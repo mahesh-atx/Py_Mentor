@@ -11,68 +11,103 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 
-const questions = [
-  {
-    id: 1,
-    type: "mcq",
-    question: "Which of the following is a valid variable name in Python?",
-    options: ["1st_name", "first-name", "first_name", "first name"],
-    correct: "first_name"
-  },
-  {
-    id: 2,
-    type: "output",
-    question: "What will be the output of the following code?",
-    code: `x = 5\ny = "10"\nprint(x + y)`,
-    options: ["15", "510", "TypeError", "SyntaxError"],
-    correct: "TypeError"
-  },
-  {
-    id: 3,
-    type: "debug",
-    question: "Find the bug in this code. It is supposed to print 'Hello World'.",
-    code: `print("Hello World')`,
-    options: ["Missing parentheses", "Mismatched quotes", "print should be capitalized", "Nothing is wrong"],
-    correct: "Mismatched quotes"
-  }
-];
+interface QuizQuestion {
+  id: string;
+  type: string;
+  question: string;
+  options: string | null; // JSON array string
+  correctAnswer: string;
+  code: string | null;
+}
 
-export default function QuizPage() {
+interface QuizData {
+  id: string;
+  title: string;
+  topicId: string;
+  questions: QuizQuestion[];
+}
+
+interface QuizClientProps {
+  quiz: QuizData;
+  nextTopicSlug: string | null;
+}
+
+export function QuizClient({ quiz, nextTopicSlug }: QuizClientProps) {
   const router = useRouter();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState("");
   const [isChecked, setIsChecked] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [score, setScore] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const questions = quiz.questions;
   const currentQuestion = questions[currentIndex];
+  
+  // Parse options safely
+  const options = currentQuestion?.options ? JSON.parse(currentQuestion.options) : [];
   const progress = ((currentIndex) / questions.length) * 100;
 
   const handleCheck = () => {
     if (!selectedAnswer) return;
     
     setIsChecked(true);
-    if (selectedAnswer === currentQuestion.correct) {
+    if (selectedAnswer === currentQuestion.correctAnswer) {
       setIsCorrect(true);
       setScore(s => s + 1);
       toast.success("Correct! Great job.");
     } else {
       setIsCorrect(false);
-      toast.error(`Incorrect. The correct answer was: ${currentQuestion.correct}`);
+      toast.error(`Incorrect. The correct answer was: ${currentQuestion.correctAnswer}`);
     }
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex(c => c + 1);
       setSelectedAnswer("");
       setIsChecked(false);
       setIsCorrect(false);
     } else {
-      // End of quiz
-      router.push('/');
+      // End of quiz - Submit
+      setIsSubmitting(true);
+      try {
+        const { submitQuizAction } = await import("@/app/actions");
+        // final score includes the current question if it was correct
+        const finalScore = isCorrect ? score + 1 : score;
+        
+        const result = await submitQuizAction(quiz.id, finalScore, questions.length);
+        
+        if (result.success) {
+          toast.success(`Quiz Completed! You earned +${result.earnedXp} XP`);
+          if (result.unlockedAchievements && result.unlockedAchievements.length > 0) {
+            result.unlockedAchievements.forEach((ach: any) => {
+              toast.success(`🏆 Achievement Unlocked: ${ach.title}! +${ach.xpReward} XP`, {
+                duration: 5000,
+              });
+            });
+          }
+          
+          if (nextTopicSlug) {
+            router.push(`/learn/${nextTopicSlug}`);
+          } else {
+            router.push('/dashboard');
+          }
+        } else {
+          toast.error("Failed to save quiz results.");
+          setIsSubmitting(false);
+        }
+      } catch (e) {
+        console.error(e);
+        toast.error("An error occurred while saving.");
+        setIsSubmitting(false);
+      }
     }
   };
+
+  if (!currentQuestion) {
+    return <div>No questions found for this quiz.</div>;
+  }
 
   return (
     <div className="max-w-3xl mx-auto h-[calc(100vh-8rem)] flex flex-col pt-8">
@@ -113,10 +148,10 @@ export default function QuizPage() {
             )}
 
             <RadioGroup value={selectedAnswer} onValueChange={setSelectedAnswer} className="space-y-3">
-              {currentQuestion.options.map((option, idx) => {
+              {options.map((option: string, idx: number) => {
                 const isSelected = selectedAnswer === option;
                 const isWrong = isChecked && isSelected && !isCorrect;
-                const isActualCorrect = isChecked && option === currentQuestion.correct;
+                const isActualCorrect = isChecked && option === currentQuestion.correctAnswer;
                 
                 let borderClass = "border-border hover:border-primary/50";
                 if (isSelected && !isChecked) borderClass = "border-primary bg-primary/5 ring-1 ring-primary";
@@ -130,7 +165,7 @@ export default function QuizPage() {
                       htmlFor={`option-${idx}`}
                       className={`flex items-center p-4 rounded-xl border-2 cursor-pointer transition-all ${borderClass}`}
                     >
-                      <div className={`h-5 w-5 rounded-full border-2 mr-4 flex items-center justify-center
+                      <div className={`h-5 w-5 rounded-full border-2 mr-4 flex items-center justify-center shrink-0
                         ${isSelected && !isChecked ? 'border-primary bg-primary' : ''}
                         ${isActualCorrect ? 'border-success bg-success' : ''}
                         ${isWrong ? 'border-destructive bg-destructive' : ''}
@@ -164,8 +199,9 @@ export default function QuizPage() {
             size="lg" 
             className={`w-full text-lg h-14 ${isCorrect ? 'bg-success hover:bg-success/90 text-success-foreground' : 'bg-destructive hover:bg-destructive/90 text-destructive-foreground'}`}
             onClick={handleNext}
+            disabled={isSubmitting}
           >
-            {currentIndex === questions.length - 1 ? 'Finish Quiz' : 'Continue'} <ChevronRight className="ml-2 h-5 w-5" />
+            {isSubmitting ? "Saving..." : currentIndex === questions.length - 1 ? 'Finish Quiz' : 'Continue'} <ChevronRight className="ml-2 h-5 w-5" />
           </Button>
         )}
       </div>

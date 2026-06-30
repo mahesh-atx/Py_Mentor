@@ -36,7 +36,7 @@ const navItems = [
   { title: "Roadmaps", url: "/roadmaps", icon: Map },
   { title: "Practice", url: "/practice", icon: Dumbbell },
   { title: "Projects", url: "/projects", icon: FolderDot },
-  { title: "Playground", url: "#", icon: Terminal },
+  { title: "Playground", url: "/playground", icon: Terminal },
   { title: "AI Mentor", url: "/ai-mentor", icon: Bot },
 ];
 

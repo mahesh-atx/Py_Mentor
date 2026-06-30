@@ -11,6 +11,9 @@ const prisma = new PrismaClient({ adapter });
 async function main() {
   console.log("🌱 Seeding database...");
 
+  await prisma.roadmap.deleteMany();
+  await prisma.achievement.deleteMany();
+  await prisma.user.deleteMany();
   // ============================================================
   // ROADMAP
   // ============================================================
@@ -428,6 +431,53 @@ async function main() {
   });
 
   console.log("✅ Module 2: Control Flow — 2 Topics, 2 Lessons, 2 Exercises");
+
+  // ============================================================
+  // QUIZZES
+  // ============================================================
+  await prisma.quiz.create({
+    data: {
+      title: "Loops Mastery Quiz",
+      slug: "loops-mastery",
+      description: "Test your understanding of for and while loops in Python.",
+      xpReward: 100,
+      order: 1,
+      isPublished: true,
+      topicId: topicLoops.id,
+      questions: {
+        create: [
+          {
+            type: "mcq",
+            question: "Which of the following is a valid variable name in Python?",
+            options: JSON.stringify(["1st_name", "first-name", "first_name", "first name"]),
+            correctAnswer: "first_name",
+            difficulty: "easy",
+            order: 1
+          },
+          {
+            type: "output",
+            question: "What will be the output of the following code?",
+            code: "x = 5\ny = \"10\"\nprint(x + y)",
+            options: JSON.stringify(["15", "510", "TypeError", "SyntaxError"]),
+            correctAnswer: "TypeError",
+            difficulty: "medium",
+            order: 2
+          },
+          {
+            type: "debug",
+            question: "Find the bug in this code. It is supposed to print 'Hello World'.",
+            code: "print(\"Hello World')",
+            options: JSON.stringify(["Missing parentheses", "Mismatched quotes", "print should be capitalized", "Nothing is wrong"]),
+            correctAnswer: "Mismatched quotes",
+            difficulty: "easy",
+            order: 3
+          }
+        ]
+      }
+    }
+  });
+
+  console.log("✅ Quiz created");
 
   // ============================================================
   // PROJECTS (linked to Topics)

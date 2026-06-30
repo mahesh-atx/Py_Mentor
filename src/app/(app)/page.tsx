@@ -1,4 +1,6 @@
 import { CurriculumService } from "@/lib/services/curriculum.service";
+import { UserService } from "@/lib/services/user.service";
+import { ProgressService } from "@/lib/services/progress.service";
 import { DashboardClient } from "./dashboard-client";
 
 export default async function DashboardPage() {
@@ -18,7 +20,12 @@ export default async function DashboardPage() {
     module.topics.map(topic => ({ ...topic, module }))
   );
 
+  // Get user stats
+  const user = await UserService.getLocalUser();
+  const stats = await ProgressService.getStats(user.id);
+
   // Default to the first topic as "continue learning"
+  // For a real app, we would look up the last uncompleted topic, but we'll stick to basic logic for now.
   const continueTopic = allTopics.length > 0 ? allTopics[0] : null;
   
   // Pick next 2 topics as recommendations
@@ -28,6 +35,15 @@ export default async function DashboardPage() {
     <DashboardClient 
       continueTopic={continueTopic} 
       recommendedTopics={recommendedTopics} 
+      stats={{
+        totalXp: stats.totalXp,
+        lessonsCompleted: stats.completedLessons,
+        exercisesCompleted: stats.totalSubmissions, // Approximating exercises via submissions for now
+        level: stats.level,
+        currentStreak: stats.currentStreak,
+        xpInCurrentLevel: stats.xpInCurrentLevel,
+        xpForNextLevel: stats.xpForNextLevel,
+      }}
     />
   );
 }

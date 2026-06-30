@@ -24,15 +24,16 @@ model User {
   updatedAt     DateTime  @updatedAt
 
   // Relations
-  progress      Progress[]
-  submissions   Submission[]
-  achievements  UserAchievement[]
-  notes         Note[]
-  bookmarks     Bookmark[]
-  aiChats       AIChat[]
-  streaks       Streak[]
-  sessions      Session[]
-  accounts      Account[]
+  progress        Progress[]
+  submissions     Submission[]
+  achievements    UserAchievement[]
+  quizSubmissions QuizSubmission[]
+  notes           Note[]
+  bookmarks       Bookmark[]
+  aiChats         AIChat[]
+  streaks         Streak[]
+  sessions        Session[]
+  accounts        Account[]
 }
 
 model Account {
@@ -200,8 +201,9 @@ model Quiz {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  topic     Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  questions QuizQuestion[]
+  topic       Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  questions   QuizQuestion[]
+  submissions QuizSubmission[]
 
   @@unique([topicId, slug])
 }
@@ -298,6 +300,21 @@ model Progress {
   lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
+}
+
+model QuizSubmission {
+  id          String   @id @default(cuid())
+  score       Int
+  total       Int
+  completedAt DateTime @default(now())
+
+  userId      String
+  quizId      String
+
+  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quiz        Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, quizId])
 }
 
 model Streak {

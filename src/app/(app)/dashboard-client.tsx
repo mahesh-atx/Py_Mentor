@@ -15,9 +15,18 @@ export type TopicWithModule = Topic & { module: Module };
 interface DashboardClientProps {
   continueTopic: TopicWithModule | null;
   recommendedTopics: TopicWithModule[];
+  stats: {
+    totalXp: number;
+    lessonsCompleted: number;
+    exercisesCompleted: number;
+    level: number;
+    currentStreak: number;
+    xpInCurrentLevel: number;
+    xpForNextLevel: number;
+  };
 }
 
-export function DashboardClient({ continueTopic, recommendedTopics }: DashboardClientProps) {
+export function DashboardClient({ continueTopic, recommendedTopics, stats }: DashboardClientProps) {
   return (
     <div className="space-y-8 pb-10 max-w-6xl mx-auto">
       
@@ -54,10 +63,10 @@ export function DashboardClient({ continueTopic, recommendedTopics }: DashboardC
                 </div>
                 <div className="w-full max-w-md space-y-2">
                   <div className="flex justify-between text-sm font-medium">
-                    <span>Progress</span>
-                    <span>0%</span>
+                    <span>Level {stats.level}</span>
+                    <span className="text-muted-foreground">{stats.xpInCurrentLevel} / {stats.xpForNextLevel} XP</span>
                   </div>
-                  <Progress value={0} className="h-2" />
+                  <Progress value={(stats.xpInCurrentLevel / stats.xpForNextLevel) * 100} className="h-2" />
                 </div>
               </div>
               <Link 
@@ -76,17 +85,17 @@ export function DashboardClient({ continueTopic, recommendedTopics }: DashboardC
         </Card>
       )}
 
-      {/* Stats Row - MOCKED for single player */}
+      {/* Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4, delay: 0.1 }}>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle className="text-sm font-medium">Daily Goal</CardTitle>
+              <CardTitle className="text-sm font-medium">Lessons Completed</CardTitle>
               <Target className="h-4 w-4 text-primary" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0 / 3</div>
-              <p className="text-xs text-muted-foreground mt-1">Lessons completed today</p>
+              <div className="text-2xl font-bold">{stats.lessonsCompleted}</div>
+              <p className="text-xs text-muted-foreground mt-1">Keep it up!</p>
             </CardContent>
           </Card>
         </motion.div>
@@ -97,7 +106,7 @@ export function DashboardClient({ continueTopic, recommendedTopics }: DashboardC
               <Flame className="h-4 w-4 text-warning" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-warning">0 Days</div>
+              <div className="text-2xl font-bold text-warning">{stats.currentStreak} Days</div>
               <p className="text-xs text-muted-foreground mt-1">Start learning to build your streak!</p>
             </CardContent>
           </Card>
@@ -109,7 +118,7 @@ export function DashboardClient({ continueTopic, recommendedTopics }: DashboardC
               <Trophy className="h-4 w-4 text-success" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">0</div>
+              <div className="text-2xl font-bold">{stats.totalXp}</div>
               <p className="text-xs text-muted-foreground mt-1">Earn XP by completing challenges</p>
             </CardContent>
           </Card>

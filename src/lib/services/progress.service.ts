@@ -109,4 +109,83 @@ export const ProgressService = {
       mastery: data.total > 0 ? Math.round((data.completed / data.total) * 100) : 0,
     }));
   },
+
+  /** Mark a lesson as completed for the user */
+  async markLessonComplete(userId: string, lessonId: string) {
+    await this.recordStreak(userId);
+    return db.progress.upsert({
+      where: { userId_lessonId: { userId, lessonId } },
+      update: { status: "completed", completedAt: new Date() },
+      create: { userId, lessonId, status: "completed", completedAt: new Date() }
+    });
+  },
+
+  /** Save an exercise submission */
+  async saveExerciseSubmission({
+    userId,
+    exerciseId,
+    code,
+    status,
+    testResults
+  }: {
+    userId: string;
+    exerciseId: string;
+    code: string;
+    status: "passed" | "failed" | "error";
+    testResults: any;
+  }) {
+    await this.recordStreak(userId);
+    
+    // Check if they already passed it to prevent farming XP on the exact same exercise.
+    const existingSuccess = await db.submission.findFirst({
+      where: { userId, exerciseId, status: "passed" }
+    });
+
+    const exercise = await db.exercise.findUnique({ where: { id: exerciseId } });
+    const xpReward = exercise?.xpReward || 100;
+    
+    // Score is the XP reward if they passed and haven't passed before
+    const score = (status === "passed" && !existingSuccess) ? xpReward : 0;
+
+    return db.submission.create({
+      data: {
+        userId,
+        exerciseId,
+        code,
+        status,
+        testResults: JSON.stringify(testResults),
+        score,
+      }
+    });
+  },
+
+  /** Check if a lesson is completed */
+  async isLessonCompleted(userId: string, lessonId: string) {
+    const progress = await db.progress.findUnique({
+      where: { userId_lessonId: { userId, lessonId } }
+    });
+    return progress?.status === "completed";
+  },
+
+  /** Save a project submission */
+  async saveProjectSubmission({
+    userId,
+    projectId,
+    repoUrl,
+  }: {
+    userId: string;
+    projectId: string;
+    repoUrl: string;
+  }) {
+    await this.recordStreak(userId);
+    return db.submission.create({
+      data: {
+        userId,
+        projectId,
+        code: repoUrl,
+        status: "passed", 
+        testResults: JSON.stringify({ review: "AI Review Passed" })
+      }
+    });
+  }
 };

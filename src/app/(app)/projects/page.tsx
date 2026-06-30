@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const projects = [
   {
-    id: "calculator",
+    slug: "terminal-calculator",
     title: "Terminal Calculator",
     description: "Build a fully functional command-line calculator that handles basic arithmetic, continuous operations, and error handling for division by zero.",
     icon: Calculator,
@@ -17,9 +17,9 @@ const projects = [
     bg: "bg-blue-500/10"
   },
   {
-    id: "atm",
-    title: "ATM System Simulator",
-    description: "Create an interactive ATM interface. Implement PIN authentication, balance checking, deposits, and withdrawal constraints using object-oriented principles.",
+    slug: "number-guessing-game",
+    title: "Number Guessing Game",
+    description: "Create a game where the computer picks a random number and the user has to guess it with hints.",
     icon: CreditCard,
     difficulty: "Medium",
     time: "4 Hours",
@@ -28,7 +28,7 @@ const projects = [
     bg: "bg-emerald-500/10"
   },
   {
-    id: "quiz",
+    slug: "quiz",
     title: "Interactive Quiz App",
     description: "Develop a multiple-choice quiz engine that loads questions from a dictionary, tracks the user's score, and provides a final grade breakdown.",
     icon: HelpCircle,
@@ -39,7 +39,7 @@ const projects = [
     bg: "bg-purple-500/10"
   },
   {
-    id: "expense",
+    slug: "expense",
     title: "Expense Tracker",
     description: "Build an application that allows users to log daily expenses, categorize them, and generate a simple terminal-based report of their spending habits.",
     icon: Receipt,
@@ -64,7 +64,7 @@ export default function ProjectsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((project) => (
-          <Card key={project.id} className="bg-background shadow-sm hover:shadow-md transition-shadow flex flex-col">
+          <Card key={project.slug} className="bg-background shadow-sm hover:shadow-md transition-shadow flex flex-col">
             <CardHeader>
               <div className="flex items-start justify-between mb-2">
                 <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${project.bg}`}>
@@ -101,8 +101,8 @@ export default function ProjectsPage() {
               </div>
             </CardContent>
             <CardFooter className="border-t bg-muted/20 pt-4">
-              <Link href={`/projects/${project.id}`} className="w-full">
-                <Button className="w-full">Start Project</Button>
+              <Link href={`/projects/${project.slug}`} className="w-full">
+                <Button className="w-full group">Start Project</Button>
               </Link>
             </CardFooter>
           </Card>

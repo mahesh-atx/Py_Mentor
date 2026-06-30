@@ -130,5 +130,49 @@ export const CurriculumService = {
     }
 
     return { prevTopic, nextTopic };
+  },
+
+  /** Get a single exercise by its slug */
+  async getExerciseBySlug(slug: string) {
+    return db.exercise.findFirst({
+      where: { slug },
+      include: {
+        topic: {
+          include: {
+            module: {
+              include: {
+                roadmap: true,
+              }
+            }
+          }
+        }
+      }
+    });
+  },
+
+  /** Get the very first exercise in the curriculum for redirects */
+  async getFirstExercise() {
+    return db.exercise.findFirst({
+      where: { isPublished: true },
+      orderBy: { order: "asc" },
+    });
+  },
+
+  /** Get a single project by its slug */
+  async getProjectBySlug(slug: string) {
+    return db.project.findFirst({
+      where: { slug },
+      include: {
+        topic: {
+          include: {
+            module: {
+              include: {
+                roadmap: true,
+              }
+            }
+          }
+        }
+      }
+    });
   }
 };
