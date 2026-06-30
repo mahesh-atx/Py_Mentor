@@ -4,54 +4,11 @@ import { Badge } from "@/components/ui/badge";
 import { Calculator, CreditCard, HelpCircle, Receipt } from "lucide-react";
 import Link from "next/link";
 
-const projects = [
-  {
-    slug: "terminal-calculator",
-    title: "Terminal Calculator",
-    description: "Build a fully functional command-line calculator that handles basic arithmetic, continuous operations, and error handling for division by zero.",
-    icon: Calculator,
-    difficulty: "Easy",
-    time: "2 Hours",
-    skills: ["Variables", "Functions", "Conditionals", "Input"],
-    color: "text-blue-500",
-    bg: "bg-blue-500/10"
-  },
-  {
-    slug: "number-guessing-game",
-    title: "Number Guessing Game",
-    description: "Create a game where the computer picks a random number and the user has to guess it with hints.",
-    icon: CreditCard,
-    difficulty: "Medium",
-    time: "4 Hours",
-    skills: ["Classes", "Loops", "Exception Handling"],
-    color: "text-emerald-500",
-    bg: "bg-emerald-500/10"
-  },
-  {
-    slug: "quiz",
-    title: "Interactive Quiz App",
-    description: "Develop a multiple-choice quiz engine that loads questions from a dictionary, tracks the user's score, and provides a final grade breakdown.",
-    icon: HelpCircle,
-    difficulty: "Medium",
-    time: "3 Hours",
-    skills: ["Dictionaries", "Lists", "Loops"],
-    color: "text-purple-500",
-    bg: "bg-purple-500/10"
-  },
-  {
-    slug: "expense",
-    title: "Expense Tracker",
-    description: "Build an application that allows users to log daily expenses, categorize them, and generate a simple terminal-based report of their spending habits.",
-    icon: Receipt,
-    difficulty: "Hard",
-    time: "6 Hours",
-    skills: ["File I/O", "Data Structures", "Functions"],
-    color: "text-destructive",
-    bg: "bg-destructive/10"
-  }
-];
+import { CurriculumService } from "@/lib/services/curriculum.service";
 
-export default function ProjectsPage() {
+export default async function ProjectsPage() {
+  const dbProjects = await CurriculumService.getAllProjects();
+
   return (
     <div className="p-4 md:p-8 max-w-6xl mx-auto h-[calc(100vh-4rem)] overflow-y-auto">
       
@@ -63,50 +20,67 @@ export default function ProjectsPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projects.map((project) => (
-          <Card key={project.slug} className="bg-background shadow-sm hover:shadow-md transition-shadow flex flex-col">
-            <CardHeader>
-              <div className="flex items-start justify-between mb-2">
-                <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${project.bg}`}>
-                  <project.icon className={`h-6 w-6 ${project.color}`} />
+        {dbProjects.map((project) => {
+          let parsedSkills: string[] = [];
+          try {
+            if (project.skills) parsedSkills = JSON.parse(project.skills);
+          } catch(e) {}
+
+          // Determine icon dynamically or use a fallback
+          let ProjectIcon = HelpCircle;
+          let color = "text-blue-500";
+          let bg = "bg-blue-500/10";
+          
+          if (project.slug.includes("calculator")) { ProjectIcon = Calculator; color = "text-blue-500"; bg = "bg-blue-500/10"; }
+          else if (project.slug.includes("game")) { ProjectIcon = CreditCard; color = "text-emerald-500"; bg = "bg-emerald-500/10"; }
+          else if (project.slug.includes("quiz")) { ProjectIcon = HelpCircle; color = "text-purple-500"; bg = "bg-purple-500/10"; }
+          else if (project.slug.includes("expense")) { ProjectIcon = Receipt; color = "text-destructive"; bg = "bg-destructive/10"; }
+
+          return (
+            <Card key={project.slug} className="bg-background shadow-sm hover:shadow-md transition-shadow flex flex-col">
+              <CardHeader>
+                <div className="flex items-start justify-between mb-2">
+                  <div className={`h-12 w-12 rounded-xl flex items-center justify-center ${bg}`}>
+                    <ProjectIcon className={`h-6 w-6 ${color}`} />
+                  </div>
+                  <div className="flex gap-2">
+                    <Badge variant="outline" className="bg-background">
+                      {project.estimatedTime || "2 Hours"}
+                    </Badge>
+                    <Badge 
+                      variant="secondary" 
+                      className={
+                        project.difficulty.toLowerCase() === 'easy' ? 'bg-success/10 text-success hover:bg-success/20' : 
+                        project.difficulty.toLowerCase() === 'medium' ? 'bg-warning/10 text-warning hover:bg-warning/20' : 
+                        'bg-destructive/10 text-destructive hover:bg-destructive/20'
+                      }
+                    >
+                      {project.difficulty}
+                    </Badge>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  <Badge variant="outline" className="bg-background">
-                    {project.time}
-                  </Badge>
-                  <Badge 
-                    variant="secondary" 
-                    className={
-                      project.difficulty === 'Easy' ? 'bg-success/10 text-success hover:bg-success/20' : 
-                      project.difficulty === 'Medium' ? 'bg-warning/10 text-warning hover:bg-warning/20' : 
-                      'bg-destructive/10 text-destructive hover:bg-destructive/20'
-                    }
-                  >
-                    {project.difficulty}
-                  </Badge>
+                <CardTitle className="text-xl">{project.title}</CardTitle>
+                <CardDescription className="text-[15px] leading-relaxed pt-2">
+                  {project.description}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="flex-1">
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {parsedSkills.map(skill => (
+                    <Badge key={skill} variant="outline" className="text-xs text-muted-foreground">
+                      {skill}
+                    </Badge>
+                  ))}
                 </div>
-              </div>
-              <CardTitle className="text-xl">{project.title}</CardTitle>
-              <CardDescription className="text-[15px] leading-relaxed pt-2">
-                {project.description}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex-1">
-              <div className="flex flex-wrap gap-2 mt-2">
-                {project.skills.map(skill => (
-                  <Badge key={skill} variant="outline" className="text-xs text-muted-foreground">
-                    {skill}
-                  </Badge>
-                ))}
-              </div>
-            </CardContent>
-            <CardFooter className="border-t bg-muted/20 pt-4">
-              <Link href={`/projects/${project.slug}`} className="w-full">
-                <Button className="w-full group">Start Project</Button>
-              </Link>
-            </CardFooter>
-          </Card>
-        ))}
+              </CardContent>
+              <CardFooter className="border-t bg-muted/20 pt-4">
+                <Link href={`/projects/${project.slug}`} className="w-full">
+                  <Button className="w-full group">Start Project</Button>
+                </Link>
+              </CardFooter>
+            </Card>
+          );
+        })}
       </div>
 
     </div>

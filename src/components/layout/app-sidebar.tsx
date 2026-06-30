@@ -42,7 +42,7 @@ const navItems = [
 
 const secondaryItems = [
   { title: "Progress", url: "/progress", icon: Award },
-  { title: "Daily Challenge", url: "#", icon: Calendar },
+  { title: "Daily Challenge", url: "/daily-challenge", icon: Calendar },
   { title: "Bookmarks", url: "/notes", icon: Bookmark },
   { title: "Notes", url: "/notes", icon: FileText },
 ];

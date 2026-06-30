@@ -174,5 +174,24 @@ export const CurriculumService = {
         }
       }
     });
+  },
+
+  /** Get all published projects */
+  async getAllProjects() {
+    return db.project.findMany({
+      where: { isPublished: true },
+      orderBy: { order: "asc" },
+      include: {
+        topic: {
+          include: {
+            module: {
+              include: {
+                roadmap: true,
+              }
+            }
+          }
+        }
+      }
+    });
   }
 };
