@@ -1,6 +1,8 @@
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { TopNav } from "@/components/layout/top-nav";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
+import { FloatingAiMentor } from "@/components/floating-ai-mentor";
+import { FloatingEditor } from "@/components/floating-editor";
 
 export default function AppLayout({
   children,
@@ -16,6 +18,8 @@ export default function AppLayout({
           {children}
         </main>
       </SidebarInset>
+      <FloatingAiMentor />
+      <FloatingEditor />
     </SidebarProvider>
   );
 }

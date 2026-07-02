@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Bot, ChevronLeft, ChevronRight, CheckCircle2, Copy } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Bot, ChevronLeft, ChevronRight, CheckCircle2, Copy, ArrowDown } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +12,6 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import Link from "next/link";
-import { AiMentorSidebar } from "@/components/ai-mentor-sidebar";
 
 export interface NavigationTopic {
   id: string;
@@ -33,6 +32,29 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
   const router = useRouter();
   const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
   const [isCompleting, setIsCompleting] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [showScrollHint, setShowScrollHint] = useState(false);
+
+  useEffect(() => {
+    // Only show scroll hint if content is actually scrollable
+    const checkScrollable = () => {
+      if (scrollRef.current) {
+        if (scrollRef.current.scrollHeight > scrollRef.current.clientHeight) {
+          setShowScrollHint(true);
+        } else {
+          setShowScrollHint(false);
+        }
+      }
+    };
+    
+    checkScrollable();
+    window.addEventListener('resize', checkScrollable);
+    return () => window.removeEventListener('resize', checkScrollable);
+  }, [lessonContent]);
+
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    setShowScrollHint(e.currentTarget.scrollTop <= 10);
+  };
 
   const handleComplete = async () => {
     if (!lessonId || isCompleted) return;
@@ -62,10 +84,14 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
   };
 
   return (
-    <div className="flex flex-col lg:flex-row h-[calc(100vh-5rem)] overflow-hidden">
+    <div className="flex flex-col lg:flex-row h-[calc(100vh-5rem)] overflow-hidden relative">
       
       {/* Main Content Area */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-10 lg:pr-8">
+      <div 
+        ref={scrollRef}
+        onScroll={handleScroll}
+        className="flex-1 overflow-y-auto p-4 md:p-8 space-y-10 lg:pr-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
         
         {/* Header */}
         <header className="space-y-4">
@@ -139,8 +165,13 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
 
       </div>
 
-      {/* AI Mentor Sidebar (Sticky on Desktop) */}
-      <AiMentorSidebar topicTitle={topic.title} />
+      {/* Scroll Hint Popup */}
+      <div 
+        className={`absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-1 bg-card text-card-foreground border border-border px-3 py-3 rounded-full shadow-xl transition-all duration-500 pointer-events-none z-50 ${showScrollHint ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+      >
+        <ArrowDown className="h-4 w- animate-bounce" />
+        <span className="text-sm font-medium">Scroll to read more</span>
+      </div>
 
     </div>
   );

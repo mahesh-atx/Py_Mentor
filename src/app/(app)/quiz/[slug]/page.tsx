@@ -3,8 +3,8 @@ import { CurriculumService } from "@/lib/services/curriculum.service";
 import { notFound } from "next/navigation";
 import { QuizClient } from "./quiz-client";
 
-export default async function QuizSlugPage({ params }: { params: { slug: string } }) {
-  const { slug } = params;
+export default async function QuizSlugPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   
   const quiz = await QuizService.getQuizBySlug(slug);
   

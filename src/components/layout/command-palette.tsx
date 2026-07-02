@@ -59,10 +59,6 @@ export function CommandPalette({ open, setOpen }: { open: boolean, setOpen: (ope
             <BookOpen />
             <span>Learn</span>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/playground"))}>
-            <Terminal />
-            <span>Playground</span>
-          </CommandItem>
         </CommandGroup>
         <CommandSeparator />
         <CommandGroup heading="Settings">

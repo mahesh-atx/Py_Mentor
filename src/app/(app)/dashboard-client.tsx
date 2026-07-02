@@ -192,16 +192,6 @@ export function DashboardClient({ continueTopic, recommendedTopics, stats }: Das
                     <span className="text-xs text-muted-foreground font-normal">Solve algorithmic problems</span>
                   </div>
                 </Link>
-                <Link 
-                  href="/ai-mentor"
-                  className={buttonVariants({ variant: "ghost", className: "justify-start h-14 px-6 rounded-none hover:bg-accent/50 text-left" })}
-                >
-                  <Bot className="h-5 w-5 mr-3 text-info" />
-                  <div className="flex flex-col items-start">
-                    <span>Ask AI Mentor</span>
-                    <span className="text-xs text-muted-foreground font-normal">Stuck? Get a hint</span>
-                  </div>
-                </Link>
               </CardContent>
             </Card>
           </section>

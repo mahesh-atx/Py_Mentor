@@ -28,6 +28,32 @@ export const CurriculumService = {
     });
   },
 
+  /** Get all published roadmaps including their exercises for the practice dashboard */
+  async getRoadmapsWithExercises() {
+    return db.roadmap.findMany({
+      where: { isPublished: true },
+      orderBy: { order: "asc" },
+      include: {
+        modules: {
+          where: { isPublished: true },
+          orderBy: { order: "asc" },
+          include: {
+            topics: {
+              where: { isPublished: true },
+              orderBy: { order: "asc" },
+              include: {
+                exercises: {
+                  where: { isPublished: true },
+                  orderBy: { order: "asc" }
+                }
+              }
+            },
+          },
+        },
+      },
+    });
+  },
+
   /** Get a single roadmap by slug */
   async getRoadmapBySlug(slug: string) {
     return db.roadmap.findUnique({

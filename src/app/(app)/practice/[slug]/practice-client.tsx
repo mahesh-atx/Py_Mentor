@@ -153,10 +153,20 @@ export function PracticeClient({ exercise }: { exercise: any }) {
   };
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] flex flex-col -mx-6 -mb-6 -mt-6">
+    <>
+      <div className="fixed inset-0 z-[110] flex items-center justify-center animate-in fade-in duration-300">
       
-      {/* Top Navbar for Practice */}
-      <div className="h-14 border-b bg-background flex items-center justify-between px-4 lg:px-6 shrink-0 shadow-sm z-10">
+      {/* Backdrop */}
+      <div 
+        className="absolute inset-0 bg-background/60 backdrop-blur-sm" 
+        onClick={() => router.back()}
+      />
+      
+      {/* Centered Window */}
+      <div className="relative w-[95vw] sm:w-[90vw] md:w-[90vw] lg:w-[85vw] h-[85vh] max-h-[900px] bg-background border border-border/60 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden animate-in zoom-in-95 duration-300">
+      
+      {/* Header */}
+      <div className="h-14 border-b bg-muted/30 flex items-center justify-between px-4 lg:px-6 shrink-0">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-muted-foreground">
             <ChevronLeft className="h-5 w-5" />
@@ -311,9 +321,12 @@ export function PracticeClient({ exercise }: { exercise: any }) {
         </Tabs>
       </div>
 
+      </div>
+    </div>
+
       {/* Hints Dialog */}
       <Dialog open={showHint} onOpenChange={setShowHint}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-xl md:max-w-2xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <Lightbulb className="h-5 w-5 text-warning" /> Need a Hint?
@@ -338,7 +351,7 @@ export function PracticeClient({ exercise }: { exercise: any }) {
 
       {/* Results Dialog */}
       <Dialog open={showResults} onOpenChange={setShowResults}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-xl md:max-w-3xl">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-2xl">
               {isSuccess ? (
@@ -415,6 +428,6 @@ export function PracticeClient({ exercise }: { exercise: any }) {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+    </>
   );
 }
