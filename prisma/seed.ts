@@ -3,6 +3,8 @@ import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 import { module1 } from "./notes/module-01";
 import { module2 } from "./notes/module-02";
+import { module3 } from "./notes/module-03";
+import { module4 } from "./notes/module-04";
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL!,
@@ -137,26 +139,31 @@ async function main() {
     },
   });
 
-  const m3Topics = [
-    "Arithmetic Operators",
-    "Comparison Operators",
-    "Logical Operators",
-    "Assignment Operators",
-    "Bitwise Operators",
-    "Identity Operators",
-    "Membership Operators",
-    "Operator Precedence"
-  ];
-
-  for (let i = 0; i < m3Topics.length; i++) {
-    await prisma.topic.create({
+  for (let i = 0; i < module3.lessons.length; i++) {
+    const lessonData = module3.lessons[i];
+    const topic = await prisma.topic.create({
       data: {
-        title: m3Topics[i],
+        title: lessonData.title,
         slug: `m3-topic-${i + 1}`,
-        description: `Learn about ${m3Topics[i]}`,
+        description: `Learn about ${lessonData.title}`,
         order: i + 1,
         isPublished: true,
         moduleId: mod3.id,
+      },
+    });
+
+    await prisma.lesson.create({
+      data: {
+        title: lessonData.title,
+        slug: lessonData.slug,
+        content: lessonData.content,
+        objectives: JSON.stringify(lessonData.objectives),
+        examples: JSON.stringify([]),
+        order: 1,
+        difficulty: lessonData.difficulty,
+        xpReward: lessonData.xpReward,
+        isPublished: true,
+        topicId: topic.id,
       },
     });
   }
@@ -175,23 +182,31 @@ async function main() {
     },
   });
 
-  const m4Topics = [
-    "Conditional Statements",
-    "Loops",
-    "Loop Control",
-    "range() Function",
-    "Pattern Printing"
-  ];
-
-  for (let i = 0; i < m4Topics.length; i++) {
-    await prisma.topic.create({
+  for (let i = 0; i < module4.lessons.length; i++) {
+    const lessonData = module4.lessons[i];
+    const topic = await prisma.topic.create({
       data: {
-        title: m4Topics[i],
+        title: lessonData.title,
         slug: `m4-topic-${i + 1}`,
-        description: `Learn about ${m4Topics[i]}`,
+        description: `Learn about ${lessonData.title}`,
         order: i + 1,
         isPublished: true,
         moduleId: mod4.id,
+      },
+    });
+
+    await prisma.lesson.create({
+      data: {
+        title: lessonData.title,
+        slug: lessonData.slug,
+        content: lessonData.content,
+        objectives: JSON.stringify(lessonData.objectives),
+        examples: JSON.stringify([]),
+        order: 1,
+        difficulty: lessonData.difficulty,
+        xpReward: lessonData.xpReward,
+        isPublished: true,
+        topicId: topic.id,
       },
     });
   }
