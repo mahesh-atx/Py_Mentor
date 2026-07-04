@@ -1,5 +1,5 @@
 import { CurriculumService } from "@/lib/services/curriculum.service";
-import { RoadmapClient, RoadmapModuleData } from "./roadmaps-client";
+import { RoadmapClient, RoadmapData } from "./roadmaps-client";
 
 export default async function RoadmapPage() {
   const roadmaps = await CurriculumService.getRoadmaps();
@@ -14,22 +14,19 @@ export default async function RoadmapPage() {
   }
 
   // Transform database models into UI models
-  // Since we are mocking progress, we make everything "in-progress" so it's clickable and visible
-  const modulesData: RoadmapModuleData[] = firstRoadmap.modules.map((m) => {
+  const roadmapsData: RoadmapData[] = roadmaps.map((r) => {
     return {
-      id: m.id,
-      title: m.title,
-      description: m.description,
+      id: r.id,
+      title: r.title,
+      description: r.description,
       status: "in-progress", // Mock status
-      topics: m.topics.map((t) => ({
-        id: t.id,
-        title: t.title,
-        slug: t.slug,
-        type: "lesson", // Assuming they are all lessons for this high-level view
-        status: "in-progress" // Mock status
+      modules: r.modules.map((m) => ({
+        id: m.id,
+        title: m.title,
+        description: m.description,
       }))
     };
   });
 
-  return <RoadmapClient modules={modulesData} />;
+  return <RoadmapClient roadmaps={roadmapsData} />;
 }

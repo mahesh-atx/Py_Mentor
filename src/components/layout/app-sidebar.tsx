@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   Sidebar,
   SidebarContent,
@@ -29,6 +30,7 @@ import {
   Settings,
   User,
 } from "lucide-react";
+import { LearnSidebar } from "./learn-sidebar";
 
 const navItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard },
@@ -51,7 +53,12 @@ const bottomItems = [
   { title: "Settings", url: "#", icon: Settings },
 ];
 
-export function AppSidebar() {
+export function AppSidebar({ roadmaps }: { roadmaps?: any[] }) {
+  const pathname = usePathname();
+
+  if (pathname.startsWith("/learn")) {
+    return <LearnSidebar roadmaps={roadmaps} />;
+  }
 
   return (
     <Sidebar variant="inset">

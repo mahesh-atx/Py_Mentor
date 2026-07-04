@@ -1,6 +1,8 @@
 import "dotenv/config";
 import { PrismaClient } from "@prisma/client";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { module1 } from "./notes/module-01";
+import { module2 } from "./notes/module-02";
 
 const adapter = new PrismaBetterSqlite3({
   url: process.env.DATABASE_URL!,
@@ -16,8 +18,195 @@ async function main() {
   await prisma.user.deleteMany();
   await prisma.quiz.deleteMany();
   await prisma.exercise.deleteMany();
+  await prisma.module.deleteMany();
+  await prisma.topic.deleteMany();
+  // ============================================================
+  // ROADMAP
+  // ============================================================
+  const phase1Roadmap = await prisma.roadmap.create({
+    data: {
+      title: "PHASE 1: FOUNDATION (Weeks 1-4)",
+      slug: "phase-1",
+      description: "Master the fundamentals of Python, from setting up your environment to understanding basic syntax, variables, operators, and control flow.",
+      language: "python",
+      icon: "🐍",
+      order: 1,
+      isPublished: true,
+    },
+  });
+
+  console.log("✅ Roadmap created");
+
+  // ============================================================
+  // MODULE 1: Getting Started
+  // ============================================================
+  const mod1 = await prisma.module.create({
+    data: {
+      title: "Module 1: Getting Started",
+      slug: "module-1-getting-started",
+      description: "Getting Started with Python.",
+      order: 1,
+      isPublished: true,
+      roadmapId: phase1Roadmap.id,
+    },
+  });
+
+  for (let i = 0; i < module1.lessons.length; i++) {
+    const lessonData = module1.lessons[i];
+    const topic = await prisma.topic.create({
+      data: {
+        title: lessonData.title,
+        slug: `m1-topic-${i + 1}`,
+        description: `Learn about ${lessonData.title}`,
+        order: i + 1,
+        isPublished: true,
+        moduleId: mod1.id,
+      },
+    });
+
+    await prisma.lesson.create({
+      data: {
+        title: lessonData.title,
+        slug: lessonData.slug,
+        content: lessonData.content,
+        objectives: JSON.stringify(lessonData.objectives),
+        examples: JSON.stringify([]),
+        order: 1,
+        difficulty: lessonData.difficulty,
+        xpReward: lessonData.xpReward,
+        isPublished: true,
+        topicId: topic.id,
+      },
+    });
+  }
+
+  // ============================================================
+  // MODULE 2: Variables & Data Types
+  // ============================================================
+  const mod2 = await prisma.module.create({
+    data: {
+      title: "Module 2: Variables & Data Types",
+      slug: "module-2-variables",
+      description: "Variables & Data Types.",
+      order: 2,
+      isPublished: true,
+      roadmapId: phase1Roadmap.id,
+    },
+  });
+
+  for (let i = 0; i < module2.lessons.length; i++) {
+    const lessonData = module2.lessons[i];
+    const topic = await prisma.topic.create({
+      data: {
+        title: lessonData.title,
+        slug: `m2-topic-${i + 1}`,
+        description: `Learn about ${lessonData.title}`,
+        order: i + 1,
+        isPublished: true,
+        moduleId: mod2.id,
+      },
+    });
+
+    await prisma.lesson.create({
+      data: {
+        title: lessonData.title,
+        slug: lessonData.slug,
+        content: lessonData.content,
+        objectives: JSON.stringify(lessonData.objectives),
+        examples: JSON.stringify([]),
+        order: 1,
+        difficulty: lessonData.difficulty,
+        xpReward: lessonData.xpReward,
+        isPublished: true,
+        topicId: topic.id,
+      },
+    });
+  }
+
+  // ============================================================
+  // MODULE 3: Operators
+  // ============================================================
+  const mod3 = await prisma.module.create({
+    data: {
+      title: "Module 3: Operators",
+      slug: "module-3-operators",
+      description: "Operators.",
+      order: 3,
+      isPublished: true,
+      roadmapId: phase1Roadmap.id,
+    },
+  });
+
+  const m3Topics = [
+    "Arithmetic Operators",
+    "Comparison Operators",
+    "Logical Operators",
+    "Assignment Operators",
+    "Bitwise Operators",
+    "Identity Operators",
+    "Membership Operators",
+    "Operator Precedence"
+  ];
+
+  for (let i = 0; i < m3Topics.length; i++) {
+    await prisma.topic.create({
+      data: {
+        title: m3Topics[i],
+        slug: `m3-topic-${i + 1}`,
+        description: `Learn about ${m3Topics[i]}`,
+        order: i + 1,
+        isPublished: true,
+        moduleId: mod3.id,
+      },
+    });
+  }
+
+  // ============================================================
+  // MODULE 4: Control Flow
+  // ============================================================
+  const mod4 = await prisma.module.create({
+    data: {
+      title: "Module 4: Control Flow",
+      slug: "module-4-control-flow",
+      description: "Control Flow.",
+      order: 4,
+      isPublished: true,
+      roadmapId: phase1Roadmap.id,
+    },
+  });
+
+  const m4Topics = [
+    "Conditional Statements",
+    "Loops",
+    "Loop Control",
+    "range() Function",
+    "Pattern Printing"
+  ];
+
+  for (let i = 0; i < m4Topics.length; i++) {
+    await prisma.topic.create({
+      data: {
+        title: m4Topics[i],
+        slug: `m4-topic-${i + 1}`,
+        description: `Learn about ${m4Topics[i]}`,
+        order: i + 1,
+        isPublished: true,
+        moduleId: mod4.id,
+      },
+    });
+  }
+
+  console.log("✅ Modules 1-4 created with topics");
+  
+
+
+  
+
 
   // ACHIEVEMENTS
+
+
+  // ============================================================
   await prisma.achievement.createMany({
     data: [
       { title: "First Blood", description: "Complete your first lesson.", icon: "Zap", color: "text-yellow-500", xpReward: 50, condition: JSON.stringify({ type: "lessons_completed", count: 1 }) },
