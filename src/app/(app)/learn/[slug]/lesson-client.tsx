@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo } from "react";
+import { motion } from "framer-motion";
 import { Bot, ChevronLeft, ChevronRight, CheckCircle2, Copy, ArrowDown } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -12,6 +13,8 @@ import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
 import Link from "next/link";
+import { remarkAlerts } from "@/lib/remark-alerts";
+import { Info, AlertTriangle, Lightbulb, ShieldAlert, Shield } from "lucide-react";
 
 export interface NavigationTopic {
   id: string;
@@ -160,13 +163,68 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
         {children}
       </h3>
     ),
+    div: ({ node, className, children, ...props }: any) => {
+      if (typeof className === 'string' && className.includes('markdown-alert')) {
+        const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
+        
+        let Icon = Info;
+        let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
+        let title = "Note";
+
+        switch (type) {
+          case 'tip':
+            Icon = Lightbulb;
+            colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
+            title = "Tip";
+            break;
+          case 'warning':
+            Icon = AlertTriangle;
+            colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
+            title = "Warning";
+            break;
+          case 'caution':
+            Icon = ShieldAlert;
+            colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
+            title = "Caution";
+            break;
+          case 'important':
+            Icon = Shield;
+            colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
+            title = "Important";
+            break;
+          case 'note':
+          default:
+            Icon = Info;
+            colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
+            title = "Note";
+            break;
+        }
+
+        return (
+          <div className={`my-6 rounded-lg border p-4 ${colorClass}`} {...props}>
+            <div className="flex items-center gap-2 font-semibold mb-2">
+              <Icon className="h-5 w-5" />
+              <span>{title}</span>
+            </div>
+            <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
+              {children}
+            </div>
+          </div>
+        );
+      }
+      return <div className={className} {...props}>{children}</div>;
+    }
   };
 
   return (
     <div className="flex flex-col xl:flex-row h-[calc(100vh-5rem)] overflow-hidden relative">
       
       {/* Main Content Area */}
-      <div 
+      <motion.div 
+        key={topic.slug}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
         ref={scrollRef}
         onScroll={handleScroll}
         className="flex-1 overflow-y-auto p-4 md:p-8 space-y-10 xl:pr-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] scroll-smooth"
@@ -189,7 +247,7 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
         {/* Content Body */}
         <article className="prose prose-neutral dark:prose-invert max-w-3xl prose-headings:font-semibold prose-a:text-primary overflow-x-hidden">
           <ReactMarkdown 
-            remarkPlugins={[remarkGfm]} 
+            remarkPlugins={[remarkGfm, remarkAlerts]} 
             rehypePlugins={[rehypeHighlight]}
             components={MarkdownComponents}
           >
@@ -243,7 +301,7 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
           </div>
         </footer>
 
-      </div>
+      </motion.div>
 
       {/* Right Sidebar Minimap (TOC) */}
       {headings.length > 0 && (

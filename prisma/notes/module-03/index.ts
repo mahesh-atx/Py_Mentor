@@ -1,3 +1,4 @@
+import { exercises } from "./exercises";
 import { arithmeticOperatorsLesson } from "./arithmetic-operators";
 import { comparisonOperatorsLesson } from "./comparison-operators";
 import { logicalOperatorsLesson } from "./logical-operators";
@@ -24,13 +25,13 @@ export const module3 = {
   description: "Operators.",
   order: 3,
   lessons: [
-    arithmeticOperatorsLesson,
-    comparisonOperatorsLesson,
-    logicalOperatorsLesson,
-    assignmentOperatorsLesson,
-    bitwiseOperatorsLesson,
-    identityOperatorsLesson,
-    membershipOperatorsLesson,
-    operatorPrecedenceLesson
+    { ...arithmeticOperatorsLesson, exercises: exercises[arithmeticOperatorsLesson.slug] },
+    { ...comparisonOperatorsLesson, exercises: exercises[comparisonOperatorsLesson.slug] },
+    { ...logicalOperatorsLesson, exercises: exercises[logicalOperatorsLesson.slug] },
+    { ...assignmentOperatorsLesson, exercises: exercises[assignmentOperatorsLesson.slug] },
+    { ...bitwiseOperatorsLesson, exercises: exercises[bitwiseOperatorsLesson.slug] },
+    { ...identityOperatorsLesson, exercises: exercises[identityOperatorsLesson.slug] },
+    { ...membershipOperatorsLesson, exercises: exercises[membershipOperatorsLesson.slug] },
+    { ...operatorPrecedenceLesson, exercises: exercises[operatorPrecedenceLesson.slug] }
   ]
 };

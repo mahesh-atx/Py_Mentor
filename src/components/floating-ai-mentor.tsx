@@ -8,6 +8,8 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeHighlight from "rehype-highlight";
 import "highlight.js/styles/github-dark.css";
+import { remarkAlerts } from "@/lib/remark-alerts";
+import { Shield, ShieldAlert, Info, Lightbulb, AlertCircle } from "lucide-react";
 
 interface Message {
   role: "user" | "assistant";
@@ -138,7 +140,63 @@ export function FloatingAiMentor() {
                     {msg.role === 'user' ? (
                       msg.content
                     ) : (
-                      <ReactMarkdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeHighlight]}>
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm, remarkAlerts]} 
+                        rehypePlugins={[rehypeHighlight]}
+                        components={{
+                          div: ({ node, className, children, ...props }: any) => {
+                            if (typeof className === 'string' && className.includes('markdown-alert')) {
+                              const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
+                              
+                              let Icon = Info;
+                              let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
+                              let title = "Note";
+
+                              switch (type) {
+                                case 'tip':
+                                  Icon = Lightbulb;
+                                  colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
+                                  title = "Tip";
+                                  break;
+                                case 'warning':
+                                  Icon = AlertCircle;
+                                  colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
+                                  title = "Warning";
+                                  break;
+                                case 'caution':
+                                  Icon = ShieldAlert;
+                                  colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
+                                  title = "Caution";
+                                  break;
+                                case 'important':
+                                  Icon = Shield;
+                                  colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
+                                  title = "Important";
+                                  break;
+                                case 'note':
+                                default:
+                                  Icon = Info;
+                                  colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
+                                  title = "Note";
+                                  break;
+                              }
+
+                              return (
+                                <div className={`my-4 rounded-lg border p-3 ${colorClass}`} {...props}>
+                                  <div className="flex items-center gap-2 font-semibold mb-1 text-sm">
+                                    <Icon className="h-4 w-4" />
+                                    <span>{title}</span>
+                                  </div>
+                                  <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
+                                    {children}
+                                  </div>
+                                </div>
+                              );
+                            }
+                            return <div className={className} {...props}>{children}</div>;
+                          }
+                        }}
+                      >
                         {msg.content}
                       </ReactMarkdown>
                     )}

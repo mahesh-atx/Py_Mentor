@@ -1,3 +1,4 @@
+import { exercises } from "./exercises";
 import { conditionalStatementsLesson } from "./conditional-statements";
 import { forLoopLesson } from "./for-loops";
 import { whileLoopLesson } from "./while-loops";
@@ -22,12 +23,12 @@ export const module4 = {
   description: "Control Flow.",
   order: 4,
   lessons: [
-    conditionalStatementsLesson,
-    forLoopLesson,
-    whileLoopLesson,
-    nestedLoopsLesson,
-    loopControlStatementsLesson,
-    rangeFunctionLesson,
-    patternPrintingLesson
+    { ...conditionalStatementsLesson, exercises: exercises[conditionalStatementsLesson.slug] },
+    { ...forLoopLesson, exercises: exercises[forLoopLesson.slug] },
+    { ...whileLoopLesson, exercises: exercises[whileLoopLesson.slug] },
+    { ...nestedLoopsLesson, exercises: exercises[nestedLoopsLesson.slug] },
+    { ...loopControlStatementsLesson, exercises: exercises[loopControlStatementsLesson.slug] },
+    { ...rangeFunctionLesson, exercises: exercises[rangeFunctionLesson.slug] },
+    { ...patternPrintingLesson, exercises: exercises[patternPrintingLesson.slug] }
   ]
 };

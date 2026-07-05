@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Plus_Jakarta_Sans, JetBrains_Mono } from "next/font/google";
+import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const fontSans = Plus_Jakarta_Sans({
+const fontSans = Manrope({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const fontMono = JetBrains_Mono({
+const fontMono = localFont({
+  src: "../../public/fonts/PaperMono.woff2",
   variable: "--font-mono",
-  subsets: ["latin"],
 });
 
 export const metadata: Metadata = {

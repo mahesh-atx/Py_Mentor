@@ -11,9 +11,11 @@ import { useRouter } from "next/navigation";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { remarkAlerts } from "@/lib/remark-alerts";
+import { Shield, ShieldAlert, Info } from "lucide-react";
 import { usePyodide } from "@/lib/hooks/usePyodide";
 
-export function PracticeClient({ exercise }: { exercise: any }) {
+export function PracticeClient({ exercise, initialIsCompleted = false }: { exercise: any, initialIsCompleted?: boolean }) {
   const router = useRouter();
   const [code, setCode] = useState(exercise.starterCode || "");
   const [output, setOutput] = useState("");
@@ -24,6 +26,7 @@ export function PracticeClient({ exercise }: { exercise: any }) {
   const [showHint, setShowHint] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
 
   interface TestResult {
     passed: boolean;
@@ -84,6 +87,7 @@ export function PracticeClient({ exercise }: { exercise: any }) {
         setIsSuccess(code.includes('print'));
         setIsSubmitting(false);
         setShowResults(true);
+        if (code.includes('print')) setIsCompleted(true);
       }, 500);
       return;
     }
@@ -128,6 +132,10 @@ export function PracticeClient({ exercise }: { exercise: any }) {
     setIsSuccess(allPassed);
     setIsSubmitting(false);
     setShowResults(true);
+    
+    if (allPassed) {
+      setIsCompleted(true);
+    }
 
     // Save submission to database (fire and forget)
     if (exercise?.id) {
@@ -179,6 +187,11 @@ export function PracticeClient({ exercise }: { exercise: any }) {
           }`}>
             {exercise.difficulty.charAt(0).toUpperCase() + exercise.difficulty.slice(1)}
           </Badge>
+          {isCompleted && (
+            <Badge variant="default" className="hidden sm:inline-flex bg-success hover:bg-success/90 text-success-foreground gap-1">
+              <CheckCircle2 className="w-3 h-3" /> Completed
+            </Badge>
+          )}
         </div>
         <div className="flex items-center gap-2 sm:gap-3">
           {parsedHints.length > 0 && (
@@ -224,8 +237,63 @@ export function PracticeClient({ exercise }: { exercise: any }) {
               <TabsContent value="problem" className="flex-1 overflow-y-auto p-6 m-0 outline-none">
                 <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:mt-0">
                   <h2 className="text-2xl font-bold tracking-tight mb-4">{exercise.title}</h2>
-                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                    {exercise.description}
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm, remarkAlerts]}
+                    components={{
+                      div: ({ node, className, children, ...props }: any) => {
+                        if (typeof className === 'string' && className.includes('markdown-alert')) {
+                          const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
+                          
+                          let Icon = Info;
+                          let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
+                          let title = "Note";
+
+                          switch (type) {
+                            case 'tip':
+                              Icon = Lightbulb;
+                              colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
+                              title = "Tip";
+                              break;
+                            case 'warning':
+                              Icon = AlertCircle;
+                              colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
+                              title = "Warning";
+                              break;
+                            case 'caution':
+                              Icon = ShieldAlert;
+                              colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
+                              title = "Caution";
+                              break;
+                            case 'important':
+                              Icon = Shield;
+                              colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
+                              title = "Important";
+                              break;
+                            case 'note':
+                            default:
+                              Icon = Info;
+                              colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
+                              title = "Note";
+                              break;
+                          }
+
+                          return (
+                            <div className={`my-4 rounded-lg border p-3 ${colorClass}`} {...props}>
+                              <div className="flex items-center gap-2 font-semibold mb-1 text-sm">
+                                <Icon className="h-4 w-4" />
+                                <span>{title}</span>
+                              </div>
+                              <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
+                                {children}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return <div className={className} {...props}>{children}</div>;
+                      }
+                    }}
+                  >
+                    {exercise.prompt || exercise.description}
                   </ReactMarkdown>
                 </article>
               </TabsContent>
@@ -300,7 +368,64 @@ export function PracticeClient({ exercise }: { exercise: any }) {
           <TabsContent value="problem" className="flex-1 overflow-y-auto p-4 m-0 outline-none bg-background">
              <article className="prose prose-sm dark:prose-invert">
                 <h2 className="text-xl font-bold tracking-tight mb-4">{exercise.title}</h2>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>{exercise.description}</ReactMarkdown>
+                <ReactMarkdown 
+                  remarkPlugins={[remarkGfm, remarkAlerts]}
+                  components={{
+                    div: ({ node, className, children, ...props }: any) => {
+                      if (typeof className === 'string' && className.includes('markdown-alert')) {
+                        const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
+                        
+                        let Icon = Info;
+                        let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
+                        let title = "Note";
+
+                        switch (type) {
+                          case 'tip':
+                            Icon = Lightbulb;
+                            colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
+                            title = "Tip";
+                            break;
+                          case 'warning':
+                            Icon = AlertCircle;
+                            colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
+                            title = "Warning";
+                            break;
+                          case 'caution':
+                            Icon = ShieldAlert;
+                            colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
+                            title = "Caution";
+                            break;
+                          case 'important':
+                            Icon = Shield;
+                            colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
+                            title = "Important";
+                            break;
+                          case 'note':
+                          default:
+                            Icon = Info;
+                            colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
+                            title = "Note";
+                            break;
+                        }
+
+                        return (
+                          <div className={`my-4 rounded-lg border p-3 ${colorClass}`} {...props}>
+                            <div className="flex items-center gap-2 font-semibold mb-1 text-sm">
+                              <Icon className="h-4 w-4" />
+                              <span>{title}</span>
+                            </div>
+                            <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
+                              {children}
+                            </div>
+                          </div>
+                        );
+                      }
+                      return <div className={className} {...props}>{children}</div>;
+                    }
+                  }}
+                >
+                  {exercise.prompt || exercise.description}
+                </ReactMarkdown>
               </article>
           </TabsContent>
           
@@ -417,11 +542,27 @@ export function PracticeClient({ exercise }: { exercise: any }) {
           </div>
           <DialogFooter className="mt-4">
             {isSuccess ? (
-              <Button className="w-full" onClick={() => { setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
-                Return to Lesson
-              </Button>
+              (() => {
+                const exercises = exercise.topic?.exercises || [];
+                const currentIndex = exercises.findIndex((e: any) => e.slug === exercise.slug);
+                const nextExercise = currentIndex !== -1 && currentIndex < exercises.length - 1 ? exercises[currentIndex + 1] : null;
+
+                if (nextExercise) {
+                  return (
+                    <Button className="w-full sm:w-auto" onClick={() => { setShowResults(false); router.push(`/practice/${nextExercise.slug}`); }}>
+                      Next Exercise
+                    </Button>
+                  );
+                } else {
+                  return (
+                    <Button className="w-full sm:w-auto" onClick={() => { setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
+                      Return to Lesson
+                    </Button>
+                  );
+                }
+              })()
             ) : (
-              <Button className="w-full" variant="outline" onClick={() => setShowResults(false)}>
+              <Button className="w-full sm:w-auto" variant="outline" onClick={() => setShowResults(false)}>
                 Keep Trying
               </Button>
             )}

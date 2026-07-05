@@ -1,3 +1,4 @@
+import { exercises } from "./exercises";
 import { introductionLesson } from "./introduction";
 import { setupLesson } from "./setup";
 import { helloWorldLesson } from "./hello-world";
@@ -20,11 +21,11 @@ export const module1 = {
   description: "Getting Started with Python.",
   order: 1,
   lessons: [
-    introductionLesson,
-    setupLesson,
-    helloWorldLesson,
-    interpreterLesson,
-    syntaxLesson,
-    commentsLesson
+    { ...introductionLesson, exercises: exercises[introductionLesson.slug] },
+    { ...setupLesson, exercises: exercises[setupLesson.slug] },
+    { ...helloWorldLesson, exercises: exercises[helloWorldLesson.slug] },
+    { ...interpreterLesson, exercises: exercises[interpreterLesson.slug] },
+    { ...syntaxLesson, exercises: exercises[syntaxLesson.slug] },
+    { ...commentsLesson, exercises: exercises[commentsLesson.slug] }
   ]
 };
