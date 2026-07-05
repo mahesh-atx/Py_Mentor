@@ -73,188 +73,6 @@ model VerificationToken {
 }
 
 // ============================================================
-// ENGINE 2: CURRICULUM
-// ============================================================
-
-model Roadmap {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String   @unique
-  description String
-  language    String   // "python", "javascript", etc.
-  icon        String?
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  modules Module[]
-}
-
-model Module {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  description String
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  roadmapId   String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  roadmap Roadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
-  topics  Topic[]
-
-  @@unique([roadmapId, slug])
-}
-
-model Topic {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  description String
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  moduleId    String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  module    Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-  lessons   Lesson[]
-  exercises Exercise[]
-  quizzes   Quiz[]
-  projects  Project[]
-
-  @@unique([moduleId, slug])
-}
-
-// ============================================================
-// ENGINE 4: LESSON ENGINE
-// ============================================================
-
-model Lesson {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  content     String   // Markdown or JSON content
-  objectives  String?  // JSON array of learning objectives
-  examples    String?  // JSON array of code examples
-  diagrams    String?  // JSON array of diagram URLs or SVG data
-  order       Int      @default(0)
-  difficulty  String   @default("beginner") // beginner, intermediate, advanced
-  xpReward    Int      @default(50)
-  isPublished Boolean  @default(false)
-  isGenerated Boolean  @default(false) // true if AI-generated
-  topicId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  topic    Topic      @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  progress Progress[]
-
-  @@unique([topicId, slug])
-}
-
-// ============================================================
-// ENGINE 8: PRACTICE
-// ============================================================
-
-model Exercise {
-  id           String   @id @default(cuid())
-  title        String
-  slug         String
-  description  String   // Problem statement (Markdown)
-  starterCode  String?  // Initial code in the editor
-  solutionCode String?  // Reference solution
-  hints        String?  // JSON array of progressive hints
-  testCases    String   // JSON array of { input, expectedOutput }
-  difficulty   String   @default("easy") // easy, medium, hard
-  xpReward     Int      @default(100)
-  timeLimit    Int      @default(10) // seconds
-  order        Int      @default(0)
-  isPublished  Boolean  @default(false)
-  isGenerated  Boolean  @default(false)
-  topicId      String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  topic       Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  submissions Submission[]
-
-  @@unique([topicId, slug])
-}
-
-// ============================================================
-// ENGINE 11: QUIZ
-// ============================================================
-
-model Quiz {
-  id          String   @id @default(cuid())
-  title       String
-  slug        String
-  description String?
-  xpReward    Int      @default(100)
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  isGenerated Boolean  @default(false)
-  topicId     String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  topic       Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  questions   QuizQuestion[]
-  submissions QuizSubmission[]
-
-  @@unique([topicId, slug])
-}
-
-model QuizQuestion {
-  id           String @id @default(cuid())
-  type         String // "mcq", "output_prediction", "debugging", "fill_blank", "coding"
-  question     String
-  options      String? // JSON array for MCQ options
-  correctAnswer String
-  explanation  String?
-  code         String? // Code snippet for output_prediction / debugging
-  difficulty   String @default("medium")
-  order        Int    @default(0)
-  quizId       String
-
-  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
-}
-
-// ============================================================
-// ENGINE 12: PROJECTS
-// ============================================================
-
-model Project {
-  id           String   @id @default(cuid())
-  title        String
-  slug         String
-  description  String
-  requirements String   // JSON array of requirement strings
-  milestones   String?  // JSON array of milestone objects
-  hints        String?  // JSON array of AI guidance hints
-  testCases    String?  // JSON array of test cases
-  difficulty   String   @default("medium")
-  estimatedTime String? // "2 Hours", "4 Hours"
-  xpReward     Int      @default(500)
-  skills       String?  // JSON array of skills e.g. ["Variables", "Functions"]
-  icon         String?
-  order        Int      @default(0)
-  isPublished  Boolean  @default(false)
-  isGenerated  Boolean  @default(false)
-  topicId      String
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  topic       Topic        @relation(fields: [topicId], references: [id], onDelete: Cascade)
-  submissions Submission[]
-
-  @@unique([topicId, slug])
-}
-
-// ============================================================
 // ENGINE 6: SUBMISSIONS
 // ============================================================
 
@@ -272,12 +90,10 @@ model Submission {
   createdAt  DateTime @default(now())
 
   userId     String
-  exerciseId String?
-  projectId  String?
+  exerciseId String?  // Now stores the static exercise ID (slug)
+  projectId  String?  // Now stores the static project ID (slug)
 
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  exercise Exercise? @relation(fields: [exerciseId], references: [id], onDelete: SetNull)
-  project  Project?  @relation(fields: [projectId], references: [id], onDelete: SetNull)
 }
 
 // ============================================================
@@ -294,10 +110,9 @@ model Progress {
   updatedAt   DateTime @updatedAt
 
   userId   String
-  lessonId String
+  lessonId String // Now stores the static lesson ID (slug)
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
-  lesson Lesson @relation(fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
 }
@@ -309,10 +124,9 @@ model QuizSubmission {
   completedAt DateTime @default(now())
 
   userId      String
-  quizId      String
+  quizId      String // Now stores the static quiz ID (slug)
 
   user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quiz        Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
   @@unique([userId, quizId])
 }
@@ -364,7 +178,7 @@ model Note {
   id        String   @id @default(cuid())
   content   String
   module    String?  // Which module this note is related to
-  lessonRef String?  // Optional reference to a lesson ID
+  lessonRef String?  // Optional reference to a static lesson ID
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -376,7 +190,7 @@ model Bookmark {
   id        String   @id @default(cuid())
   title     String
   type      String   // "lesson", "exercise", "quiz", "project"
-  targetId  String   // The ID of the bookmarked item
+  targetId  String   // The ID of the bookmarked static item
   module    String?
   createdAt DateTime @default(now())
 

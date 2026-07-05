@@ -6,101 +6,31 @@
  */
 
 import { db } from "@/lib/db";
+import { allLessons, allTopics } from "../curriculum-data";
 
 export const LessonService = {
   /** Get a lesson by topic and slug */
   async getLessonBySlug(topicId: string, slug: string) {
-    return db.lesson.findUnique({
-      where: { topicId_slug: { topicId, slug } },
-      include: {
-        topic: {
-          include: {
-            module: {
-              include: { roadmap: true },
-            },
-          },
-        },
-      },
-    });
+    const topic = allTopics.find(t => t.id === topicId);
+    if (!topic) return null;
+    const lesson = topic.lessons.find(l => l.slug === slug);
+    if (!lesson) return null;
+    return lesson;
   },
 
   /** Get a lesson by ID */
   async getLessonById(id: string) {
-    return db.lesson.findUnique({
-      where: { id },
-      include: {
-        topic: {
-          include: {
-            module: {
-              include: { roadmap: true },
-            },
-          },
-        },
-      },
-    });
+    const lesson = allLessons.find(l => l.id === id);
+    return lesson || null;
   },
 
   /** Get the next lesson in sequence */
   async getNextLesson(currentLessonId: string) {
-    const current = await db.lesson.findUnique({
-      where: { id: currentLessonId },
-      include: { topic: { include: { module: true } } },
-    });
-    if (!current) return null;
-
-    // Try next lesson in same topic
-    const nextInTopic = await db.lesson.findFirst({
-      where: {
-        topicId: current.topicId,
-        order: { gt: current.order },
-        isPublished: true,
-      },
-      orderBy: { order: "asc" },
-    });
-    if (nextInTopic) return nextInTopic;
-
-    // Try first lesson of next topic in same module
-    const nextTopic = await db.topic.findFirst({
-      where: {
-        moduleId: current.topic.moduleId,
-        order: { gt: current.topic.order },
-        isPublished: true,
-      },
-      orderBy: { order: "asc" },
-      include: {
-        lessons: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-          take: 1,
-        },
-      },
-    });
-    if (nextTopic?.lessons[0]) return nextTopic.lessons[0];
-
-    // Try first lesson of next module
-    const nextModule = await db.module.findFirst({
-      where: {
-        roadmapId: current.topic.module.roadmapId,
-        order: { gt: current.topic.module.order },
-        isPublished: true,
-      },
-      orderBy: { order: "asc" },
-      include: {
-        topics: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-          take: 1,
-          include: {
-            lessons: {
-              where: { isPublished: true },
-              orderBy: { order: "asc" },
-              take: 1,
-            },
-          },
-        },
-      },
-    });
-    return nextModule?.topics[0]?.lessons[0] ?? null;
+    const currentIndex = allLessons.findIndex(l => l.id === currentLessonId);
+    if (currentIndex === -1 || currentIndex === allLessons.length - 1) {
+      return null;
+    }
+    return allLessons[currentIndex + 1];
   },
 
   /** Mark a lesson as completed for a user */

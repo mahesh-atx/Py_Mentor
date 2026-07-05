@@ -71,7 +71,18 @@ export function usePyodide() {
       // Redirect stdin
       pyodide.setStdin({
         stdin: () => {
-          return inputQueue.length > 0 ? inputQueue.shift()! : "";
+          if (inputQueue.length > 0) {
+            const val = inputQueue.shift()!;
+            outputLines.push(val);
+            return val + "\n";
+          }
+          const result = window.prompt("Python input:");
+          if (result === null) {
+            // User clicked cancel
+            throw new Error("KeyboardInterrupt");
+          }
+          outputLines.push(result);
+          return result + "\n";
         },
       });
 

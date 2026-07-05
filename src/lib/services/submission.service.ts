@@ -6,6 +6,7 @@
 
 import { db } from "@/lib/db";
 import { SandboxService } from "./sandbox.service";
+import { allExercises } from "../curriculum-data";
 
 interface TestCase {
   input: string;
@@ -22,10 +23,10 @@ interface TestResult {
 export const SubmissionService = {
   /** Submit code for an exercise, run tests, and save result */
   async submitExercise(userId: string, exerciseId: string, code: string) {
-    const exercise = await db.exercise.findUnique({ where: { id: exerciseId } });
+    const exercise = allExercises.find(e => e.id === exerciseId);
     if (!exercise) throw new Error("Exercise not found");
 
-    const testCases: TestCase[] = JSON.parse(exercise.testCases);
+    const testCases: TestCase[] = typeof exercise.testCases === 'string' ? JSON.parse(exercise.testCases) : exercise.testCases;
     const results: TestResult[] = [];
 
     for (const tc of testCases) {

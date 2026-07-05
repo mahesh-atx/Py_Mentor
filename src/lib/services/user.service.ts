@@ -1,4 +1,5 @@
 import { db } from "../db";
+import { allLessons, allExercises } from "../curriculum-data";
 
 /**
  * UserService
@@ -26,15 +27,16 @@ export const UserService = {
 
     // Sum XP from completed lessons
     const completedLessons = await db.progress.findMany({
-      where: { userId: user.id, status: "completed" },
-      include: { lesson: true }
+      where: { userId: user.id, status: "completed" }
     });
-    const lessonXp = completedLessons.reduce((sum, p) => sum + (p.lesson?.xpReward || 0), 0);
+    const lessonXp = completedLessons.reduce((sum, p) => {
+      const lesson = allLessons.find(l => l.id === p.lessonId);
+      return sum + (lesson?.xpReward || 0);
+    }, 0);
 
-    // Sum XP from successful submissions (first time only usually, but we'll sum max scores per exercise)
+    // Sum XP from successful submissions
     const successfulSubmissions = await db.submission.findMany({
-      where: { userId: user.id, status: "passed", exerciseId: { not: null } },
-      include: { exercise: true }
+      where: { userId: user.id, status: "passed", exerciseId: { not: null } }
     });
     
     // To prevent farming XP from the same exercise, only count unique exercises
@@ -43,7 +45,8 @@ export const UserService = {
     for (const sub of successfulSubmissions) {
       if (sub.exerciseId && !uniqueExercises.has(sub.exerciseId)) {
         uniqueExercises.add(sub.exerciseId);
-        exerciseXp += (sub.exercise?.xpReward || 0);
+        const exercise = allExercises.find(e => e.id === sub.exerciseId);
+        exerciseXp += (exercise?.xpReward || 0);
       }
     }
 

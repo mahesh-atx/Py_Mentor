@@ -5,144 +5,66 @@
  * Every page that displays curriculum data should call this service.
  */
 
-import { db } from "@/lib/db";
+import { staticRoadmap, allModules, allTopics, allExercises, allProjects } from "../curriculum-data";
 
 export const CurriculumService = {
   /** Get all published roadmaps */
   async getRoadmaps() {
-    return db.roadmap.findMany({
-      where: { isPublished: true },
-      orderBy: { order: "asc" },
-      include: {
-        modules: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-          include: {
-            topics: {
-              where: { isPublished: true },
-              orderBy: { order: "asc" },
-            },
-          },
-        },
-      },
-    });
+    return [staticRoadmap];
   },
 
   /** Get all published roadmaps including their exercises for the practice dashboard */
   async getRoadmapsWithExercises() {
-    return db.roadmap.findMany({
-      where: { isPublished: true },
-      orderBy: { order: "asc" },
-      include: {
-        modules: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-          include: {
-            topics: {
-              where: { isPublished: true },
-              orderBy: { order: "asc" },
-              include: {
-                exercises: {
-                  where: { isPublished: true },
-                  orderBy: { order: "asc" }
-                }
-              }
-            },
-          },
-        },
-      },
-    });
+    return [staticRoadmap];
   },
 
   /** Get a single roadmap by slug */
   async getRoadmapBySlug(slug: string) {
-    return db.roadmap.findUnique({
-      where: { slug },
-      include: {
-        modules: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-          include: {
-            topics: {
-              where: { isPublished: true },
-              orderBy: { order: "asc" },
-            },
-          },
-        },
-      },
-    });
+    if (slug === staticRoadmap.slug) {
+      return staticRoadmap;
+    }
+    return null;
   },
 
   /** Get all modules for a roadmap */
   async getModules(roadmapId: string) {
-    return db.module.findMany({
-      where: { roadmapId, isPublished: true },
-      orderBy: { order: "asc" },
-      include: {
-        topics: {
-          where: { isPublished: true },
-          orderBy: { order: "asc" },
-        },
-      },
-    });
+    if (roadmapId === staticRoadmap.id) {
+      return allModules;
+    }
+    return [];
   },
 
   /** Get all topics for a module */
   async getTopics(moduleId: string) {
-    return db.topic.findMany({
-      where: { moduleId, isPublished: true },
-      orderBy: { order: "asc" },
-      include: {
-        lessons: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        exercises: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        quizzes: { where: { isPublished: true }, orderBy: { order: "asc" } },
-      },
-    });
+    const module = allModules.find(m => m.id === moduleId);
+    return module ? module.topics : [];
   },
 
   /** Get a single topic by module and slug */
   async getTopicBySlug(moduleId: string, slug: string) {
-    return db.topic.findUnique({
-      where: { moduleId_slug: { moduleId, slug } },
-      include: {
-        lessons: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        exercises: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        quizzes: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        projects: { where: { isPublished: true }, orderBy: { order: "asc" } },
-      },
-    });
+    const module = allModules.find(m => m.id === moduleId);
+    if (!module) return null;
+    return module.topics.find(t => t.slug === slug) || null;
   },
 
   /** Get a topic globally just by its slug (useful for /learn/[slug] routing) */
   async getTopicBySlugGlobal(slug: string) {
-    return db.topic.findFirst({
-      where: { slug },
-      include: {
-        module: {
-          include: {
-            roadmap: true,
-          }
-        },
-        lessons: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        exercises: { where: { isPublished: true }, orderBy: { order: "asc" } },
-        quizzes: { where: { isPublished: true }, orderBy: { order: "asc" } },
+    const topic = allTopics.find(t => t.slug === slug);
+    if (!topic) return null;
+    
+    // Construct the expected relation format
+    return {
+      ...topic,
+      module: {
+        ...topic.module,
+        roadmap: staticRoadmap
       }
-    });
+    };
   },
 
   /** Get Next and Previous topic for navigation */
   async getNavigation(currentTopicId: string) {
-    // A simplified navigation fetch: get all topics in the curriculum ordered
-    // Then find the current one, and return prev/next.
-    const allRoadmaps = await this.getRoadmaps();
-    
-    // Flatten all topics into a single ordered array
-    const orderedTopics = allRoadmaps.flatMap(roadmap => 
-      roadmap.modules.flatMap(module => 
-        module.topics
-      )
-    );
-
+    const orderedTopics = allTopics;
     const currentIndex = orderedTopics.findIndex(t => t.id === currentTopicId);
     
     let prevTopic = null;
@@ -160,64 +82,54 @@ export const CurriculumService = {
 
   /** Get a single exercise by its slug */
   async getExerciseBySlug(slug: string) {
-    return db.exercise.findFirst({
-      where: { slug },
-      include: {
-        topic: {
-          include: {
-            module: {
-              include: {
-                roadmap: true,
-              }
-            }
-          }
+    const exercise = allExercises.find(e => e.slug === slug);
+    if (!exercise) return null;
+    
+    return {
+      ...exercise,
+      topic: {
+        ...exercise.topic,
+        module: {
+          ...exercise.topic.module,
+          roadmap: staticRoadmap
         }
       }
-    });
+    };
   },
 
   /** Get the very first exercise in the curriculum for redirects */
   async getFirstExercise() {
-    return db.exercise.findFirst({
-      where: { isPublished: true },
-      orderBy: { order: "asc" },
-    });
+    return allExercises[0] || null;
   },
 
   /** Get a single project by its slug */
   async getProjectBySlug(slug: string) {
-    return db.project.findFirst({
-      where: { slug },
-      include: {
-        topic: {
-          include: {
-            module: {
-              include: {
-                roadmap: true,
-              }
-            }
-          }
+    const project = allProjects.find(p => p.slug === slug);
+    if (!project) return null;
+    
+    return {
+      ...project,
+      topic: {
+        ...project.topic,
+        module: {
+          ...project.topic.module,
+          roadmap: staticRoadmap
         }
       }
-    });
+    };
   },
 
   /** Get all published projects */
   async getAllProjects() {
-    return db.project.findMany({
-      where: { isPublished: true },
-      orderBy: { order: "asc" },
-      include: {
-        topic: {
-          include: {
-            module: {
-              include: {
-                roadmap: true,
-              }
-            }
-          }
+    return allProjects.map(project => ({
+      ...project,
+      topic: {
+        ...project.topic,
+        module: {
+          ...project.topic.module,
+          roadmap: staticRoadmap
         }
       }
-    });
+    }));
   }
 };

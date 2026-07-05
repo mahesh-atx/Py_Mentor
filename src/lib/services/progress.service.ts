@@ -6,6 +6,7 @@
  */
 
 import { db } from "@/lib/db";
+import { allLessons, allTopics, allExercises } from "../curriculum-data";
 
 const XP_PER_LEVEL = 500;
 
@@ -70,33 +71,23 @@ export const ProgressService = {
   async getTopicMastery(userId: string) {
     const progress = await db.progress.findMany({
       where: { userId, status: "completed" },
-      include: {
-        lesson: {
-          include: {
-            topic: true,
-          },
-        },
-      },
     });
 
     const topicMap: Record<string, { completed: number; total: number }> = {};
 
     for (const p of progress) {
-      const topicName = p.lesson.topic.title;
+      const staticLesson = allLessons.find(l => l.id === p.lessonId);
+      if (!staticLesson) continue;
+
+      const topicName = staticLesson.topic.title;
       if (!topicMap[topicName]) {
         topicMap[topicName] = { completed: 0, total: 0 };
       }
       topicMap[topicName].completed++;
     }
 
-    // Get total lessons per topic
-    const topics = await db.topic.findMany({
-      include: {
-        lessons: { where: { isPublished: true } },
-      },
-    });
-
-    for (const topic of topics) {
+    // Get total lessons per topic from static topics
+    for (const topic of allTopics) {
       if (!topicMap[topic.title]) {
         topicMap[topic.title] = { completed: 0, total: topic.lessons.length };
       } else {
@@ -141,7 +132,7 @@ export const ProgressService = {
       where: { userId, exerciseId, status: "passed" }
     });
 
-    const exercise = await db.exercise.findUnique({ where: { id: exerciseId } });
+    const exercise = allExercises.find(e => e.id === exerciseId);
     const xpReward = exercise?.xpReward || 100;
     
     // Score is the XP reward if they passed and haven't passed before
