@@ -16,7 +16,7 @@ export default async function AppLayout({
     <SidebarProvider>
       <AppSidebar roadmaps={roadmaps} />
       <SidebarInset className="flex flex-col min-w-0 flex-1">
-        <TopNav />
+        <TopNav roadmaps={roadmaps} />
         <main className="flex-1 bg-background p-6">
           {children}
         </main>

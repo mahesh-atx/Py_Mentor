@@ -27,11 +27,20 @@ async function loadPyodideOnce() {
   return globalPyodidePromise;
 }
 
-export function usePyodide() {
+/**
+ * Hook to load and interact with Pyodide.
+ * @param enabled - When false (default true), Pyodide will NOT be loaded.
+ *                  Pass `false` to defer the heavy ~15 MB download until
+ *                  the user actually opens the editor.
+ */
+export function usePyodide(enabled: boolean = true) {
   const [isPyodideLoading, setIsPyodideLoading] = useState(true);
   const pyodideRef = useRef<any>(null);
 
   useEffect(() => {
+    // Skip loading entirely when not enabled
+    if (!enabled) return;
+
     let cancelled = false;
 
     loadPyodideOnce()
@@ -49,7 +58,7 @@ export function usePyodide() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [enabled]);
 
   const runPython = useCallback(
     async (code: string, inputString: string = "") => {

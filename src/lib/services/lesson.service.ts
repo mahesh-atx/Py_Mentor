@@ -1,31 +1,50 @@
-/**
- * LessonService
- * 
- * Responsible for individual lesson operations: fetching content,
- * marking completion, and navigating between lessons.
- */
-
-import { db } from "@/lib/db";
-import { allLessons, allTopics } from "../curriculum-data";
+import { db } from "../db/prisma";
+import { unstable_cache } from "next/cache";
 
 export const LessonService = {
   /** Get a lesson by topic and slug */
-  async getLessonBySlug(topicId: string, slug: string) {
-    const topic = allTopics.find(t => t.id === topicId);
-    if (!topic) return null;
-    const lesson = topic.lessons.find(l => l.slug === slug);
-    if (!lesson) return null;
-    return lesson;
-  },
+  getLessonBySlug: unstable_cache(
+    async (topicId: string, slug: string) => {
+      return db.lesson.findFirst({
+        where: { topicId, slug, isPublished: true },
+        include: {
+          topic: {
+            include: { module: { include: { roadmap: true } } }
+          }
+        }
+      });
+    },
+    ["curriculum-lesson"],
+    { revalidate: 3600, tags: ["curriculum"] }
+  ),
 
   /** Get a lesson by ID */
-  async getLessonById(id: string) {
-    const lesson = allLessons.find(l => l.id === id);
-    return lesson || null;
-  },
+  getLessonById: unstable_cache(
+    async (id: string) => {
+      return db.lesson.findUnique({
+        where: { id },
+        include: {
+          topic: {
+            include: { module: { include: { roadmap: true } } }
+          }
+        }
+      });
+    },
+    ["curriculum-lesson-by-id"],
+    { revalidate: 3600, tags: ["curriculum"] }
+  ),
 
   /** Get the next lesson in sequence */
   async getNextLesson(currentLessonId: string) {
+    const allLessons = await db.lesson.findMany({
+      where: { isPublished: true },
+      orderBy: [
+        { topic: { module: { roadmap: { order: "asc" } } } },
+        { topic: { module: { order: "asc" } } },
+        { topic: { order: "asc" } },
+        { order: "asc" }
+      ]
+    });
     const currentIndex = allLessons.findIndex(l => l.id === currentLessonId);
     if (currentIndex === -1 || currentIndex === allLessons.length - 1) {
       return null;

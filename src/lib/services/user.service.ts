@@ -1,5 +1,4 @@
-import { db } from "../db";
-import { allLessons, allExercises } from "../curriculum-data";
+import { db } from "../db/prisma";
 
 /**
  * UserService
@@ -25,28 +24,27 @@ export const UserService = {
   async getUserStats() {
     const user = await this.getLocalUser();
 
-    // Sum XP from completed lessons
     const completedLessons = await db.progress.findMany({
       where: { userId: user.id, status: "completed" }
     });
-    const lessonXp = completedLessons.reduce((sum, p) => {
-      const lesson = allLessons.find(l => l.id === p.lessonId);
-      return sum + (lesson?.xpReward || 0);
-    }, 0);
+    
+    const lessonSlugs = completedLessons.map(p => p.lessonId);
+    const lessons = await db.lesson.findMany({
+      where: { slug: { in: lessonSlugs } },
+      select: { xpReward: true }
+    });
+    const lessonXp = lessons.reduce((sum, l) => sum + (l.xpReward || 50), 0);
 
-    // Sum XP from successful submissions
     const successfulSubmissions = await db.submission.findMany({
       where: { userId: user.id, status: "passed", exerciseId: { not: null } }
     });
     
-    // To prevent farming XP from the same exercise, only count unique exercises
     const uniqueExercises = new Set<string>();
     let exerciseXp = 0;
     for (const sub of successfulSubmissions) {
       if (sub.exerciseId && !uniqueExercises.has(sub.exerciseId)) {
         uniqueExercises.add(sub.exerciseId);
-        const exercise = allExercises.find(e => e.id === sub.exerciseId);
-        exerciseXp += (exercise?.xpReward || 0);
+        exerciseXp += sub.score || 0;
       }
     }
 

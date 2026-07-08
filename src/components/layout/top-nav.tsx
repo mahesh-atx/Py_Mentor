@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { usePathname } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,29 +26,78 @@ import {
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
 
-export function TopNav() {
+export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
+  const { state, isMobile } = useSidebar();
   
-  // Basic dynamic breadcrumb generation
-  const segments = pathname.split('/').filter(Boolean);
-  const currentPathName = segments.length > 0 ? segments[segments.length - 1] : "Dashboard";
-  const titleCasePath = currentPathName.charAt(0).toUpperCase() + currentPathName.slice(1);
+  // Find matching topic context
+  let breadcrumbs: { title: string; href?: string }[] = [];
+  
+  if (pathname.startsWith("/learn/")) {
+    const slug = pathname.split('/').pop();
+    let found = false;
+    
+    for (const roadmap of roadmaps) {
+      if (found) break;
+      for (const mod of roadmap.modules || []) {
+        if (found) break;
+        for (const topic of mod.topics || []) {
+          if (topic.slug === slug) {
+            breadcrumbs = [
+              { title: roadmap.title },
+              { title: mod.title },
+              { title: topic.title, href: `/learn/${topic.slug}` }
+            ];
+            found = true;
+            break;
+          }
+        }
+      }
+    }
+    
+    if (!found) {
+       breadcrumbs = [{ title: "Learn" }, { title: slug || "Topic" }];
+    }
+  } else {
+    // Basic dynamic breadcrumb generation
+    const segments = pathname.split('/').filter(Boolean);
+    const currentPathName = segments.length > 0 ? segments[segments.length - 1] : "Dashboard";
+    const titleCasePath = currentPathName.charAt(0).toUpperCase() + currentPathName.slice(1);
+    if (currentPathName !== "Dashboard") {
+      breadcrumbs = [{ title: titleCasePath }];
+    }
+  }
 
   return (
     <>
       <header className="sticky top-0 z-50 flex h-14 shrink-0 items-center gap-2 border-b bg-background/95 backdrop-blur px-4">
-        <SidebarTrigger className="-ml-1" />
-        <div className="mr-2 h-4 w-px bg-border" />
+        {(state === "collapsed" || isMobile) && (
+          <>
+            <SidebarTrigger className="-ml-1" />
+            <div className="mr-2 h-4 w-px bg-border" />
+          </>
+        )}
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
               <BreadcrumbLink href="/">PyMentor</BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator className="hidden md:block" />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{titleCasePath}</BreadcrumbPage>
-            </BreadcrumbItem>
+            
+            {breadcrumbs.map((crumb, index) => (
+              <React.Fragment key={index}>
+                <BreadcrumbSeparator className="hidden md:block" />
+                <BreadcrumbItem>
+                  {crumb.href && index < breadcrumbs.length - 1 ? (
+                    <BreadcrumbLink href={crumb.href} className="hidden md:block">{crumb.title}</BreadcrumbLink>
+                  ) : (
+                    <BreadcrumbPage className={index < breadcrumbs.length - 1 ? "hidden md:block" : ""}>
+                      {crumb.title}
+                    </BreadcrumbPage>
+                  )}
+                </BreadcrumbItem>
+              </React.Fragment>
+            ))}
           </BreadcrumbList>
         </Breadcrumb>
         

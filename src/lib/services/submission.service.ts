@@ -1,12 +1,5 @@
-/**
- * SubmissionService
- * 
- * Handles code submission, test execution, and result storage.
- */
-
-import { db } from "@/lib/db";
+import { db } from "../db/prisma";
 import { SandboxService } from "./sandbox.service";
-import { allExercises } from "../curriculum-data";
 
 interface TestCase {
   input: string;
@@ -22,11 +15,11 @@ interface TestResult {
 
 export const SubmissionService = {
   /** Submit code for an exercise, run tests, and save result */
-  async submitExercise(userId: string, exerciseId: string, code: string) {
-    const exercise = allExercises.find(e => e.id === exerciseId);
+  async submitExercise(userId: string, exerciseSlug: string, code: string) {
+    const exercise = await db.exercise.findFirst({ where: { slug: exerciseSlug } });
     if (!exercise) throw new Error("Exercise not found");
 
-    const testCases: TestCase[] = typeof exercise.testCases === 'string' ? JSON.parse(exercise.testCases) : exercise.testCases;
+    const testCases: TestCase[] = typeof exercise.testCases === 'string' ? JSON.parse(exercise.testCases as string) : exercise.testCases as any;
     const results: TestResult[] = [];
 
     for (const tc of testCases) {
@@ -49,7 +42,7 @@ export const SubmissionService = {
     const submission = await db.submission.create({
       data: {
         userId,
-        exerciseId,
+        exerciseId: exerciseSlug,
         code,
         status,
         score,
@@ -62,9 +55,9 @@ export const SubmissionService = {
   },
 
   /** Get submission history for a user and exercise */
-  async getHistory(userId: string, exerciseId: string) {
+  async getHistory(userId: string, exerciseSlug: string) {
     return db.submission.findMany({
-      where: { userId, exerciseId },
+      where: { userId, exerciseId: exerciseSlug },
       orderBy: { createdAt: "desc" },
       take: 10,
     });

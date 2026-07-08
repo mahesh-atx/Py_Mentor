@@ -1,12 +1,22 @@
-import { db } from "../db";
-import { allQuizzes } from "../curriculum-data";
+import { db } from "../db/prisma";
+import { unstable_cache } from "next/cache";
 
 export const QuizService = {
-  async getQuizBySlug(slug: string) {
-    const quiz = allQuizzes.find(q => q.slug === slug);
-    if (!quiz) return null;
-    return quiz;
-  },
+  getQuizBySlug: unstable_cache(
+    async (slug: string) => {
+      return db.quiz.findFirst({
+        where: { slug, isPublished: true },
+        include: {
+          questions: { orderBy: { order: "asc" } },
+          topic: {
+            include: { module: { include: { roadmap: true } } }
+          }
+        }
+      });
+    },
+    ["curriculum-quiz"],
+    { revalidate: 3600, tags: ["curriculum"] }
+  ),
 
   async saveQuizSubmission({
     userId,
@@ -19,7 +29,6 @@ export const QuizService = {
     score: number;
     total: number;
   }) {
-    // 1. Save or update the quiz submission
     const submission = await db.quizSubmission.upsert({
       where: {
         userId_quizId: {
@@ -40,11 +49,9 @@ export const QuizService = {
       }
     });
 
-    // 2. Fetch the quiz from static data to determine XP reward
-    const quiz = allQuizzes.find(q => q.id === quizId);
+    const quiz = await db.quiz.findFirst({ where: { slug: quizId } });
     const maxReward = quiz?.xpReward || 100;
 
-    // 3. Award XP based on percentage correct
     const percentage = score / total;
     const earnedXp = Math.floor(maxReward * percentage);
 

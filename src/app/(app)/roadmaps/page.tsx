@@ -14,13 +14,13 @@ export default async function RoadmapPage() {
   }
 
   // Transform database models into UI models
-  const roadmapsData: RoadmapData[] = roadmaps.map((r) => {
+  const roadmapsData: RoadmapData[] = roadmaps.map((r: any) => {
     return {
       id: r.id,
       title: r.title,
       description: r.description,
       status: "in-progress", // Mock status
-      modules: r.modules.map((m) => ({
+      modules: r.modules.map((m: any) => ({
         id: m.id,
         title: m.title,
         description: m.description,

@@ -1,7 +1,6 @@
-import { db } from "@/lib/db";
+import { db } from "@/lib/db/prisma";
 import { redirect } from "next/navigation";
 import { UserService } from "@/lib/services/user.service";
-import { allExercises } from "@/lib/curriculum-data";
 
 export default async function DailyChallengePage() {
   const user = await UserService.getLocalUser();
@@ -14,9 +13,14 @@ export default async function DailyChallengePage() {
     }
   });
   
-  const passedExerciseIds = new Set(userSubmissions.map(s => s.exerciseId));
+  const passedExerciseSlugs = new Set(userSubmissions.map(s => s.exerciseId));
   
-  const uncompletedExercises = allExercises.filter(e => !passedExerciseIds.has(e.id));
+  const allExercises = await db.exercise.findMany({
+    where: { isPublished: true },
+    select: { slug: true }
+  });
+
+  const uncompletedExercises = allExercises.filter(e => !passedExerciseSlugs.has(e.slug));
 
   if (uncompletedExercises.length === 0) {
     if (allExercises.length === 0) {

@@ -17,7 +17,7 @@ export default async function QuizSlugPage({ params }: { params: Promise<{ slug:
 
   return (
     <QuizClient 
-      quiz={quiz} 
+      quiz={quiz as any} 
       nextTopicSlug={nextTopic?.slug || null} 
     />
   );

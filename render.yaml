@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: pymentor
+    env: node
+    buildCommand: npm install && npx prisma generate && npm run build
+    startCommand: npm run start
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: AUTH_SECRET
+        sync: false
+      - key: OPENROUTER_API_KEY
+        sync: false
+      - key: DEFAULT_AI_PROVIDER
+        value: nvidia
+      - key: DEFAULT_AI_MODEL
+        value: openai/gpt-oss-120b

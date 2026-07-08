@@ -1,12 +1,4 @@
-/**
- * ProgressService
- * 
- * Tracks lesson completion, quiz scores, coding time,
- * XP, levels, streaks, and weak/strong topic analysis.
- */
-
-import { db } from "@/lib/db";
-import { allLessons, allTopics, allExercises } from "../curriculum-data";
+import { db } from "../db/prisma";
 
 const XP_PER_LEVEL = 500;
 
@@ -73,25 +65,22 @@ export const ProgressService = {
       where: { userId, status: "completed" },
     });
 
+    const topics = await db.topic.findMany({
+      where: { isPublished: true },
+      include: { lessons: { where: { isPublished: true }, select: { slug: true } } }
+    });
+
     const topicMap: Record<string, { completed: number; total: number }> = {};
-
-    for (const p of progress) {
-      const staticLesson = allLessons.find(l => l.id === p.lessonId);
-      if (!staticLesson) continue;
-
-      const topicName = staticLesson.topic.title;
-      if (!topicMap[topicName]) {
-        topicMap[topicName] = { completed: 0, total: 0 };
-      }
-      topicMap[topicName].completed++;
+    for (const t of topics) {
+      topicMap[t.title] = { completed: 0, total: t.lessons.length };
     }
 
-    // Get total lessons per topic from static topics
-    for (const topic of allTopics) {
-      if (!topicMap[topic.title]) {
-        topicMap[topic.title] = { completed: 0, total: topic.lessons.length };
-      } else {
-        topicMap[topic.title].total = topic.lessons.length;
+    for (const p of progress) {
+      for (const t of topics) {
+        if (t.lessons.some(l => l.slug === p.lessonId)) {
+          topicMap[t.title].completed++;
+          break;
+        }
       }
     }
 
@@ -127,15 +116,13 @@ export const ProgressService = {
   }) {
     await this.recordStreak(userId);
     
-    // Check if they already passed it to prevent farming XP on the exact same exercise.
     const existingSuccess = await db.submission.findFirst({
       where: { userId, exerciseId, status: "passed" }
     });
 
-    const exercise = allExercises.find(e => e.id === exerciseId);
+    const exercise = await db.exercise.findFirst({ where: { slug: exerciseId } });
     const xpReward = exercise?.xpReward || 100;
     
-    // Score is the XP reward if they passed and haven't passed before
     const score = (status === "passed" && !existingSuccess) ? xpReward : 0;
 
     return db.submission.create({

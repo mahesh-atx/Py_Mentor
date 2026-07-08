@@ -21,7 +21,7 @@ export function FloatingEditor() {
   const [code, setCode] = useState(DEFAULT_CODE);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
-  const { isPyodideLoading, runPython } = usePyodide();
+  const { isPyodideLoading, runPython } = usePyodide(isOpen);
 
   const runCode = async () => {
     setIsRunning(true);

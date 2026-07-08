@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // ============================================================
@@ -240,4 +240,148 @@ model UserMemory {
   userId String
 
   @@unique([userId, key])
+}
+
+// ============================================================
+// ENGINE 20: CURRICULUM
+// ============================================================
+
+model Roadmap {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  modules Module[]
+}
+
+model Module {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  roadmapId String
+  roadmap   Roadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  topics    Topic[]
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  moduleId String
+  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
+
+  lessons   Lesson[]
+  exercises Exercise[]
+  quizzes   Quiz[]
+  projects  Project[]
+}
+
+model Lesson {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  content     String   // Markdown
+  objectives  Json     // Array of strings
+  duration    Int      // Minutes
+  xpReward    Int      @default(50)
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, slug])
+}
+
+model Exercise {
+  id             String   @id @default(cuid())
+  title          String
+  slug           String
+  description    String   // Markdown
+  starterCode    String
+  solution       String
+  testCases      Json     // Array of test case objects
+  hints          Json     // Array of strings
+  difficulty     String   // "beginner", "intermediate", "advanced", "expert"
+  xpReward       Int      @default(20)
+  order          Int      @default(0)
+  isPublished    Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, slug])
+}
+
+model Quiz {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String
+  description String
+  xpReward    Int      @default(100)
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  questions QuizQuestion[]
+
+  @@unique([topicId, slug])
+}
+
+model QuizQuestion {
+  id            String   @id @default(cuid())
+  question      String
+  options       Json     // Array of strings
+  correctOption Int      // Index
+  explanation   String
+  order         Int      @default(0)
+
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id           String   @id @default(cuid())
+  title        String
+  slug         String
+  description  String
+  requirements Json     // Array of strings
+  milestones   Json     // Array of objects
+  starterCode  String?
+  solution     String?
+  difficulty   String
+  order        Int      @default(0)
+  isPublished  Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  topicId String
+  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+
+  @@unique([topicId, slug])
 }

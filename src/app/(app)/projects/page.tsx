@@ -43,7 +43,7 @@ export default async function ProjectsPage() {
           
           {/* Project List */}
           <div className="flex flex-col gap-3">
-            {dbProjects.map((project) => {
+            {dbProjects.map((project: any) => {
               let parsedSkills: string[] = [];
               try {
                 if (project.skills) parsedSkills = JSON.parse(project.skills);

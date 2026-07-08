@@ -16,8 +16,8 @@ export default async function DashboardPage() {
   }
 
   // Flatten topics with module references
-  const allTopics = firstRoadmap.modules.flatMap(module => 
-    module.topics.map(topic => ({ ...topic, module }))
+  const allTopics = firstRoadmap.modules.flatMap((module: any) => 
+    module.topics.map((topic: any) => ({ ...topic, module }))
   );
 
   // Get user stats

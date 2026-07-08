@@ -4,7 +4,7 @@ import { Dumbbell, TerminalSquare } from "lucide-react";
 
 export default async function PracticeDashboard() {
   const roadmaps = await CurriculumService.getRoadmapsWithExercises();
-  const modules = roadmaps.flatMap(r => r.modules);
+  const modules = roadmaps.flatMap((r: any) => r.modules);
 
 
 
@@ -27,7 +27,7 @@ export default async function PracticeDashboard() {
 
       <PracticeListClient modules={modules} />
 
-      {modules.every(m => !m.topics.some(t => t.exercises.length > 0)) && (
+      {modules.every((m: any) => !m.topics.some((t: any) => t.exercises.length > 0)) && (
         <div className="text-center py-24 border border-dashed border-border/60 rounded-2xl bg-muted/20 backdrop-blur-sm">
           <TerminalSquare className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
           <h3 className="text-xl font-medium text-foreground mb-2">No exercises available yet</h3>

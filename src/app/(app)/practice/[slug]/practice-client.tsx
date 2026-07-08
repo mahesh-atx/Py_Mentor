@@ -41,7 +41,7 @@ export function PracticeClient({ exercise, initialIsCompleted = false }: { exerc
   let parsedHints: string[] = [];
   try {
     if (exercise.hints) {
-      parsedHints = JSON.parse(exercise.hints);
+      parsedHints = typeof exercise.hints === "string" ? JSON.parse(exercise.hints) : exercise.hints;
     }
   } catch (e) {
     console.error("Failed to parse hints", e);
@@ -51,7 +51,7 @@ export function PracticeClient({ exercise, initialIsCompleted = false }: { exerc
   let testCases: any[] = [];
   try {
     if (exercise.testCases) {
-      testCases = JSON.parse(exercise.testCases);
+      testCases = typeof exercise.testCases === "string" ? JSON.parse(exercise.testCases) : exercise.testCases;
     }
   } catch (e) {
     console.error("Failed to parse test cases", e);
