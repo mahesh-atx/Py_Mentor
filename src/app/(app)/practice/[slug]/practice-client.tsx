@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Editor } from "@monaco-editor/react";
 import { Play, CheckCircle2, ChevronLeft, Lightbulb, Terminal as TerminalIcon, Send, AlertCircle, XCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -14,14 +14,39 @@ import remarkGfm from "remark-gfm";
 import { remarkAlerts } from "@/lib/remark-alerts";
 import { Shield, ShieldAlert, Info } from "lucide-react";
 import { usePyodide } from "@/lib/hooks/usePyodide";
+import {
+  MentorContextProvider,
+  useMentorContextUpdater,
+} from "@/components/mentor-context";
 
 export function PracticeClient({ exercise, initialIsCompleted = false }: { exercise: any, initialIsCompleted?: boolean }) {
+  // Provider lives here so the mentor (rendered at the app layout level) can
+  // read the current exercise slug and the learner's live editor code.
+  return (
+    <MentorContextProvider
+      exerciseSlug={exercise?.slug}
+      topicSlug={exercise?.topic?.slug}
+      pageLabel={exercise?.title ? `Practice: ${exercise.title}` : "Practice"}
+    >
+      <PracticeClientInner exercise={exercise} initialIsCompleted={initialIsCompleted} />
+    </MentorContextProvider>
+  );
+}
+
+function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercise: any, initialIsCompleted?: boolean }) {
   const router = useRouter();
   const [code, setCode] = useState(exercise.starterCode || "");
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { isPyodideLoading, runPython } = usePyodide();
+
+  // Keep the mentor context's `code` in sync with the editor so "debug my code"
+  // includes exactly what the learner is looking at.
+  const pushCodeToMentor = useMentorContextUpdater();
+  useEffect(() => {
+    pushCodeToMentor({ code });
+  }, [code, pushCodeToMentor]);
   
   const [showHint, setShowHint] = useState(false);
   const [showResults, setShowResults] = useState(false);

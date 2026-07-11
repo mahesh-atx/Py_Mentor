@@ -19,6 +19,7 @@ import { remarkAlerts } from "@/lib/remark-alerts";
 import { Info, AlertTriangle, Lightbulb, ShieldAlert, Shield } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
 import { usePyodide } from "@/lib/hooks/usePyodide";
+import { MentorContextProvider } from "@/components/mentor-context";
 
 export interface NavigationTopic {
   id: string;
@@ -567,7 +568,13 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
     </div>
   );
 
+  const mentorContextBase = {
+    topicSlug: topic?.slug,
+    pageLabel: topic?.title ? `Lesson: ${topic.title}` : "Lesson",
+  };
+
   return (
+    <MentorContextProvider {...mentorContextBase}>
     <div className="flex h-full overflow-hidden relative w-full">
       
       {/* Desktop Split View */}
@@ -635,5 +642,6 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
       </div>
 
     </div>
+    </MentorContextProvider>
   );
 }

@@ -59,42 +59,41 @@ const bottomItems = [
   { title: "Settings", url: "#", icon: Settings, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
 ];
 
-function CollapsiblePhase({ roadmap, pathname }: { roadmap: any; pathname: string }) {
-  const isActive = useMemo(() => {
-    if (!pathname.startsWith("/learn")) return false;
-    for (const mod of roadmap.modules || []) {
-      for (const topic of mod.topics || []) {
-        if (pathname.includes(`/learn/${topic.slug}`)) return true;
-      }
-    }
-    return false;
-  }, [roadmap, pathname]);
-
-  const [isOpen, setIsOpen] = useState(isActive);
+function CollapsibleModule({ mod, pathname }: { mod: any; pathname: string }) {
+  const isModActive = mod.topics?.some((t: any) => pathname.includes(`/learn/${t.slug}`)) || false;
+  // Modules start collapsed by default
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <SidebarMenuSubItem>
-      <SidebarMenuSubButton
+      <SidebarMenuSubButton 
         onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
+        isActive={isModActive && !isOpen} 
         className="justify-between cursor-pointer w-full"
       >
-        <span className="truncate font-medium">{roadmap.title}</span>
+        <span className="truncate text-sm font-medium text-foreground/90 hover:text-primary transition-all duration-300">{mod.title}</span>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </SidebarMenuSubButton>
       {isOpen && (
-        <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-3">
-          {roadmap.modules?.map((mod: any) => {
-            const firstTopic = mod.topics?.[0];
-            const href = firstTopic ? `/learn/${firstTopic.slug}` : "#";
-            const isModActive = mod.topics?.some((t: any) => pathname.includes(`/learn/${t.slug}`)) || false;
-            
+        <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-2">
+          {mod.topics?.map((topic: any) => {
+            const isTopicActive = pathname.includes(`/learn/${topic.slug}`);
             return (
-              <SidebarMenuSubItem key={mod.id}>
-                <SidebarMenuSubButton 
-                  isActive={isModActive} 
+              <SidebarMenuSubItem key={topic.id}>
+                <SidebarMenuSubButton
+                  isActive={isTopicActive}
+                  className={cn(
+                    "py-1.5 h-auto",
+                    isTopicActive ? "bg-primary/10 border-l-2 border-primary rounded-none" : ""
+                  )}
                   render={
-                    <Link href={href} className="flex items-center gap-2 w-full text-xs py-1 group/module">
-                      <span className="truncate text-muted-foreground group-hover/module:text-green-400 group-hover/module:drop-shadow-[0_0_5px_rgba(74,222,128,0.5)] transition-all duration-300">{mod.title}</span>
+                    <Link href={`/learn/${topic.slug}`} className="flex items-center gap-2 w-full group/topic">
+                      <span className={cn(
+                        "truncate transition-all duration-300 text-sm font-normal",
+                        isTopicActive ? "text-primary pl-2" : "text-muted-foreground group-hover/topic:text-foreground pl-2"
+                      )}>
+                        {topic.title}
+                      </span>
                     </Link>
                   }
                 />
@@ -104,6 +103,21 @@ function CollapsiblePhase({ roadmap, pathname }: { roadmap: any; pathname: strin
         </SidebarMenuSub>
       )}
     </SidebarMenuSubItem>
+  );
+}
+
+function SidebarPhase({ roadmap, pathname }: { roadmap: any; pathname: string }) {
+  return (
+    <div className="mb-4 last:mb-0">
+      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2 mt-4 px-2">
+        {roadmap.title}
+      </div>
+      <SidebarMenuSub className="mr-0 pr-0 border-none ml-0 space-y-1">
+        {roadmap.modules?.map((mod: any) => (
+          <CollapsibleModule key={mod.id} mod={mod} pathname={pathname} />
+        ))}
+      </SidebarMenuSub>
+    </div>
   );
 }
 
@@ -131,7 +145,7 @@ function LearnAccordion({ roadmaps, pathname }: { roadmaps?: any[]; pathname: st
       {isOpen && state === "expanded" && (
         <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-3 group-data-[collapsible=icon]:hidden">
           {roadmaps?.map(roadmap => (
-            <CollapsiblePhase key={roadmap.id} roadmap={roadmap} pathname={pathname} />
+            <SidebarPhase key={roadmap.id} roadmap={roadmap} pathname={pathname} />
           ))}
         </SidebarMenuSub>
       )}

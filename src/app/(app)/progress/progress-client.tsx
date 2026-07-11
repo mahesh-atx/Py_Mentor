@@ -20,21 +20,14 @@ interface ProgressClientProps {
     currentStreak: number;
     xpInCurrentLevel: number;
     xpForNextLevel: number;
+    codingTime: string;
+    activityData: { day: string; hours: number }[];
   };
   topicMastery: { subject: string; mastery: number }[];
   achievements: any[];
 }
 
-// Mocked activity for now
-const activityData = [
-  { day: "Mon", hours: 1.5 },
-  { day: "Tue", hours: 2.0 },
-  { day: "Wed", hours: 0.5 },
-  { day: "Thu", hours: 3.0 },
-  { day: "Fri", hours: 1.0 },
-  { day: "Sat", hours: 4.5 },
-  { day: "Sun", hours: 2.5 },
-];
+
 
 export function ProgressClient({ stats, topicMastery, achievements }: ProgressClientProps) {
   return (
@@ -87,7 +80,7 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
               <span className="text-sm font-medium text-muted-foreground">Coding Time</span>
               <Clock className="h-4 w-4 text-primary" />
             </div>
-            <div className="text-3xl font-bold">Mocked</div>
+            <div className="text-3xl font-bold">{stats.codingTime}</div>
           </CardContent>
         </Card>
         
@@ -116,7 +109,7 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
           <CardContent>
             <div className="h-[250px] w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={activityData}>
+                <BarChart data={stats.activityData}>
                   <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 12, fill: "#888888" }} />
                   <YAxis hide />
                   <RechartsTooltip 

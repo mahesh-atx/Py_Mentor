@@ -1,21 +1,19 @@
 import "dotenv/config";
 import { db as prisma } from "../src/lib/db/prisma";
-import { module1 } from "./notes/module-01";
-import { module2 } from "./notes/module-02";
-import { module3 } from "./notes/module-03";
-import { module4 } from "./notes/module-04";
-import { module5 } from "./notes/module-05";
-import { module6 } from "./notes/module-06";
-import { module7 } from "./notes/module-07";
-import { module8 } from "./notes/module-08";
-import { module9 } from "./notes/module-09";
-import { module10 } from "./notes/module-10";
-import { module11 } from "./notes/module-11";
-import { module12 } from "./notes/module-12";
-import { module13 } from "./notes/module-13";
-import { module14 } from "./notes/module-14";
-import { module15 } from "./notes/module-15";
-import { module16 } from "./notes/module-16";
+import { gettingStartedModule } from "./notes/1.1 Getting Started";
+import { variablesDataTypesModule } from "./notes/1.2 Variables & Data Types";
+import { operatorsModule } from "./notes/1.3 Operators";
+import { controlFlowModule } from "./notes/1.4 Control Flow";
+import { loopsModule } from "./notes/1.5 Loops";
+import { dictionariesModule } from "./notes/2.1 Data Structures/Dictionaries";
+import { listsModule } from "./notes/2.1 Data Structures/Lists";
+import { tuplesSetsModule } from "./notes/2.1 Data Structures/Tuples & Sets";
+import { functionsModule } from "./notes/2.2 Functions";
+import { stringManipulationModule } from "./notes/2.3 String Manipulation";
+import { oopFundamentalsModule } from "./notes/3.1 OOP Fundamentals";
+import { oopPillarsModule } from "./notes/3.2 OOP Pillars";
+import { fileHandlingModule } from "./notes/2.4 File Handling";
+import { errorHandlingModule } from "./notes/2.5 Error Handling";
 
 // ============================================================
 // PHASE DEFINITIONS — Grouping modules into progressive roadmaps
@@ -26,40 +24,51 @@ const phases = [
     title: "Phase 1: Python Fundamentals",
     description: "Learn to think in Python. Set up your environment, understand syntax, variables, operators, and control flow.",
     order: 1,
-    modules: [module1, module2, module3, module4],
+    modules: [
+      gettingStartedModule,
+      variablesDataTypesModule,
+      operatorsModule,
+      controlFlowModule,
+      loopsModule,
+    ],
   },
   {
     slug: "phase-2",
     title: "Phase 2: Working with Data",
     description: "Master Python's core data types and built-in tools — strings, lists, tuples, sets, dictionaries, and essential built-in functions.",
     order: 2,
-    modules: [module5, module6, module7, module8, module9, module10],
+    modules: [
+      listsModule,
+      tuplesSetsModule,
+      dictionariesModule,
+      functionsModule,
+      stringManipulationModule,
+      fileHandlingModule,
+      errorHandlingModule,
+    ],
   },
   {
     slug: "phase-3",
-    title: "Phase 3: Functions & Functional Programming",
-    description: "Write reusable, elegant code with functions, closures, decorators, and functional programming patterns.",
-    order: 3,
-    modules: [module11, module12, module13],
-  },
-  {
-    slug: "phase-4",
-    title: "Phase 4: Object-Oriented Programming",
+    title: "Phase 3: Object-Oriented Programming",
     description: "Design and architect with classes, objects, inheritance, polymorphism, abstraction, and magic methods.",
-    order: 4,
-    modules: [module14, module15],
-  },
-  {
-    slug: "phase-5",
-    title: "Phase 5: Advanced Python",
-    description: "Write production-quality Python with type hints, annotations, and modern typing patterns.",
-    order: 5,
-    modules: [module16],
-  },
+    order: 3,
+    modules: [
+      oopFundamentalsModule,
+      oopPillarsModule,
+    ],
+  }
 ];
 
 async function main() {
   console.log("🌱 Seeding database...");
+
+  // Clear existing curriculum data to start fresh
+  await prisma.roadmap.deleteMany();
+  await prisma.module.deleteMany();
+  await prisma.topic.deleteMany();
+  await prisma.lesson.deleteMany();
+  await prisma.exercise.deleteMany();
+  await prisma.achievement.deleteMany();
 
   // ============================================================
   // SEED ROADMAPS & MODULES
@@ -88,6 +97,7 @@ async function main() {
       const m = phase.modules[mIndex];
       // Module order is relative within the phase (1-based)
       const moduleOrder = mIndex + 1;
+      console.log(`  -> Seeding module: ${m.title}`);
 
       const moduleId = await prisma.module.upsert({
         where: { slug: m.slug },
@@ -110,7 +120,7 @@ async function main() {
 
       for (let lIndex = 0; lIndex < m.lessons.length; lIndex++) {
         const l = m.lessons[lIndex] as any;
-        const topicSlug = `m${m.order}-topic-${lIndex + 1}`;
+        const topicSlug = `${m.slug}-topic-${lIndex + 1}`;
 
         const topic = await prisma.topic.upsert({
           where: { slug: topicSlug },

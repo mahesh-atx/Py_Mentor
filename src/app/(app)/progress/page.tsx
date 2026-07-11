@@ -19,6 +19,8 @@ export default async function ProgressPage() {
         currentStreak: stats.currentStreak,
         xpInCurrentLevel: stats.xpInCurrentLevel,
         xpForNextLevel: stats.xpForNextLevel,
+        codingTime: stats.codingTimeFormatted,
+        activityData: stats.activityData,
       }}
       topicMastery={topicMastery}
       achievements={achievements}
