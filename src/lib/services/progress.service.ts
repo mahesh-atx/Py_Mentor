@@ -15,7 +15,7 @@ export const ProgressService = {
     ]);
 
     // ── Centralised XP calculation ─────────────────────────────────────────
-    const completedLessonSlugs = completedProgress.map((p) => p.lessonId);
+    const completedLessonSlugs = completedProgress.map((p: { lessonId: string }) => p.lessonId);
 
     // Batch-load the xpReward for every completed lesson (1 query, not N).
     const lessonXpMap = new Map<string, number>();
@@ -31,7 +31,7 @@ export const ProgressService = {
 
     const xp = computeXpFromRaw(
       completedLessonSlugs,
-      submissions.map((s) => ({ exerciseId: s.exerciseId!, score: s.score ?? 0 })),
+      submissions.map((s: { exerciseId: string | null; score: number | null }) => ({ exerciseId: s.exerciseId!, score: s.score ?? 0 })),
       lessonXpMap,
     );
 
@@ -91,7 +91,7 @@ export const ProgressService = {
     });
     const avgQuizScore =
       allSubmissions.length > 0
-        ? Math.round(allSubmissions.reduce((sum, s) => sum + (s.score ?? 0), 0) / allSubmissions.length)
+        ? Math.round(allSubmissions.reduce((sum: number, s: { score: number | null }) => sum + (s.score ?? 0), 0) / allSubmissions.length)
         : 0;
 
     return {
@@ -127,7 +127,7 @@ export const ProgressService = {
       select: { lessonId: true },
     });
 
-    const completedSlugs = new Set(progress.map((p) => p.lessonId));
+    const completedSlugs = new Set(progress.map((p: { lessonId: string }) => p.lessonId));
 
     const roadmaps = await db.roadmap.findMany({
       where: { isPublished: true },
@@ -267,13 +267,13 @@ export const ProgressService = {
     ]);
 
     // ── Batch-resolve titles instead of N+1 per-item queries ─────────────
-    const lessonSlugs = recentProgress.map((p) => p.lessonId);
+    const lessonSlugs = recentProgress.map((p: { lessonId: string }) => p.lessonId);
     const exerciseSlugs = recentSubmissions
-      .filter((s) => s.exerciseId)
-      .map((s) => s.exerciseId!);
+      .filter((s: { exerciseId: string | null }) => s.exerciseId)
+      .map((s: { exerciseId: string | null }) => s.exerciseId!);
     const projectSlugs = recentSubmissions
-      .filter((s) => s.projectId)
-      .map((s) => s.projectId!);
+      .filter((s: { projectId: string | null }) => s.projectId)
+      .map((s: { projectId: string | null }) => s.projectId!);
 
     const [lessons, exercises, projects] = await Promise.all([
       lessonSlugs.length > 0
@@ -287,9 +287,9 @@ export const ProgressService = {
         : [],
     ]);
 
-    const lessonTitleMap = new Map(lessons.map((l) => [l.slug, l.title]));
-    const exerciseTitleMap = new Map(exercises.map((e) => [e.slug, e.title]));
-    const projectTitleMap = new Map(projects.map((p) => [p.slug, p.title]));
+    const lessonTitleMap = new Map(lessons.map((l: { slug: string; title: string }) => [l.slug, l.title]));
+    const exerciseTitleMap = new Map(exercises.map((e: { slug: string; title: string }) => [e.slug, e.title]));
+    const projectTitleMap = new Map(projects.map((p: { slug: string; title: string }) => [p.slug, p.title]));
 
     // ── Assemble activity items ──────────────────────────────────────────
     type ActivityItem = {

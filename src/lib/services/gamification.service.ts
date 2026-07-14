@@ -11,12 +11,12 @@ export const GamificationService = {
       where: { userId }
     });
 
-    const unlockedIds = new Set(userAchievements.map(ua => ua.achievementId));
+    const unlockedIds = new Set(userAchievements.map((ua: { achievementId: string }) => ua.achievementId));
 
-    return allAchievements.map(ach => ({
+    return allAchievements.map((ach: any) => ({
       ...ach,
       isUnlocked: unlockedIds.has(ach.id),
-      unlockedAt: userAchievements.find(ua => ua.achievementId === ach.id)?.unlockedAt || null,
+      unlockedAt: userAchievements.find((ua: { achievementId: string }) => ua.achievementId === ach.id)?.unlockedAt || null,
     }));
   },
 
@@ -26,7 +26,7 @@ export const GamificationService = {
    */
   async checkAchievements(userId: string) {
     const all = await this.getUserAchievements(userId);
-    const locked = all.filter(a => !a.isUnlocked);
+    const locked = all.filter((a: { isUnlocked: boolean }) => !a.isUnlocked);
     
     if (locked.length === 0) return [];
 

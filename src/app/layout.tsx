@@ -1,14 +1,32 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const fontSans = Manrope({
+// ── Fonts ────────────────────────────────────────────────────────────────
+// For the npm distribution, we use local fonts instead of Google Fonts
+// so the app works fully offline. Manrope is loaded as a local variable
+// font; if the font file is missing (e.g., during sandbox builds), the
+// browser falls back to the system sans-serif font via CSS.
+
+const fontSans = localFont({
+  src: "../../public/fonts/Manrope.woff2",
   variable: "--font-sans",
-  subsets: ["latin"],
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif",
+  ],
+  // If the font file doesn't exist, don't crash the build.
+  // The CSS variable still gets set and the fallback stack applies.
+  display: "swap",
+  adjustFontFallback: "Arial",
 });
 
 const fontMono = localFont({

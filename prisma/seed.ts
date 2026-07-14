@@ -1,5 +1,6 @@
 import "dotenv/config";
 import { db as prisma } from "../src/lib/db/prisma";
+import { stringifyJsonField } from "../src/lib/db/json-helper";
 import { gettingStartedModule } from "./notes/1.1 Getting Started";
 import { variablesDataTypesModule } from "./notes/1.2 Variables & Data Types";
 import { operatorsModule } from "./notes/1.3 Operators";
@@ -211,7 +212,7 @@ async function main() {
           update: {
             title: lessonDef.title,
             content: lessonDef.content,
-            objectives: lessonDef.objectives || [],
+            objectives: stringifyJsonField(lessonDef.objectives || []),
             duration: 15,
             xpReward: lessonDef.xpReward || 50,
             order: 1,
@@ -221,7 +222,7 @@ async function main() {
             title: lessonDef.title,
             slug: lessonDef.slug,
             content: lessonDef.content,
-            objectives: lessonDef.objectives || [],
+            objectives: stringifyJsonField(lessonDef.objectives || []),
             duration: 15,
             xpReward: lessonDef.xpReward || 50,
             order: 1,
@@ -244,8 +245,8 @@ async function main() {
                 description: e.prompt,
                 starterCode: e.starterCode,
                 solution: e.solutionCode || "",
-                testCases: e.testCases || [],
-                hints: [],
+                testCases: stringifyJsonField(e.testCases || []),
+                hints: stringifyJsonField([]),
                 difficulty: e.difficulty || "beginner",
                 xpReward: e.xpReward || 20,
                 order: eIndex + 1,
@@ -257,8 +258,8 @@ async function main() {
                 description: e.prompt,
                 starterCode: e.starterCode,
                 solution: e.solutionCode || "",
-                testCases: e.testCases || [],
-                hints: [],
+                testCases: stringifyJsonField(e.testCases || []),
+                hints: stringifyJsonField([]),
                 difficulty: e.difficulty || "beginner",
                 xpReward: e.xpReward || 20,
                 order: eIndex + 1,

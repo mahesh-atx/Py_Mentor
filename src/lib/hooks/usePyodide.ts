@@ -6,22 +6,70 @@ import { useState, useEffect, useRef, useCallback } from "react";
 let globalPyodidePromise: Promise<any> | null = null;
 let globalPyodideInstance: any = null;
 
+/**
+ * The base URL for Pyodide assets.
+ *
+ * Priority:
+ *  1. Local server (`/pyodide/`) — works offline when bundled via npm
+ *  2. CDN fallback (`cdn.jsdelivr.net`) — for cloud deployments or if local
+ *     files are missing (e.g., first run before download, or not bundled)
+ *
+ * When PyMentor is installed via `npm install -g pymentor`, the Pyodide
+ * WASM files are included in the package under public/pyodide/, so the
+ * local path always works and the app is fully offline-capable.
+ */
+const PYODIDE_VERSION = "0.27.7";
+const LOCAL_PYODIDE_BASE = `/pyodide`;
+const CDN_PYODIDE_BASE = `https://cdn.jsdelivr.net/pyodide/v${PYODIDE_VERSION}/full`;
+
 async function loadPyodideOnce() {
   if (globalPyodideInstance) return globalPyodideInstance;
   if (globalPyodidePromise) return globalPyodidePromise;
 
   globalPyodidePromise = (async () => {
-    // Dynamic ESM import directly from CDN — bypasses both the bundler AND Monaco's AMD loader
-    const pyodideModule = await import(
-      /* webpackIgnore: true */
-      // @ts-ignore — external CDN URL import
-      "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/pyodide.mjs"
-    );
-    const pyodide = await pyodideModule.loadPyodide({
-      indexURL: "https://cdn.jsdelivr.net/pyodide/v0.27.7/full/",
-    });
-    globalPyodideInstance = pyodide;
-    return pyodide;
+    // ── Try loading from local server first (offline-capable) ───────────
+    try {
+      const pyodideModule = await import(
+        /* webpackIgnore: true */
+        // @ts-ignore — local path import
+        `${LOCAL_PYODIDE_BASE}/pyodide.mjs`
+      );
+      const pyodide = await pyodideModule.loadPyodide({
+        indexURL: `${LOCAL_PYODIDE_BASE}/`,
+      });
+      globalPyodideInstance = pyodide;
+      console.log("[pyodide] Loaded from local bundle (offline ✅)");
+      return pyodide;
+    } catch (localError) {
+      console.warn(
+        "[pyodide] Local bundle not available, falling back to CDN:",
+        (localError as Error).message
+      );
+    }
+
+    // ── Fallback: load from CDN (requires internet) ─────────────────────
+    try {
+      const pyodideModule = await import(
+        /* webpackIgnore: true */
+        // @ts-ignore — external CDN URL import
+        `${CDN_PYODIDE_BASE}/pyodide.mjs`
+      );
+      const pyodide = await pyodideModule.loadPyodide({
+        indexURL: `${CDN_PYODIDE_BASE}/`,
+      });
+      globalPyodideInstance = pyodide;
+      console.log("[pyodide] Loaded from CDN (online mode)");
+      return pyodide;
+    } catch (cdnError) {
+      console.error(
+        "[pyodide] Failed to load from both local and CDN:",
+        (cdnError as Error).message
+      );
+      throw new Error(
+        "Pyodide failed to load. Please check your internet connection or " +
+        "ensure the local Pyodide bundle is included in the package."
+      );
+    }
   })();
 
   return globalPyodidePromise;

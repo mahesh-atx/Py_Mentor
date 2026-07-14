@@ -259,7 +259,7 @@ export function FloatingAiMentor() {
           }
           // 503 means no provider configured — surface a setup hint.
           if (response.status === 503) {
-            setError("AI provider not configured. Add an API key in .env to enable the mentor.");
+            setError("AI provider not configured. Run 'pymentor config --set-key OPENROUTER_API_KEY=your-key' to enable the mentor, or add it to ~/.pymentor/.env");
           } else {
             setError(detail);
           }
@@ -313,7 +313,7 @@ export function FloatingAiMentor() {
           });
         } else {
           console.error("Mentor stream error", e);
-          setError("Couldn't reach the AI mentor. Check your connection and try again.");
+          setError("Couldn't reach the AI mentor. Check your connection and try again. If you're offline, all other features still work — only AI chat needs internet.");
           setMessages((prev) => prev.slice(0, assistantIndex));
         }
       } finally {
@@ -422,12 +422,23 @@ export function FloatingAiMentor() {
 
         {/* Not-configured banner */}
         {providerStatus && !providerStatus.configured && (
-          <div className="px-4 py-2 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive flex items-start gap-2">
+          <div className="px-4 py-3 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-            <span>
-              No AI provider configured. Set <code className="font-mono">OPENROUTER_API_KEY</code> or{" "}
-              <code className="font-mono">NVIDIA_API_KEY</code> in <code className="font-mono">.env</code> to enable real answers.
-            </span>
+            <div className="space-y-1.5">
+              <p className="font-medium">AI Mentor requires an API key</p>
+              <p className="opacity-80">
+                The AI Mentor is the only feature that needs internet. Everything else — lessons, exercises, quizzes, code execution — works fully offline.
+              </p>
+              <p className="opacity-80">
+                To enable AI chat, run:
+              </p>
+              <code className="block bg-background/50 px-2 py-1 rounded text-[11px] font-mono border">
+                pymentor config --set-key OPENROUTER_API_KEY=your-key
+              </code>
+              <p className="opacity-60">
+                Or add it to <code className="font-mono">~/.pymentor/.env</code>
+              </p>
+            </div>
           </div>
         )}
 

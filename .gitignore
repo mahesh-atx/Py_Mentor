@@ -19,6 +19,7 @@
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store
@@ -42,4 +43,7 @@ next-env.d.ts
 
 /src/generated/prisma
 *.db
-*.sqlite
+*.sqlite3
+# SQLite database files (only .sqlite files at root or prisma level)
+dev.sqlite
+pymentor.db

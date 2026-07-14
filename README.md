@@ -4,48 +4,80 @@
 
 ---
 
-## Features
+## 🚀 Quick Start (npm CLI)
 
-- **📖 Structured Curriculum** — 14 modules across 3 phases: Fundamentals → Data Structures → Object-Oriented Programming
-- **💻 Live Code Editor** — Monaco-powered editor with instant Python execution via Pyodide (no server required)
-- **🧪 Exercises & Test Cases** — 80+ exercises at four difficulty tiers with automated pass/fail checking
-- **❓ Quizzes** — Multiple-choice quizzes with XP rewards
-- **🏗️ Projects** — Guided capstone projects with requirements and milestones
-- **🤖 AI Mentor** — Streaming chat with context-aware tutoring (knows which lesson you're on and what code you're writing). Supports OpenRouter and NVIDIA LLMs
-- **🏆 Gamification** — XP, levels, daily streaks, unlockable achievements
-- **📊 Progress Dashboard** — Activity charts, topic mastery radar, streak tracking
-- **📝 Notes & Bookmarks** — Save personal notes and bookmark lessons/exercises
-- **🎨 Dark & Light Mode** — Warm colour palette with full theme support
+The fastest way to use PyMentor — no database setup, no git clone:
+
+```bash
+# Install globally
+npm install -g pymentor
+
+# Launch — that's it!
+pymentor
+```
+
+**What happens on first run:**
+1. Creates `~/.pymentor/` data directory
+2. Initializes local SQLite database
+3. Seeds curriculum (lessons, exercises, quizzes, projects, achievements)
+4. Starts a local server on `localhost:3000`
+5. Opens the browser automatically
+
+**All your data persists** in `~/.pymentor/pymentor.db` — notes, progress, bookmarks, streaks, achievements. Everything works offline except the AI Mentor chat (which needs an API key).
+
+### CLI Commands
+
+```bash
+pymentor                              # Start the app (opens browser)
+pymentor start --port 8080            # Use a custom port
+pymentor config                       # Show current configuration
+pymentor config --set-key OPENROUTER_API_KEY=sk-xxx  # Set AI API key
+pymentor backup                       # Create a backup of your data
+pymentor restore ./backup.db          # Restore from a backup file
+pymentor reset --force                # Reset all user data
+pymentor --version                    # Show version
+pymentor --help                       # Show help
+```
+
+### Data Location
+
+All user data is stored in `~/.pymentor/`:
+
+```
+~/.pymentor/
+├── pymentor.db          # SQLite database (all data — notes, progress, etc.)
+├── .env                 # API keys & config
+├── config.json          # App settings
+└── backups/             # Auto-created backups
+```
+
+### Offline Feature Matrix
+
+| Feature | Works Offline? | Notes |
+|---------|---------------|-------|
+| 📖 Lessons & Curriculum | ✅ | Seeded into local SQLite |
+| 💻 Code Editor & Execution | ✅ | Pyodide runs in browser |
+| 🏋️ Exercises | ✅ | Starter code + test cases in DB |
+| 📝 Quizzes | ✅ | Questions stored in DB |
+| 📊 Progress Tracking | ✅ | All stored in SQLite |
+| 📓 Notes & Bookmarks | ✅ | Stored in SQLite |
+| 🏆 Achievements & Streaks | ✅ | Stored in SQLite |
+| 🗂️ Projects | ✅ | Descriptions in DB |
+| 🤖 AI Mentor Chat | ❌ | Needs API key + internet |
+| 🔄 Daily Challenge | ✅ | Can be pre-generated |
 
 ---
 
-## Tech Stack
+## ☁️ Cloud Deployment (PostgreSQL)
 
-| Layer | Technology |
-|---|---|
-| **Framework** | [Next.js 16](https://nextjs.org) (App Router) with React 19 |
-| **Language** | TypeScript |
-| **Database** | PostgreSQL via [Prisma ORM](https://prisma.io) |
-| **UI** | [shadcn/ui](https://ui.shadcn.com) + [Tailwind CSS v4](https://tailwindcss.com) |
-| **Animations** | [Framer Motion](https://motion.dev) |
-| **Code Editor** | [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
-| **Python Runtime** | [Pyodide](https://pyodide.org) (client-side) |
-| **AI** | Streaming chat via [OpenRouter](https://openrouter.ai) / [NVIDIA](https://build.nvidia.com) |
-| **Charts** | [Recharts](https://recharts.org) |
-| **Auth** | NextAuth.js v5 (planned — currently single-user local mode) |
-| **Deploy** | [Render](https://render.com) (see `render.yaml`) |
-
----
-
-## Getting Started
+For multi-user or hosted deployments, PyMentor supports PostgreSQL as the database backend:
 
 ### Prerequisites
 
 - **Node.js** ≥ 18
 - **PostgreSQL** ≥ 14 (local or cloud)
-- An AI provider API key for the mentor (optional — the app works without it):
-  - [OpenRouter](https://openrouter.ai/keys) or
-  - [NVIDIA](https://build.nvidia.com/explore/discover) (free tier available)
+- An AI provider API key for the mentor (optional):
+  - [OpenRouter](https://openrouter.ai/keys) or [NVIDIA](https://build.nvidia.com/explore/discover)
 
 ### 1. Clone & Install
 
@@ -60,7 +92,7 @@ npm install
 Create a `.env` file in the project root:
 
 ```env
-# Database (required)
+# Database (required — PostgreSQL for cloud mode)
 DATABASE_URL="postgresql://user:password@localhost:5432/pymentor"
 
 # Auth secret (generate with: openssl rand -base64 32)
@@ -100,64 +132,66 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000). The app creates a local user automatically on first visit.
 
+### 5. Build for Production
+
+```bash
+# Cloud build (PostgreSQL)
+npm run build:cloud
+
+# Or: npm build for standard Next.js build
+```
+
 ---
 
-## Project Structure
+## Features
 
-```
-├── prisma/
-│   ├── schema.prisma          # Database schema
-│   ├── seed.ts                # Curriculum seeder
-│   └── notes/                 # Curriculum content (lessons, exercises)
-│       ├── 1.1 Getting Started/
-│       ├── 1.2 Variables & Data Types/
-│       ├── 1.3 Operators/
-│       ├── 1.4 Control Flow/
-│       ├── 1.5 Loops/
-│       ├── 2.1 Data Structures/
-│       ├── 2.2 Functions/
-│       ├── 2.3 String Manipulation/
-│       ├── 2.4 File Handling/
-│       ├── 2.5 Error Handling/
-│       ├── 3.1 OOP Fundamentals/
-│       └── 3.2 OOP Pillars/
-│
-├── src/
-│   ├── app/
-│   │   ├── (app)/              # Main app routes (dashboard, learn, practice, etc.)
-│   │   ├── api/ai-mentor/      # AI streaming endpoint
-│   │   └── actions.ts          # Server actions (mutations)
-│   │
-│   ├── components/
-│   │   ├── floating-ai-mentor.tsx   # AI chat widget
-│   │   ├── floating-editor.tsx      # Code playground widget
-│   │   ├── layout/                  # Sidebar, top nav, command palette
-│   │   └── ui/                      # shadcn/ui primitives
-│   │
-│   ├── lib/
-│   │   ├── ai/                 # LLM client + prompt builder
-│   │   ├── db/                 # Prisma client
-│   │   ├── hooks/              # React hooks (usePyodide, etc.)
-│   │   ├── services/           # Business logic layer
-│   │   │   ├── curriculum.service.ts
-│   │   │   ├── progress.service.ts
-│   │   │   ├── gamification.service.ts
-│   │   │   ├── ai-chat.service.ts
-│   │   │   ├── sandbox.service.ts
-│   │   │   └── ...
-│   │   ├── rate-limit.ts       # In-memory rate limiter
-│   │   └── xp-calculator.ts    # Centralised XP/level math
-│   │
-│   └── auth.ts                 # Auth stub (NextAuth.js integration point)
-│
-├── public/                     # Static assets, fonts
-├── render.yaml                 # Render deploy config
-└── generate_modules.py         # Curriculum scaffold generator
-```
+- **📖 Structured Curriculum** — 14 modules across 3 phases: Fundamentals → Data Structures → Object-Oriented Programming
+- **💻 Live Code Editor** — Monaco-powered editor with instant Python execution via Pyodide (no server required)
+- **🧪 Exercises & Test Cases** — 80+ exercises at four difficulty tiers with automated pass/fail checking
+- **❓ Quizzes** — Multiple-choice quizzes with XP rewards
+- **🏗️ Projects** — Guided capstone projects with requirements and milestones
+- **🤖 AI Mentor** — Streaming chat with context-aware tutoring (knows which lesson you're on and what code you're writing). Supports OpenRouter and NVIDIA LLMs
+- **🏆 Gamification** — XP, levels, daily streaks, unlockable achievements
+- **📊 Progress Dashboard** — Activity charts, topic mastery radar, streak tracking
+- **📝 Notes & Bookmarks** — Save personal notes and bookmark lessons/exercises
+- **🎨 Dark & Light Mode** — Warm colour palette with full theme support
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Framework** | [Next.js 16](https://nextjs.org) (App Router) with React 19 |
+| **Language** | TypeScript |
+| **Database** | PostgreSQL *or* SQLite via [Prisma ORM](https://prisma.io) |
+| **UI** | [shadcn/ui](https://ui.shadcn.com) + [Tailwind CSS v4](https://tailwindcss.com) |
+| **Animations** | [Framer Motion](https://motion.dev) |
+| **Code Editor** | [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
+| **Python Runtime** | [Pyodide](https://pyodide.org) (client-side, offline-capable) |
+| **AI** | Streaming chat via [OpenRouter](https://openrouter.ai) / [NVIDIA](https://build.nvidia.com) |
+| **Charts** | [Recharts](https://recharts.org) |
+| **CLI** | Node.js CLI with auto-setup, backup/restore, config management |
+| **Deploy** | [Render](https://render.com) (see `render.yaml`) or `npm install -g pymentor` |
 
 ---
 
 ## Architecture
+
+### Dual Database Support
+
+PyMentor supports two database backends, auto-detected via the `DATABASE_URL` environment variable:
+
+| | PostgreSQL (Cloud) | SQLite (npm CLI) |
+|---|---|---|
+| **Trigger** | `DATABASE_URL=postgresql://...` | `DATABASE_URL=file:...` |
+| **Schema** | `prisma/schema.prisma` | `prisma/schema.sqlite.prisma` |
+| **Adapter** | pg Pool + PrismaPg | Plain PrismaClient |
+| **Use case** | Multi-user hosted deployment | Single-user local install |
+
+The `src/lib/db/prisma.ts` module auto-detects the provider. The `json-helper.ts` module transparently handles the `Json`→`String` type difference between the two databases.
+
+### Service-Oriented Design
 
 PyMentor follows a **service-oriented architecture** inside Next.js:
 
@@ -172,6 +206,121 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 
 ---
 
+## Project Structure
+
+```
+├── bin/
+│   └── cli.js                  # CLI entry point (pymentor command)
+│
+├── prisma/
+│   ├── schema.prisma           # PostgreSQL schema (cloud)
+│   ├── schema.sqlite.prisma    # SQLite schema (npm CLI)
+│   ├── migrations.sqlite/      # SQLite migration SQL
+│   ├── seed.ts                 # Curriculum seeder (dual-db compatible)
+│   └── notes/                  # Curriculum content (lessons, exercises)
+│       ├── 1.1 Getting Started/
+│       ├── 1.2 Variables & Data Types/
+│       ├── 1.3 Operators/
+│       ├── 1.4 Control Flow/
+│       ├── 1.5 Loops/
+│       ├── 2.1 Data Structures/
+│       ├── 2.2 Functions/
+│       ├── 2.3 String Manipulation/
+│       ├── 2.4 File Handling/
+│       ├── 2.5 Error Handling/
+│       ├── 3.1 OOP Fundamentals/
+│       └── 3.2 OOP Pillars/
+│
+├── scripts/
+│   ├── build.sh                # Full build pipeline (--cloud flag)
+│   ├── prepare-dist.js         # Post-build dist assembly
+│   └── download-pyodide.sh     # Download Pyodide for offline use
+│
+├── src/
+│   ├── app/
+│   │   ├── (app)/              # Main app routes (dashboard, learn, practice, etc.)
+│   │   ├── api/ai-mentor/      # AI streaming endpoint
+│   │   └── actions.ts          # Server actions (mutations)
+│   │
+│   ├── components/
+│   │   ├── floating-ai-mentor.tsx   # AI chat widget (graceful offline)
+│   │   ├── floating-editor.tsx      # Code playground widget
+│   │   ├── layout/                  # Sidebar, top nav, command palette
+│   │   └── ui/                      # shadcn/ui primitives
+│   │
+│   ├── lib/
+│   │   ├── ai/                 # LLM client + prompt builder
+│   │   ├── db/                 # Prisma client (auto PG/SQLite) + json-helper
+│   │   ├── hooks/              # React hooks (usePyodide — local-first loading)
+│   │   ├── services/           # Business logic layer
+│   │   │   ├── curriculum.service.ts
+│   │   │   ├── progress.service.ts
+│   │   │   ├── gamification.service.ts
+│   │   │   ├── ai-chat.service.ts
+│   │   │   └── ...
+│   │   ├── rate-limit.ts       # In-memory rate limiter
+│   │   └── xp-calculator.ts    # Centralised XP/level math
+│   │
+│   └── auth.ts                 # Auth stub (NextAuth.js integration point)
+│
+├── __tests__/                  # Test suite (295 tests)
+│   ├── json-helper.test.ts     # JSON parse/stringify helpers
+│   ├── db-provider.test.ts     # PG/SQLite auto-detection
+│   ├── sqlite-schema.test.ts   # SQLite schema validation
+│   ├── schema-sync.test.ts     # PG↔SQLite schema parity
+│   ├── build-standalone.test.ts # Build pipeline validation
+│   ├── cli.test.ts             # CLI command tests
+│   └── offline-support.test.ts # Pyodide + AI offline handling
+│
+├── public/                     # Static assets, fonts
+├── render.yaml                 # Render deploy config
+└── NPM_DISTRIBUTION_PLAN.md    # Full distribution plan
+```
+
+---
+
+## Building for npm Distribution
+
+```bash
+# 1. Build the standalone Next.js server
+npm run build:npm
+
+# 2. (Optional) Download Pyodide for full offline support
+npm run download-pyodide
+
+# 3. Test the CLI locally
+node bin/cli.js start --port 3000
+
+# 4. Publish to npm
+npm publish --access public
+```
+
+---
+
+## Testing
+
+```bash
+# Run all tests
+npm test
+
+# Run SQLite-specific tests only
+npm run test:sqlite
+
+# Watch mode
+npm run test:watch
+```
+
+The test suite covers:
+- **JSON helpers** — `parseJsonField()` / `stringifyJsonField()` for PG↔SQLite compatibility
+- **DB provider detection** — Auto-switching between PostgreSQL and SQLite
+- **Schema validation** — SQLite schema structure and migration SQL
+- **Schema sync** — Ensuring PG and SQLite schemas stay in parity
+- **Build pipeline** — Standalone build output validation
+- **CLI** — All CLI commands and argument parsing
+- **Offline support** — Pyodide local-first loading, AI mentor graceful degradation
+
+---
+
 ## Roadmap
 
 - [x] Structured Python curriculum (14 modules, 80+ exercises)
@@ -180,12 +329,15 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 - [x] Gamification (XP, levels, streaks, achievements)
 - [x] Progress dashboard with charts
 - [x] Notes & bookmarks
+- [x] Offline-capable npm CLI (`npm install -g pymentor`)
+- [x] SQLite support (dual PG/SQLite database)
+- [x] Local-first Pyodide loading (CDN fallback)
+- [x] AI Mentor graceful degradation for offline
 - [ ] Full NextAuth.js integration (GitHub, Google, credentials)
-- [ ] Self-hosted code execution (remove Piston API dependency)
 - [ ] Email notifications (streak reminders)
 - [ ] Multi-language curriculum (JavaScript, TypeScript)
 - [ ] Admin dashboard
-- [ ] Tests (unit + integration)
+- [ ] Bundle real Pyodide WASM in npm package
 
 ---
 
@@ -197,6 +349,7 @@ Contributions are welcome! This is a solo project that would benefit from:
 - Tests
 - Accessibility improvements
 - Documentation
+- Pyodide WASM bundling optimization
 
 Please open an issue or PR on GitHub.
 

@@ -161,7 +161,7 @@ export const CurriculumService = {
       }
     });
 
-    const currentIndex = allTopics.findIndex(t => t.id === currentTopicId);
+    const currentIndex = allTopics.findIndex((t: { id: string }) => t.id === currentTopicId);
     
     let prevTopic = null;
     let nextTopic = null;

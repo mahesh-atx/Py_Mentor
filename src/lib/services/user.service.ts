@@ -36,7 +36,7 @@ export const UserService = {
       }),
     ]);
 
-    const completedLessonSlugs = completedProgress.map((p) => p.lessonId);
+    const completedLessonSlugs = completedProgress.map((p: { lessonId: string }) => p.lessonId);
 
     // Batch-load lesson xpReward map (1 query instead of N)
     const lessonXpMap = new Map<string, number>();
@@ -52,7 +52,7 @@ export const UserService = {
 
     const xp = computeXpFromRaw(
       completedLessonSlugs,
-      passedSubmissions.map((s) => ({
+      passedSubmissions.map((s: { exerciseId: string | null; score: number | null }) => ({
         exerciseId: s.exerciseId!,
         score: s.score ?? 0,
       })),
@@ -61,7 +61,7 @@ export const UserService = {
 
     // Count unique exercises completed
     const uniqueExerciseIds = new Set(
-      passedSubmissions.map((s) => s.exerciseId!).filter(Boolean),
+      passedSubmissions.map((s: { exerciseId: string | null }) => s.exerciseId!).filter(Boolean),
     );
 
     return {

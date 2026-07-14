@@ -41,7 +41,7 @@ export const MemoryService = {
     });
     
     // Convert array of {key, value} to a single object map
-    return memories.reduce((acc, curr) => {
+    return memories.reduce((acc: Record<string, any>, curr: { key: string; value: string }) => {
       try {
         acc[curr.key] = JSON.parse(curr.value);
       } catch (e) {
