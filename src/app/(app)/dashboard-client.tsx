@@ -8,6 +8,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import type { Module, Topic } from "@prisma/client";
+import { formatDate } from "@/lib/utils";
 
 // A Topic with its parent Module
 export type TopicWithModule = Topic & { module: Module };
@@ -169,7 +170,7 @@ export function DashboardClient({ continueTopic, recommendedTopics, stats, recen
                         <div className="text-xs font-bold text-success">+{activity.score} XP</div>
                       )}
                       <div className="text-xs text-muted-foreground">
-                        {new Date(activity.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                        {formatDate(new Date(activity.date), "short")}
                       </div>
                     </div>
                   </Card>
