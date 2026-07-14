@@ -272,6 +272,14 @@ try {
     scripts: {
       start: "node dist/server/server.js",
       seed: "node dist/seed/seed.js",
+      postinstall: "prisma generate --schema=prisma/schema.sqlite.prisma"
+    },
+    dependencies: {
+      "prisma": rootPkg.dependencies.prisma || "^7.8.0",
+      "@prisma/client": rootPkg.dependencies["@prisma/client"] || "^7.8.0",
+      "@prisma/adapter-better-sqlite3": rootPkg.dependencies["@prisma/adapter-better-sqlite3"] || "^7.8.0",
+      "better-sqlite3": "^12.11.1",
+      "sql.js": rootPkg.dependencies["sql.js"] || "^1.14.1"
     },
     keywords: rootPkg.keywords,
     engines: rootPkg.engines,
@@ -280,6 +288,20 @@ try {
     path.join(DIST, "package.json"),
     JSON.stringify(distPkg, null, 2)
   );
+
+  // ── 9.5 Delete bundled native modules to force cross-platform resolution ──
+  console.log("  → Cleaning bundled native modules...");
+  const modulesToRemove = [
+    "better-sqlite3",
+    "@prisma",
+    ".prisma"
+  ];
+  for (const mod of modulesToRemove) {
+    const modPath = path.join(DIST, "server", "node_modules", mod);
+    if (fs.existsSync(modPath)) {
+      fs.rmSync(modPath, { recursive: true, force: true });
+    }
+  }
 
   // ── 10. Copy src/lib/db/ for seed dependencies ───────────────────────
   // The seed.ts imports from ../src/lib/db/prisma and ../src/lib/db/json-helper
