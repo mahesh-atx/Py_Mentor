@@ -1,4 +1,5 @@
 import { db } from "../db/prisma";
+import { computeXpFromRaw } from "./xp-calculator";
 
 /**
  * UserService
@@ -13,47 +14,60 @@ export const UserService = {
         data: {
           name: "Local Developer",
           email: "local@pymentor.dev",
-          image: "https://github.com/shadcn.png",
-        }
+          image: "https://ui-avatars.com/api/?name=Local+Developer&background=3B82F6&color=fff&size=128",
+        },
       });
     }
     return user;
   },
 
-  /** Aggregates user stats for the dashboard */
+  /** Aggregates user stats — delegates XP math to the centralised calculator */
   async getUserStats() {
     const user = await this.getLocalUser();
 
-    const completedLessons = await db.progress.findMany({
-      where: { userId: user.id, status: "completed" }
-    });
-    
-    const lessonSlugs = completedLessons.map(p => p.lessonId);
-    const lessons = await db.lesson.findMany({
-      where: { slug: { in: lessonSlugs } },
-      select: { xpReward: true }
-    });
-    const lessonXp = lessons.reduce((sum, l) => sum + (l.xpReward || 50), 0);
+    const [completedProgress, passedSubmissions] = await Promise.all([
+      db.progress.findMany({
+        where: { userId: user.id, status: "completed" },
+        select: { lessonId: true },
+      }),
+      db.submission.findMany({
+        where: { userId: user.id, status: "passed", exerciseId: { not: null } },
+        select: { exerciseId: true, score: true },
+      }),
+    ]);
 
-    const successfulSubmissions = await db.submission.findMany({
-      where: { userId: user.id, status: "passed", exerciseId: { not: null } }
-    });
-    
-    const uniqueExercises = new Set<string>();
-    let exerciseXp = 0;
-    for (const sub of successfulSubmissions) {
-      if (sub.exerciseId && !uniqueExercises.has(sub.exerciseId)) {
-        uniqueExercises.add(sub.exerciseId);
-        exerciseXp += sub.score || 0;
+    const completedLessonSlugs = completedProgress.map((p) => p.lessonId);
+
+    // Batch-load lesson xpReward map (1 query instead of N)
+    const lessonXpMap = new Map<string, number>();
+    if (completedLessonSlugs.length > 0) {
+      const lessons = await db.lesson.findMany({
+        where: { slug: { in: completedLessonSlugs } },
+        select: { slug: true, xpReward: true },
+      });
+      for (const l of lessons) {
+        lessonXpMap.set(l.slug, l.xpReward);
       }
     }
 
-    const totalXp = lessonXp + exerciseXp;
+    const xp = computeXpFromRaw(
+      completedLessonSlugs,
+      passedSubmissions.map((s) => ({
+        exerciseId: s.exerciseId!,
+        score: s.score ?? 0,
+      })),
+      lessonXpMap,
+    );
+
+    // Count unique exercises completed
+    const uniqueExerciseIds = new Set(
+      passedSubmissions.map((s) => s.exerciseId!).filter(Boolean),
+    );
 
     return {
-      totalXp,
-      lessonsCompleted: completedLessons.length,
-      exercisesCompleted: uniqueExercises.size,
+      totalXp: xp.totalXp,
+      lessonsCompleted: completedLessonSlugs.length,
+      exercisesCompleted: uniqueExerciseIds.size,
     };
-  }
+  },
 };

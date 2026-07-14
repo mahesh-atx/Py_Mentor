@@ -1,22 +1,41 @@
 import { db } from "../db/prisma";
-
-const XP_PER_LEVEL = 500;
+import { XP_PER_LEVEL, computeXpFromRaw, type XpBreakdown } from "./xp-calculator";
 
 export const ProgressService = {
   /** Get overall progress stats for a user */
   async getStats(userId: string) {
-    const [completedLessons, submissions, streaks, allProgress] = await Promise.all([
-      db.progress.count({ where: { userId, status: "completed" } }),
-      db.submission.findMany({ where: { userId }, select: { score: true, createdAt: true, timeTaken: true } }),
+    const [completedProgress, submissions, streaks, allProgress] = await Promise.all([
+      db.progress.findMany({ where: { userId, status: "completed" }, select: { lessonId: true } }),
+      db.submission.findMany({
+        where: { userId, status: "passed", exerciseId: { not: null } },
+        select: { exerciseId: true, score: true, createdAt: true, timeTaken: true },
+      }),
       db.streak.findMany({ where: { userId }, orderBy: { date: "desc" }, take: 30 }),
       db.progress.findMany({ where: { userId }, select: { timeSpent: true, updatedAt: true } }),
     ]);
 
-    const totalXp = completedLessons * 50 + submissions.reduce((sum, s) => sum + (s.score || 0), 0);
-    const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
-    const xpInCurrentLevel = totalXp % XP_PER_LEVEL;
+    // ── Centralised XP calculation ─────────────────────────────────────────
+    const completedLessonSlugs = completedProgress.map((p) => p.lessonId);
 
-    // Calculate streak
+    // Batch-load the xpReward for every completed lesson (1 query, not N).
+    const lessonXpMap = new Map<string, number>();
+    if (completedLessonSlugs.length > 0) {
+      const lessons = await db.lesson.findMany({
+        where: { slug: { in: completedLessonSlugs } },
+        select: { slug: true, xpReward: true },
+      });
+      for (const l of lessons) {
+        lessonXpMap.set(l.slug, l.xpReward);
+      }
+    }
+
+    const xp = computeXpFromRaw(
+      completedLessonSlugs,
+      submissions.map((s) => ({ exerciseId: s.exerciseId!, score: s.score ?? 0 })),
+      lessonXpMap,
+    );
+
+    // ── Streak ──────────────────────────────────────────────────────────────
     let currentStreak = 0;
     const today = new Date();
     today.setHours(0, 0, 0, 0);
@@ -32,63 +51,60 @@ export const ProgressService = {
       }
     }
 
-    const avgQuizScore = submissions.length > 0
-      ? Math.round(submissions.reduce((sum, s) => sum + (s.score || 0), 0) / submissions.length)
-      : 0;
-
-    // Calculate coding time and activity
-    const activityData = [];
+    // ── Activity / coding time ─────────────────────────────────────────────
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const activityData: { dateStr: string; day: string; seconds: number }[] = [];
     let totalCodingSeconds = 0;
 
     for (let i = 6; i >= 0; i--) {
       const d = new Date();
       d.setDate(d.getDate() - i);
-      activityData.push({
-        dateStr: d.toDateString(),
-        day: days[d.getDay()],
-        seconds: 0
-      });
+      activityData.push({ dateStr: d.toDateString(), day: days[d.getDay()], seconds: 0 });
     }
 
     for (const p of allProgress) {
-      totalCodingSeconds += (p.timeSpent || 0);
+      totalCodingSeconds += p.timeSpent || 0;
       const dStr = new Date(p.updatedAt).toDateString();
-      const dayData = activityData.find(a => a.dateStr === dStr);
-      if (dayData) {
-        dayData.seconds += (p.timeSpent || 0);
-      }
+      const entry = activityData.find((a) => a.dateStr === dStr);
+      if (entry) entry.seconds += p.timeSpent || 0;
     }
 
     for (const s of submissions) {
-      totalCodingSeconds += (s.timeTaken || 0);
+      totalCodingSeconds += s.timeTaken || 0;
       const dStr = new Date(s.createdAt).toDateString();
-      const dayData = activityData.find(a => a.dateStr === dStr);
-      if (dayData) {
-        dayData.seconds += (s.timeTaken || 0);
-      }
+      const entry = activityData.find((a) => a.dateStr === dStr);
+      if (entry) entry.seconds += s.timeTaken || 0;
     }
 
-    const activityDataFormatted = activityData.map(a => ({
+    const activityDataFormatted = activityData.map((a) => ({
       day: a.day,
-      hours: Number((a.seconds / 3600).toFixed(1))
+      hours: Number((a.seconds / 3600).toFixed(1)),
     }));
 
     const totalCodingHours = Math.floor(totalCodingSeconds / 3600);
     const totalCodingMinutes = Math.floor((totalCodingSeconds % 3600) / 60);
-    const codingTimeFormatted = `${totalCodingHours}h ${totalCodingMinutes}m`;
+
+    // Avg quiz score — based on all quiz submissions (not just passed exercises)
+    const allSubmissions = await db.submission.findMany({
+      where: { userId, exerciseId: { not: null }, status: "passed" },
+      select: { score: true },
+    });
+    const avgQuizScore =
+      allSubmissions.length > 0
+        ? Math.round(allSubmissions.reduce((sum, s) => sum + (s.score ?? 0), 0) / allSubmissions.length)
+        : 0;
 
     return {
-      completedLessons,
-      totalSubmissions: submissions.length,
-      totalXp,
-      level,
-      xpInCurrentLevel,
+      completedLessons: completedLessonSlugs.length,
+      totalSubmissions: allSubmissions.length,
+      totalXp: xp.totalXp,
+      level: xp.level,
+      xpInCurrentLevel: xp.xpInCurrentLevel,
       xpForNextLevel: XP_PER_LEVEL,
       currentStreak,
       avgQuizScore,
-      codingTimeFormatted,
-      activityData: activityDataFormatted
+      codingTimeFormatted: `${totalCodingHours}h ${totalCodingMinutes}m`,
+      activityData: activityDataFormatted,
     };
   },
 
@@ -108,7 +124,10 @@ export const ProgressService = {
   async getTopicMastery(userId: string) {
     const progress = await db.progress.findMany({
       where: { userId, status: "completed" },
+      select: { lessonId: true },
     });
+
+    const completedSlugs = new Set(progress.map((p) => p.lessonId));
 
     const roadmaps = await db.roadmap.findMany({
       where: { isPublished: true },
@@ -116,19 +135,17 @@ export const ProgressService = {
         modules: {
           include: {
             topics: {
-              include: {
-                lessons: { select: { slug: true } }
-              }
-            }
-          }
-        }
-      }
+              include: { lessons: { select: { slug: true } } },
+            },
+          },
+        },
+      },
     });
 
     const masteryMap: Record<string, { completed: number; total: number }> = {};
 
     for (const r of roadmaps) {
-      let title = r.title.split(': ')[1] || r.title;
+      let title = r.title.split(": ")[1] || r.title;
       if (r.slug.includes("phase-1")) title = "Fundamentals";
       else if (r.slug.includes("phase-2")) title = "Data Structures";
       else if (r.slug.includes("phase-3")) title = "OOP";
@@ -141,9 +158,7 @@ export const ProgressService = {
         for (const t of m.topics) {
           totalLessons += t.lessons.length;
           for (const l of t.lessons) {
-            if (progress.some((p) => p.lessonId === l.slug)) {
-              completedLessons++;
-            }
+            if (completedSlugs.has(l.slug)) completedLessons++;
           }
         }
       }
@@ -163,7 +178,7 @@ export const ProgressService = {
     return db.progress.upsert({
       where: { userId_lessonId: { userId, lessonId } },
       update: { status: "completed", completedAt: new Date() },
-      create: { userId, lessonId, status: "completed", completedAt: new Date() }
+      create: { userId, lessonId, status: "completed", completedAt: new Date() },
     });
   },
 
@@ -173,7 +188,7 @@ export const ProgressService = {
     exerciseId,
     code,
     status,
-    testResults
+    testResults,
   }: {
     userId: string;
     exerciseId: string;
@@ -182,15 +197,15 @@ export const ProgressService = {
     testResults: any;
   }) {
     await this.recordStreak(userId);
-    
+
     const existingSuccess = await db.submission.findFirst({
-      where: { userId, exerciseId, status: "passed" }
+      where: { userId, exerciseId, status: "passed" },
     });
 
     const exercise = await db.exercise.findFirst({ where: { slug: exerciseId } });
-    const xpReward = exercise?.xpReward || 100;
-    
-    const score = (status === "passed" && !existingSuccess) ? xpReward : 0;
+    const xpReward = exercise?.xpReward ?? 100;
+
+    const score = status === "passed" && !existingSuccess ? xpReward : 0;
 
     return db.submission.create({
       data: {
@@ -200,14 +215,14 @@ export const ProgressService = {
         status,
         testResults: JSON.stringify(testResults),
         score,
-      }
+      },
     });
   },
 
   /** Check if a lesson is completed */
   async isLessonCompleted(userId: string, lessonId: string) {
     const progress = await db.progress.findUnique({
-      where: { userId_lessonId: { userId, lessonId } }
+      where: { userId_lessonId: { userId, lessonId } },
     });
     return progress?.status === "completed";
   },
@@ -228,27 +243,55 @@ export const ProgressService = {
         userId,
         projectId,
         code: repoUrl,
-        status: "passed", 
-        testResults: JSON.stringify({ review: "AI Review Passed" })
-      }
+        status: "passed",
+        testResults: JSON.stringify({ review: "AI Review Passed" }),
+      },
     });
   },
 
-  /** Get recent activity (completed lessons and submissions) */
+  /** Get recent activity (completed lessons and submissions) — batch-optimised */
   async getRecentActivity(userId: string, limit: number = 5) {
     const [recentProgress, recentSubmissions] = await Promise.all([
       db.progress.findMany({
         where: { userId, status: "completed" },
         orderBy: { completedAt: "desc" },
         take: limit,
+        select: { id: true, lessonId: true, completedAt: true, updatedAt: true, status: true },
       }),
       db.submission.findMany({
         where: { userId },
         orderBy: { createdAt: "desc" },
         take: limit,
-      })
+        select: { id: true, exerciseId: true, projectId: true, createdAt: true, status: true, score: true },
+      }),
     ]);
 
+    // ── Batch-resolve titles instead of N+1 per-item queries ─────────────
+    const lessonSlugs = recentProgress.map((p) => p.lessonId);
+    const exerciseSlugs = recentSubmissions
+      .filter((s) => s.exerciseId)
+      .map((s) => s.exerciseId!);
+    const projectSlugs = recentSubmissions
+      .filter((s) => s.projectId)
+      .map((s) => s.projectId!);
+
+    const [lessons, exercises, projects] = await Promise.all([
+      lessonSlugs.length > 0
+        ? db.lesson.findMany({ where: { slug: { in: lessonSlugs } }, select: { slug: true, title: true } })
+        : [],
+      exerciseSlugs.length > 0
+        ? db.exercise.findMany({ where: { slug: { in: exerciseSlugs } }, select: { slug: true, title: true } })
+        : [],
+      projectSlugs.length > 0
+        ? db.project.findMany({ where: { slug: { in: projectSlugs } }, select: { slug: true, title: true } })
+        : [],
+    ]);
+
+    const lessonTitleMap = new Map(lessons.map((l) => [l.slug, l.title]));
+    const exerciseTitleMap = new Map(exercises.map((e) => [e.slug, e.title]));
+    const projectTitleMap = new Map(projects.map((p) => [p.slug, p.title]));
+
+    // ── Assemble activity items ──────────────────────────────────────────
     type ActivityItem = {
       id: string;
       type: "lesson" | "exercise" | "project";
@@ -261,31 +304,25 @@ export const ProgressService = {
 
     const activities: ActivityItem[] = [];
 
-    // Map progress (lessons)
     for (const p of recentProgress) {
-      // Find the lesson title (since we don't have direct relation in db.progress to static lesson title right away, we query it)
-      const lesson = await db.lesson.findFirst({ where: { slug: p.lessonId } });
       activities.push({
         id: p.id,
         type: "lesson",
-        title: lesson?.title || p.lessonId,
-        date: p.completedAt || p.updatedAt,
+        title: lessonTitleMap.get(p.lessonId) ?? p.lessonId,
+        date: p.completedAt ?? p.updatedAt,
         status: p.status,
-        targetId: p.lessonId
+        targetId: p.lessonId,
       });
     }
 
-    // Map submissions (exercises/projects)
     for (const s of recentSubmissions) {
+      const type: "exercise" | "project" = s.projectId ? "project" : "exercise";
       let title = s.exerciseId || s.projectId || "Code Submission";
-      let type: "exercise" | "project" = s.projectId ? "project" : "exercise";
-      
+
       if (type === "exercise" && s.exerciseId) {
-        const ex = await db.exercise.findFirst({ where: { slug: s.exerciseId } });
-        if (ex) title = ex.title;
+        title = exerciseTitleMap.get(s.exerciseId) ?? title;
       } else if (type === "project" && s.projectId) {
-        const proj = await db.project.findFirst({ where: { slug: s.projectId } });
-        if (proj) title = proj.title;
+        title = projectTitleMap.get(s.projectId) ?? title;
       }
 
       activities.push({
@@ -294,14 +331,13 @@ export const ProgressService = {
         title,
         date: s.createdAt,
         status: s.status,
-        score: s.score || undefined,
+        score: s.score ?? undefined,
         targetId: s.exerciseId || s.projectId || "",
       });
     }
 
-    // Sort combined activities and take limit
     return activities
       .sort((a, b) => b.date.getTime() - a.date.getTime())
       .slice(0, limit);
-  }
+  },
 };

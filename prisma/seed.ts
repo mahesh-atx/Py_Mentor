@@ -16,13 +16,20 @@ import { fileHandlingModule } from "./notes/2.4 File Handling";
 import { errorHandlingModule } from "./notes/2.5 Error Handling";
 
 // ============================================================
+// CLI: `npx tsx prisma/seed.ts --force` to reset & re-seed.
+// Without --force the script only upserts (safe for re-runs).
+// ============================================================
+const FORCE = process.argv.includes("--force");
+
+// ============================================================
 // PHASE DEFINITIONS — Grouping modules into progressive roadmaps
 // ============================================================
 const phases = [
   {
     slug: "phase-1",
     title: "Phase 1: Python Fundamentals",
-    description: "Learn to think in Python. Set up your environment, understand syntax, variables, operators, and control flow.",
+    description:
+      "Learn to think in Python. Set up your environment, understand syntax, variables, operators, and control flow.",
     order: 1,
     modules: [
       gettingStartedModule,
@@ -35,7 +42,8 @@ const phases = [
   {
     slug: "phase-2",
     title: "Phase 2: Working with Data",
-    description: "Master Python's core data types and built-in tools — strings, lists, tuples, sets, dictionaries, and essential built-in functions.",
+    description:
+      "Master Python's core data types and built-in tools — strings, lists, tuples, sets, dictionaries, and essential built-in functions.",
     order: 2,
     modules: [
       listsModule,
@@ -50,29 +58,87 @@ const phases = [
   {
     slug: "phase-3",
     title: "Phase 3: Object-Oriented Programming",
-    description: "Design and architect with classes, objects, inheritance, polymorphism, abstraction, and magic methods.",
+    description:
+      "Design and architect with classes, objects, inheritance, polymorphism, abstraction, and magic methods.",
     order: 3,
-    modules: [
-      oopFundamentalsModule,
-      oopPillarsModule,
-    ],
-  }
+    modules: [oopFundamentalsModule, oopPillarsModule],
+  },
 ];
 
+// ============================================================
+// ACHIEVEMENT DEFINITIONS
+// ============================================================
+const achievements = [
+  {
+    title: "First Blood",
+    description: "Complete your first lesson.",
+    icon: "Zap",
+    color: "text-yellow-500",
+    xpReward: 50,
+    condition: JSON.stringify({ type: "lessons_completed", count: 1 }),
+  },
+  {
+    title: "Getting Started",
+    description: "Complete 5 lessons.",
+    icon: "Rocket",
+    color: "text-blue-500",
+    xpReward: 100,
+    condition: JSON.stringify({ type: "lessons_completed", count: 5 }),
+  },
+  {
+    title: "7-Day Streak",
+    description: "Code for 7 consecutive days.",
+    icon: "Flame",
+    color: "text-red-500",
+    xpReward: 300,
+    condition: JSON.stringify({ type: "streak", days: 7 }),
+  },
+  {
+    title: "Project Alpha",
+    description: "Complete your first project.",
+    icon: "Trophy",
+    color: "text-purple-500",
+    xpReward: 500,
+    condition: JSON.stringify({ type: "projects_completed", count: 1 }),
+  },
+  {
+    title: "Bug Hunter",
+    description: "Fix 10 code errors.",
+    icon: "Bug",
+    color: "text-orange-500",
+    xpReward: 150,
+    condition: JSON.stringify({ type: "errors_fixed", count: 10 }),
+  },
+];
+
+// ============================================================
+// MAIN
+// ============================================================
 async function main() {
   console.log("🌱 Seeding database...");
 
-  // Clear existing curriculum data to start fresh
-  await prisma.roadmap.deleteMany();
-  await prisma.module.deleteMany();
-  await prisma.topic.deleteMany();
-  await prisma.lesson.deleteMany();
-  await prisma.exercise.deleteMany();
-  await prisma.achievement.deleteMany();
+  // ── Force-reset path (opt-in via --force) ──────────────────────────
+  if (FORCE) {
+    console.log("⚠️  --force detected: clearing existing curriculum data.");
+    // Delete child records first to respect FK constraints, then parents.
+    // Order matters: children → parents.
+    await prisma.exercise.deleteMany();
+    await prisma.quizQuestion.deleteMany();
+    await prisma.quiz.deleteMany();
+    await prisma.project.deleteMany();
+    await prisma.lesson.deleteMany();
+    await prisma.topic.deleteMany();
+    await prisma.module.deleteMany();
+    await prisma.roadmap.deleteMany();
+    await prisma.achievement.deleteMany();
+    console.log("✅ Existing curriculum cleared. Re-seeding from scratch.");
+  } else {
+    console.log(
+      "ℹ️  Running in upsert mode (safe to re-run). Use --force to reset first.",
+    );
+  }
 
-  // ============================================================
-  // SEED ROADMAPS & MODULES
-  // ============================================================
+  // ── Seed roadmaps, modules, topics, lessons, exercises ─────────────
   for (const phase of phases) {
     console.log(`\n📦 Seeding ${phase.title}...`);
 
@@ -95,18 +161,17 @@ async function main() {
 
     for (let mIndex = 0; mIndex < phase.modules.length; mIndex++) {
       const m = phase.modules[mIndex];
-      // Module order is relative within the phase (1-based)
       const moduleOrder = mIndex + 1;
       console.log(`  -> Seeding module: ${m.title}`);
 
-      const moduleId = await prisma.module.upsert({
+      const moduleRecord = await prisma.module.upsert({
         where: { slug: m.slug },
         update: {
           title: m.title,
           description: m.description,
           order: moduleOrder,
           isPublished: true,
-          roadmapId: roadmap.id, // Reassign to correct roadmap on re-seed
+          roadmapId: roadmap.id,
         },
         create: {
           title: m.title,
@@ -119,46 +184,46 @@ async function main() {
       });
 
       for (let lIndex = 0; lIndex < m.lessons.length; lIndex++) {
-        const l = m.lessons[lIndex] as any;
+        const lessonDef = m.lessons[lIndex] as any;
         const topicSlug = `${m.slug}-topic-${lIndex + 1}`;
 
         const topic = await prisma.topic.upsert({
           where: { slug: topicSlug },
           update: {
-            title: l.title,
-            description: `Learn about ${l.title}`,
+            title: lessonDef.title,
+            description: `Learn about ${lessonDef.title}`,
             order: lIndex + 1,
             isPublished: true,
           },
           create: {
-            title: l.title,
+            title: lessonDef.title,
             slug: topicSlug,
-            description: `Learn about ${l.title}`,
+            description: `Learn about ${lessonDef.title}`,
             order: lIndex + 1,
             isPublished: true,
-            moduleId: moduleId.id,
+            moduleId: moduleRecord.id,
           },
         });
 
         // Lesson
         await prisma.lesson.upsert({
-          where: { topicId_slug: { topicId: topic.id, slug: l.slug } },
+          where: { topicId_slug: { topicId: topic.id, slug: lessonDef.slug } },
           update: {
-            title: l.title,
-            content: l.content,
-            objectives: l.objectives || [],
+            title: lessonDef.title,
+            content: lessonDef.content,
+            objectives: lessonDef.objectives || [],
             duration: 15,
-            xpReward: l.xpReward || 50,
+            xpReward: lessonDef.xpReward || 50,
             order: 1,
             isPublished: true,
           },
           create: {
-            title: l.title,
-            slug: l.slug,
-            content: l.content,
-            objectives: l.objectives || [],
+            title: lessonDef.title,
+            slug: lessonDef.slug,
+            content: lessonDef.content,
+            objectives: lessonDef.objectives || [],
             duration: 15,
-            xpReward: l.xpReward || 50,
+            xpReward: lessonDef.xpReward || 50,
             order: 1,
             isPublished: true,
             topicId: topic.id,
@@ -166,11 +231,11 @@ async function main() {
         });
 
         // Exercises
-        if ((l as any).exercises) {
-          const exercises = (l as any).exercises;
+        if (lessonDef.exercises) {
+          const exercises = lessonDef.exercises;
           for (let eIndex = 0; eIndex < exercises.length; eIndex++) {
             const e = exercises[eIndex];
-            const exSlug = `${l.slug}-ex-${eIndex + 1}`;
+            const exSlug = `${lessonDef.slug}-ex-${eIndex + 1}`;
 
             await prisma.exercise.upsert({
               where: { topicId_slug: { topicId: topic.id, slug: exSlug } },
@@ -207,38 +272,31 @@ async function main() {
     }
   }
 
-    // ACHIEVEMENTS
-    const achievements = [
-      { title: "First Blood", description: "Complete your first lesson.", icon: "Zap", color: "text-yellow-500", xpReward: 50, condition: JSON.stringify({ type: "lessons_completed", count: 1 }) },
-      { title: "Getting Started", description: "Complete 5 lessons.", icon: "Rocket", color: "text-blue-500", xpReward: 100, condition: JSON.stringify({ type: "lessons_completed", count: 5 }) },
-      { title: "7-Day Streak", description: "Code for 7 consecutive days.", icon: "Flame", color: "text-red-500", xpReward: 300, condition: JSON.stringify({ type: "streak", days: 7 }) },
-      { title: "Project Alpha", description: "Complete your first project.", icon: "Trophy", color: "text-purple-500", xpReward: 500, condition: JSON.stringify({ type: "projects_completed", count: 1 }) },
-      { title: "Bug Hunter", description: "Fix 10 code errors.", icon: "Bug", color: "text-orange-500", xpReward: 150, condition: JSON.stringify({ type: "errors_fixed", count: 10 }) },
-    ];
+  // ── Seed achievements ─────────────────────────────────────────────
+  console.log("\n🏆 Seeding achievements...");
+  for (const a of achievements) {
+    await prisma.achievement.upsert({
+      where: { title: a.title },
+      update: {
+        description: a.description,
+        icon: a.icon,
+        color: a.color,
+        xpReward: a.xpReward,
+        condition: a.condition,
+      },
+      create: {
+        title: a.title,
+        description: a.description,
+        icon: a.icon,
+        color: a.color,
+        xpReward: a.xpReward,
+        condition: a.condition,
+      },
+    });
+  }
 
-    for (const a of achievements) {
-      await prisma.achievement.upsert({
-        where: { title: a.title },
-        update: {
-          description: a.description,
-          icon: a.icon,
-          color: a.color,
-          xpReward: a.xpReward,
-          condition: a.condition,
-        },
-        create: {
-          title: a.title,
-          description: a.description,
-          icon: a.icon,
-          color: a.color,
-          xpReward: a.xpReward,
-          condition: a.condition,
-        },
-      });
-    }
-  
-  console.log("✅ Curriculum and Achievements seeded via upserts");
-  console.log("\n🎉 Database seeded successfully!");
+  console.log("✅ Curriculum and Achievements seeded successfully.");
+  console.log("\n🎉 Database seeding complete!");
 }
 
 main()
