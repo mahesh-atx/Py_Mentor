@@ -148,25 +148,25 @@ export function DashboardClient({ continueTopic, recommendedTopics, stats, recen
                 </Card>
               ) : (
                 recentActivity.map((activity) => (
-                  <Card key={activity.id} className="flex items-center justify-between p-4 bg-card hover:bg-muted/30 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className={`p-2 rounded-lg ${
+                  <Card key={activity.id} className="flex flex-row items-center justify-between py-2.5 px-4 bg-card hover:bg-muted/30 transition-colors gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className={`p-1.5 rounded-md ${
                         activity.type === 'lesson' ? 'bg-primary/10 text-primary' : 
                         activity.type === 'exercise' ? 'bg-warning/10 text-warning' : 
                         'bg-purple-500/10 text-purple-500'
                       }`}>
-                        {activity.type === 'lesson' ? <Play className="h-4 w-4" /> : 
-                         activity.type === 'exercise' ? <Code className="h-4 w-4" /> : 
-                         <FolderDot className="h-4 w-4" />}
+                        {activity.type === 'lesson' ? <Play className="h-3.5 w-3.5" /> : 
+                         activity.type === 'exercise' ? <Code className="h-3.5 w-3.5" /> : 
+                         <FolderDot className="h-3.5 w-3.5" />}
                       </div>
                       <div>
-                        <h3 className="font-medium text-sm">{activity.title}</h3>
+                        <h3 className="font-medium text-sm leading-none mb-1">{activity.title}</h3>
                         <p className="text-xs text-muted-foreground capitalize">{activity.type} • {activity.status}</p>
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right flex flex-col items-end gap-0.5">
                       {activity.score !== undefined && (
-                        <div className="text-sm font-bold text-success">+{activity.score} XP</div>
+                        <div className="text-xs font-bold text-success">+{activity.score} XP</div>
                       )}
                       <div className="text-xs text-muted-foreground">
                         {new Date(activity.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
