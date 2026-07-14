@@ -68,6 +68,10 @@ function ensureDataDir() {
   if (!fs.existsSync(BACKUP_DIR)) {
     fs.mkdirSync(BACKUP_DIR, { recursive: true });
   }
+  // Ensure config.json exists so other commands can rely on it
+  if (!fs.existsSync(CONFIG_PATH)) {
+    fs.writeFileSync(CONFIG_PATH, JSON.stringify({}, null, 2));
+  }
 }
 
 function isFirstRun() {
