@@ -20,9 +20,12 @@
  *   │   └── package.json      → Minimal package.json
  *   ├── prisma/
  *   │   ├── schema.sqlite.prisma  → SQLite schema
- *   │   └── migrations.sqlite/    → SQLite migrations
- *   ├── public/               → Static assets (fonts, images)
- *   └── seed/                 → Pre-compiled seed script
+ *   │   ├── migrations.sqlite/    → SQLite migrations
+ *   │   ├── seed.ts               → Curriculum seeder (TS)
+ *   │   └── notes/                → Curriculum content modules
+ *   ├── public/               → Static assets (fonts, pyodide)
+ *   ├── bin/                  → CLI entry point
+ *   └── seed/                 → Seed wrapper script
  */
 
 const fs = require("fs");
@@ -51,7 +54,6 @@ function copyDir(src, dest) {
     const destPath = path.join(dest, entry.name);
 
     if (entry.isSymbolicLink()) {
-      // Copy symlink as-is
       const linkTarget = fs.readlinkSync(srcPath);
       fs.symlinkSync(linkTarget, destPath);
     } else if (entry.isDirectory()) {
@@ -59,7 +61,6 @@ function copyDir(src, dest) {
     } else if (entry.isFile()) {
       fs.copyFileSync(srcPath, destPath);
     }
-    // Skip other types (block devices, sockets, etc.)
   }
 }
 
@@ -127,14 +128,12 @@ function main() {
   copyDir(standaloneDir, path.join(DIST, "server"));
 
   // ── 2. Copy .next/static into standalone ─────────────────────────────
-  // Next.js standalone does NOT include static assets — a known quirk.
-  // We must copy them manually.
   console.log("  → Copying .next/static/...");
   const staticSrc = path.join(ROOT, ".next", "static");
   const staticDest = path.join(DIST, "server", ".next", "static");
   copyDir(staticSrc, staticDest);
 
-  // ── 3. Copy public/ assets ──────────────────────────────────────────
+  // ── 3. Copy public/ assets (fonts, pyodide, etc.) ────────────────────
   console.log("  → Copying public/ assets...");
   copyDir(path.join(ROOT, "public"), path.join(DIST, "server", "public"));
 
@@ -152,20 +151,52 @@ function main() {
     );
   }
 
-  // ── 5. Copy seed script ─────────────────────────────────────────────
-  // The seed script is written in TS; for the npm package we need the
-  // compiled version. We'll create a small JS wrapper that uses tsx.
+  // ── 5. Copy seed script + curriculum data ────────────────────────────
+  console.log("  → Copying seed script and curriculum data...");
+  copyFile(
+    path.join(ROOT, "prisma", "seed.ts"),
+    path.join(DIST, "prisma", "seed.ts")
+  );
+
+  if (fs.existsSync(path.join(ROOT, "prisma", "notes"))) {
+    copyDir(
+      path.join(ROOT, "prisma", "notes"),
+      path.join(DIST, "prisma", "notes")
+    );
+  }
+
+  // ── 6. Create seed wrapper ──────────────────────────────────────────
+  // The seed script is TypeScript and imports from ../src/lib/db/prisma.
+  // The wrapper uses tsx to run it, resolving paths relative to the
+  // project root (where node_modules and src/ are available).
   console.log("  → Creating seed wrapper...");
   const seedWrapper = `#!/usr/bin/env node
 /**
  * Seed wrapper for npm distribution.
  * Uses tsx to run the TypeScript seed script at runtime.
+ * Resolves paths relative to the installed package root.
  */
 const { execSync } = require("child_process");
 const path = require("path");
+const fs = require("fs");
 
-const seedPath = path.join(__dirname, "..", "prisma", "seed.ts");
-const projectRoot = path.join(__dirname, "..");
+// The seed.ts is at dist/prisma/seed.ts — find the package root from here
+const seedDir = path.join(__dirname, "..", "prisma");
+const seedPath = path.join(seedDir, "seed.ts");
+
+// The package root is where node_modules, src/ etc. live
+// When installed globally, __dirname is inside dist/seed/
+let projectRoot = path.join(__dirname, "..");
+
+// Walk up to find the root (has node_modules or package.json)
+while (!fs.existsSync(path.join(projectRoot, "node_modules")) && projectRoot !== "/") {
+  projectRoot = path.dirname(projectRoot);
+}
+
+if (!fs.existsSync(seedPath)) {
+  console.error("❌ Seed script not found at:", seedPath);
+  process.exit(1);
+}
 
 try {
   execSync(\`npx tsx "\${seedPath}"\`, {
@@ -181,25 +212,10 @@ try {
   fs.mkdirSync(path.join(DIST, "seed"), { recursive: true });
   fs.writeFileSync(path.join(DIST, "seed", "seed.js"), seedWrapper);
 
-  // Also copy the actual seed.ts so it can be compiled/run
-  copyFile(
-    path.join(ROOT, "prisma", "seed.ts"),
-    path.join(DIST, "prisma", "seed.ts")
-  );
-
-  // ── 6. Copy curriculum data (notes) that the seed imports ────────────
-  console.log("  → Copying curriculum notes data...");
-  copyDir(
-    path.join(ROOT, "prisma", "notes"),
-    path.join(DIST, "prisma", "notes")
-  );
-
   // ── 7. Create a minimal package.json for the dist server ─────────────
-  // The standalone server already has one, but we ensure it's correct.
   const serverPkgPath = path.join(DIST, "server", "package.json");
   if (fs.existsSync(serverPkgPath)) {
     const pkg = JSON.parse(fs.readFileSync(serverPkgPath, "utf-8"));
-    // Ensure the start command is correct
     pkg.scripts = pkg.scripts || {};
     pkg.scripts.start = "node server.js";
     fs.writeFileSync(serverPkgPath, JSON.stringify(pkg, null, 2));
@@ -213,10 +229,21 @@ try {
 
   // ── 9. Create dist package.json for npm publishing ───────────────────
   console.log("  → Creating dist package.json...");
+
+  // Read the root package.json for version, description etc.
+  const rootPkg = JSON.parse(
+    fs.readFileSync(path.join(ROOT, "package.json"), "utf-8")
+  );
+
   const distPkg = {
-    name: "pymentor",
-    version: "1.0.0",
-    description: "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
+    name: rootPkg.name,
+    version: rootPkg.version,
+    description: rootPkg.description,
+    license: rootPkg.license,
+    author: rootPkg.author,
+    repository: rootPkg.repository,
+    homepage: rootPkg.homepage,
+    bugs: rootPkg.bugs,
     bin: {
       pymentor: "./bin/cli.js",
     },
@@ -230,28 +257,40 @@ try {
       start: "node dist/server/server.js",
       seed: "node dist/seed/seed.js",
     },
-    dependencies: {
-      // These are needed at runtime for the CLI and Prisma
-      // The server's own node_modules are already in standalone output
-    },
-    keywords: [
-      "python",
-      "mentor",
-      "learn",
-      "tutorial",
-      "offline",
-      "programming",
-      "education",
-    ],
-    license: "MIT",
-    engines: {
-      node: ">=18.0.0",
-    },
+    keywords: rootPkg.keywords,
+    engines: rootPkg.engines,
   };
   fs.writeFileSync(
     path.join(DIST, "package.json"),
     JSON.stringify(distPkg, null, 2)
   );
+
+  // ── 10. Copy src/lib/db/ for seed dependencies ───────────────────────
+  // The seed.ts imports from ../src/lib/db/prisma and ../src/lib/db/json-helper
+  // These need to be available in the dist for tsx to resolve them.
+  console.log("  → Copying src/lib/db/ for seed dependencies...");
+  copyDir(
+    path.join(ROOT, "src", "lib", "db"),
+    path.join(DIST, "src", "lib", "db")
+  );
+
+  // ── 11. Copy sql.js WASM binary for CLI migration support ────────────
+  console.log("  → Ensuring sql.js WASM is available...");
+  try {
+    const sqlJsDir = path.dirname(
+      require.resolve("sql.js/package.json", { paths: [ROOT] })
+    );
+    const wasmSrc = path.join(sqlJsDir, "dist", "sql-wasm.wasm");
+    if (fs.existsSync(wasmSrc)) {
+      // Copy into the server's node_modules so it's available at runtime
+      const wasmDest = path.join(
+        DIST, "server", "node_modules", "sql.js", "dist", "sql-wasm.wasm"
+      );
+      copyFile(wasmSrc, wasmDest);
+    }
+  } catch {
+    console.warn("  ⚠️  Could not locate sql.js WASM binary");
+  }
 
   // ── Summary ──────────────────────────────────────────────────────────
   console.log("\n✅ dist/ prepared successfully!\n");
@@ -259,6 +298,7 @@ try {
   console.log(`     Server:     ${getDirSizeMB(path.join(DIST, "server"))} MB`);
   console.log(`     Prisma:     ${getDirSizeMB(path.join(DIST, "prisma"))} MB`);
   console.log(`     Seed:       ${getDirSizeMB(path.join(DIST, "seed"))} MB`);
+  console.log(`     Src/DB:     ${getDirSizeMB(path.join(DIST, "src"))} MB`);
   console.log(`     Total:      ${getDirSizeMB(DIST)} MB`);
   console.log("\n  Next steps:");
   console.log("     1. Test: node dist/server/server.js");

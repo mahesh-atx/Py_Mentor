@@ -132,14 +132,59 @@ describe("Phase 4: Pyodide Offline Support", () => {
   });
 
   describe("public/pyodide/ directory", () => {
-    it("public/pyodide/ may or may not exist (optional download)", () => {
+    it("public/pyodide/ exists with core files for offline use", () => {
       const pyodideDir = path.join(ROOT, "public", "pyodide");
-      // It's fine if it doesn't exist — the CDN fallback handles it
-      // But if it does exist, it should have the core files
-      if (fs.existsSync(pyodideDir)) {
-        const files = fs.readdirSync(pyodideDir);
-        expect(files.length).toBeGreaterThan(0);
-      }
+      expect(fs.existsSync(pyodideDir)).toBe(true);
+
+      const files = fs.readdirSync(pyodideDir);
+      expect(files.length).toBeGreaterThan(0);
+    });
+
+    it("has pyodide.mjs for module loading", () => {
+      const pyodideDir = path.join(ROOT, "public", "pyodide");
+      if (!fs.existsSync(pyodideDir)) return;
+      expect(fs.existsSync(path.join(pyodideDir, "pyodide.mjs"))).toBe(true);
+    });
+
+    it("has pyodide.asm.wasm for Python runtime", () => {
+      const pyodideDir = path.join(ROOT, "public", "pyodide");
+      if (!fs.existsSync(pyodideDir)) return;
+      expect(fs.existsSync(path.join(pyodideDir, "pyodide.asm.wasm"))).toBe(true);
+    });
+
+    it("has python_stdlib.zip for standard library", () => {
+      const pyodideDir = path.join(ROOT, "public", "pyodide");
+      if (!fs.existsSync(pyodideDir)) return;
+      expect(fs.existsSync(path.join(pyodideDir, "python_stdlib.zip"))).toBe(true);
+    });
+
+    it("has pyodide-lock.json for package resolution", () => {
+      const pyodideDir = path.join(ROOT, "public", "pyodide");
+      if (!fs.existsSync(pyodideDir)) return;
+      expect(fs.existsSync(path.join(pyodideDir, "pyodide-lock.json"))).toBe(true);
+    });
+
+    it("WASM file is larger than 5 MB (real Pyodide, not stub)", () => {
+      const wasmPath = path.join(ROOT, "public", "pyodide", "pyodide.asm.wasm");
+      if (!fs.existsSync(wasmPath)) return;
+      const stats = fs.statSync(wasmPath);
+      expect(stats.size).toBeGreaterThan(5 * 1024 * 1024); // > 5 MB
+    });
+  });
+
+  describe("download-pyodide.sh: node_modules copy support", () => {
+    it("script tries node_modules/pyodide/ first (offline)", () => {
+      const scriptPath = path.join(ROOT, "scripts", "download-pyodide.sh");
+      const content = fs.readFileSync(scriptPath, "utf-8");
+      expect(content).toContain("node_modules/pyodide");
+      expect(content).toContain("Copying Pyodide from node_modules");
+    });
+
+    it("script falls back to CDN download", () => {
+      const scriptPath = path.join(ROOT, "scripts", "download-pyodide.sh");
+      const content = fs.readFileSync(scriptPath, "utf-8");
+      expect(content).toContain("cdn.jsdelivr.net");
+      expect(content).toContain("Method 2: Download from CDN");
     });
   });
 });
@@ -265,6 +310,70 @@ describe("Phase 5: AI Mentor Graceful Degradation", () => {
       expect(content).toMatch(/AI Provider/i);
       expect(content).toMatch(/Not configured|OpenRouter|NVIDIA/i);
     });
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Font Files for Offline Support
+// ---------------------------------------------------------------------------
+
+describe("Font Files for Offline Support", () => {
+  it("Manrope.woff2 (Regular 400) exists and is a real font", () => {
+    const fontPath = path.join(ROOT, "public", "fonts", "Manrope.woff2");
+    expect(fs.existsSync(fontPath)).toBe(true);
+    const stats = fs.statSync(fontPath);
+    // A real font is > 10 KB; a placeholder would be < 1 KB
+    expect(stats.size).toBeGreaterThan(10000);
+  });
+
+  it("Manrope-Bold.woff2 (700) exists and is a real font", () => {
+    const fontPath = path.join(ROOT, "public", "fonts", "Manrope-Bold.woff2");
+    expect(fs.existsSync(fontPath)).toBe(true);
+    const stats = fs.statSync(fontPath);
+    expect(stats.size).toBeGreaterThan(10000);
+  });
+
+  it("Manrope-SemiBold.woff2 (600) exists and is a real font", () => {
+    const fontPath = path.join(ROOT, "public", "fonts", "Manrope-SemiBold.woff2");
+    expect(fs.existsSync(fontPath)).toBe(true);
+    const stats = fs.statSync(fontPath);
+    expect(stats.size).toBeGreaterThan(10000);
+  });
+
+  it("Manrope-ExtraBold.woff2 (800) exists and is a real font", () => {
+    const fontPath = path.join(ROOT, "public", "fonts", "Manrope-ExtraBold.woff2");
+    expect(fs.existsSync(fontPath)).toBe(true);
+    const stats = fs.statSync(fontPath);
+    expect(stats.size).toBeGreaterThan(10000);
+  });
+
+  it("PaperMono.woff2 exists for code editor", () => {
+    const fontPath = path.join(ROOT, "public", "fonts", "PaperMono.woff2");
+    expect(fs.existsSync(fontPath)).toBe(true);
+  });
+
+  it("layout.tsx uses multi-weight local fonts", () => {
+    const layoutPath = path.join(ROOT, "src", "app", "layout.tsx");
+    const content = fs.readFileSync(layoutPath, "utf-8");
+
+    // Should have src array with multiple weights
+    expect(content).toContain("Manrope.woff2");
+    expect(content).toContain("Manrope-SemiBold.woff2");
+    expect(content).toContain("Manrope-Bold.woff2");
+    expect(content).toContain("Manrope-ExtraBold.woff2");
+
+    // Should have weight declarations
+    expect(content).toContain('"400"');
+    expect(content).toContain('"600"');
+    expect(content).toContain('"700"');
+    expect(content).toContain('"800"');
+  });
+
+  it("layout.tsx uses next/font/local (not Google)", () => {
+    const layoutPath = path.join(ROOT, "src", "app", "layout.tsx");
+    const content = fs.readFileSync(layoutPath, "utf-8");
+    expect(content).toContain('import localFont from "next/font/local"');
+    expect(content).not.toContain("next/font/google");
   });
 });
 

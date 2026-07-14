@@ -7,12 +7,34 @@ import "./globals.css";
 
 // ── Fonts ────────────────────────────────────────────────────────────────
 // For the npm distribution, we use local fonts instead of Google Fonts
-// so the app works fully offline. Manrope is loaded as a local variable
-// font; if the font file is missing (e.g., during sandbox builds), the
-// browser falls back to the system sans-serif font via CSS.
+// so the app works fully offline. Manrope is loaded with multiple weights
+// (400 Regular, 600 SemiBold, 700 Bold, 800 ExtraBold) to match the
+// original Google Fonts variable font behaviour. The browser falls back
+// to the system sans-serif font via CSS if files are missing.
 
 const fontSans = localFont({
-  src: "../../public/fonts/Manrope.woff2",
+  src: [
+    {
+      path: "../../public/fonts/Manrope.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
   variable: "--font-sans",
   fallback: [
     "system-ui",
@@ -23,8 +45,6 @@ const fontSans = localFont({
     "Arial",
     "sans-serif",
   ],
-  // If the font file doesn't exist, don't crash the build.
-  // The CSS variable still gets set and the fallback stack applies.
   display: "swap",
   adjustFontFallback: "Arial",
 });
