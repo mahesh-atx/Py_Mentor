@@ -58,8 +58,23 @@ function createPrismaClient() {
     }
   }
 
-  // ── SQLite — simple, no adapter needed ──
-  return new PrismaClient();
+  // ── SQLite with better-sqlite3 adapter (Prisma 7 requires adapters) ──
+  try {
+    const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
+    const adapter = new PrismaBetterSqlite3({
+      url: process.env.DATABASE_URL || "file:./pymentor.db",
+    });
+    return new PrismaClient({ adapter });
+  } catch (error) {
+    console.error(
+      "[prisma] SQLite mode requested but adapter not available.",
+      error
+    );
+    throw new Error(
+      "SQLite mode requires '@prisma/adapter-better-sqlite3' package. " +
+      "Install it with: npm install @prisma/adapter-better-sqlite3"
+    );
+  }
 }
 
 export const db = globalForPrisma.prisma ?? createPrismaClient();

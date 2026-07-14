@@ -54,8 +54,16 @@ function copyDir(src, dest) {
     const destPath = path.join(dest, entry.name);
 
     if (entry.isSymbolicLink()) {
-      const linkTarget = fs.readlinkSync(srcPath);
-      fs.symlinkSync(linkTarget, destPath);
+      try {
+        const linkTarget = fs.realpathSync(srcPath);
+        if (fs.statSync(linkTarget).isDirectory()) {
+          copyDir(linkTarget, destPath);
+        } else {
+          fs.copyFileSync(linkTarget, destPath);
+        }
+      } catch (e) {
+        console.warn(`⚠️  Failed to resolve symlink: ${srcPath}`);
+      }
     } else if (entry.isDirectory()) {
       copyDir(srcPath, destPath);
     } else if (entry.isFile()) {
@@ -157,6 +165,12 @@ function main() {
     path.join(ROOT, "prisma", "seed.ts"),
     path.join(DIST, "prisma", "seed.ts")
   );
+  if (fs.existsSync(path.join(ROOT, "prisma", "seed.js"))) {
+    copyFile(
+      path.join(ROOT, "prisma", "seed.js"),
+      path.join(DIST, "prisma", "seed.js")
+    );
+  }
 
   if (fs.existsSync(path.join(ROOT, "prisma", "notes"))) {
     copyDir(
@@ -193,13 +207,15 @@ while (!fs.existsSync(path.join(projectRoot, "node_modules")) && projectRoot !==
   projectRoot = path.dirname(projectRoot);
 }
 
-if (!fs.existsSync(seedPath)) {
-  console.error("❌ Seed script not found at:", seedPath);
+const seedPathJs = path.join(seedDir, "seed.js");
+
+if (!fs.existsSync(seedPathJs)) {
+  console.error("❌ Seed script not found at:", seedPathJs);
   process.exit(1);
 }
 
 try {
-  execSync(\`npx tsx "\${seedPath}"\`, {
+  execSync(\`node "\${seedPathJs}"\`, {
     cwd: projectRoot,
     stdio: "inherit",
     env: { ...process.env },
