@@ -49,14 +49,11 @@ const navItems = [
 const secondaryItems = [
   { title: "Progress", url: "/progress", icon: Award, colorClass: "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" },
   { title: "Daily Challenge", url: "/daily-challenge", icon: Calendar, colorClass: "text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]" },
-  { title: "Bookmarks", url: "/notes", icon: Bookmark, colorClass: "text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.6)]" },
-  { title: "Notes", url: "/notes", icon: FileText, colorClass: "text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" },
 ];
 
 const bottomItems = [
-  { title: "Search", url: "#", icon: Search, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
-  { title: "Profile", url: "#", icon: User, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
-  { title: "Settings", url: "#", icon: Settings, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
+  { title: "Profile", url: "/profile", icon: User, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
+  { title: "Settings", url: "/settings", icon: Settings, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
 ];
 
 function CollapsibleModule({ mod, pathname }: { mod: any; pathname: string }) {

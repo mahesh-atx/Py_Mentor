@@ -30,11 +30,14 @@ export default async function DashboardPage() {
   
   // Pick next 2 topics as recommendations
   const recommendedTopics = allTopics.length > 1 ? allTopics.slice(1, 3) : [];
+  
+  const recentActivity = await ProgressService.getRecentActivity(user.id);
 
   return (
     <DashboardClient 
       continueTopic={continueTopic} 
       recommendedTopics={recommendedTopics} 
+      recentActivity={recentActivity}
       stats={{
         totalXp: stats.totalXp,
         lessonsCompleted: stats.completedLessons,

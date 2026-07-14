@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Play, Flame, Target, Trophy, Clock, Code, ChevronRight, Zap } from "lucide-react";
+import { Play, Flame, Target, Trophy, Clock, Code, ChevronRight, Zap, FolderDot } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
@@ -24,9 +24,18 @@ interface DashboardClientProps {
     xpInCurrentLevel: number;
     xpForNextLevel: number;
   };
+  recentActivity?: {
+    id: string;
+    type: "lesson" | "exercise" | "project";
+    title: string;
+    date: Date;
+    status: string;
+    score?: number;
+    targetId: string;
+  }[];
 }
 
-export function DashboardClient({ continueTopic, recommendedTopics, stats }: DashboardClientProps) {
+export function DashboardClient({ continueTopic, recommendedTopics, stats, recentActivity = [] }: DashboardClientProps) {
   return (
     <div className="space-y-8 pb-10 max-w-6xl mx-auto">
       
@@ -129,13 +138,43 @@ export function DashboardClient({ continueTopic, recommendedTopics, stats }: Das
         
         {/* Left Column */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Recent Lessons - MOCKED */}
+          {/* Recent Activity */}
           <section>
             <h2 className="text-xl font-semibold mb-4">Recent Activity</h2>
             <div className="space-y-4">
-              <Card className="flex items-center justify-between p-4 bg-muted/50 text-muted-foreground">
-                No recent activity yet.
-              </Card>
+              {recentActivity.length === 0 ? (
+                <Card className="flex items-center justify-between p-4 bg-muted/50 text-muted-foreground">
+                  No recent activity yet.
+                </Card>
+              ) : (
+                recentActivity.map((activity) => (
+                  <Card key={activity.id} className="flex items-center justify-between p-4 bg-card hover:bg-muted/30 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className={`p-2 rounded-lg ${
+                        activity.type === 'lesson' ? 'bg-primary/10 text-primary' : 
+                        activity.type === 'exercise' ? 'bg-warning/10 text-warning' : 
+                        'bg-purple-500/10 text-purple-500'
+                      }`}>
+                        {activity.type === 'lesson' ? <Play className="h-4 w-4" /> : 
+                         activity.type === 'exercise' ? <Code className="h-4 w-4" /> : 
+                         <FolderDot className="h-4 w-4" />}
+                      </div>
+                      <div>
+                        <h3 className="font-medium text-sm">{activity.title}</h3>
+                        <p className="text-xs text-muted-foreground capitalize">{activity.type} • {activity.status}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      {activity.score !== undefined && (
+                        <div className="text-sm font-bold text-success">+{activity.score} XP</div>
+                      )}
+                      <div className="text-xs text-muted-foreground">
+                        {new Date(activity.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
+                      </div>
+                    </div>
+                  </Card>
+                ))
+              )}
             </div>
           </section>
 
