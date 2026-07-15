@@ -5,6 +5,10 @@ export const listVsArrayLesson = {
 
 Python has both **lists** (built-in) and **arrays** (from the \`array\` module or \`numpy\`). Understanding when to use each is important.
 
+## The Theory — Building the Logic
+
+Under the hood a Python list is a resizable array of object references, which is why it can freely mix types but pays a memory cost for every item it holds. The \`array\` module and NumPy instead store raw values compactly in a single declared type, trading flexibility for speed and space. NumPy adds vectorization, applying one operation across the whole array in compiled code rather than touching elements one by one in Python. The pitfall is assuming lists are automatically fast for math — they are not, and once you commit to a typed array you can no longer mix data types.
+
 ## Python Lists - The Default Choice
 
 Lists are Python's built-in sequence type. They are flexible, easy to use, and work for most situations.

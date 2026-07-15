@@ -22,14 +22,6 @@ const globalForPrisma = globalThis as unknown as {
  * - Fallback → SQLite (safe default for local/offline usage)
  */
 function getProvider(): "sqlite" | "postgresql" {
-  const url = process.env.DATABASE_URL || "";
-  if (
-    url.startsWith("postgresql://") ||
-    url.startsWith("postgres://")
-  ) {
-    return "postgresql";
-  }
-  // Default to SQLite for file: URLs, empty URLs, or any other format
   return "sqlite";
 }
 
@@ -61,9 +53,9 @@ function createPrismaClient() {
   // ── SQLite with better-sqlite3 adapter (Prisma 7 requires adapters) ──
   try {
     const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
-    const adapter = new PrismaBetterSqlite3({
-      url: process.env.DATABASE_URL || "file:./pymentor.db",
-    });
+    const rawUrl = process.env.DATABASE_URL || "file:./pymentor.db";
+    // Pass the connection string to the Prisma adapter (Prisma 7 API)
+    const adapter = new PrismaBetterSqlite3({ url: rawUrl });
     return new PrismaClient({ adapter });
   } catch (error) {
     console.error(

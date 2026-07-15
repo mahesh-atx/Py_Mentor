@@ -5,6 +5,10 @@ export const conditionalStatementsLesson = {
 
 Every program needs to make decisions. Should the user be allowed to log in? Did the student pass the exam? Is the temperature too high? **Conditional statements** let your program make decisions and execute different code based on whether a condition is \`True\` or \`False\`.
 
+## The Theory — Building the Logic
+
+At its heart, a conditional is how you teach a program to *branch*: to follow one path of logic instead of another based on a truth value. Python evaluates the condition inside the \`if\` and converts it to a single boolean — \`True\` or \`False\` — using its rules for truthiness, which means values like \`0\`, \`""\`, and \`None\` count as false and most other values count as true. This is why conditions never need to literally write \`== True\`; the interpreter already reduces the expression to a yes-or-no answer. The mental model to hold is that an \`if\` is a gate, not a loop — the code inside runs at most once, only when the gate opens. A common pitfall is using \`=\` (assignment) instead of \`==\` (comparison), which either breaks the condition or silently changes a variable instead of testing it; another is expecting multiple \`if\` blocks to behave like an \`if-elif\` chain, when in fact each standalone \`if\` is checked independently and can all run.
+
 ## The if Statement
 
 The simplest conditional statement. It runs a block of code **only if** the condition is \`True\`. If the condition is \`False\`, the block is completely skipped.

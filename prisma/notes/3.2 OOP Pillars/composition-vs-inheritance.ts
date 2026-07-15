@@ -3,6 +3,10 @@ export const compositionVsInheritanceLesson = {
   slug: "composition-vs-inheritance",
   content: `# Composition vs Inheritance
 
+## The Theory — Building the Logic
+
+At a deep level, inheritance and composition are two strategies for reusing behavior, but they answer different logical questions: inheritance says "B *is a kind of* A and shares its identity," while composition says "B *uses* an A as one of its parts." Python treats both as ordinary object references, so the difference is conceptual rather than syntactic. Inheritance couples two classes tightly because the child is built directly on the parent's internal structure, so a change in the parent can ripple downward and silently break its children—the classic fragile base class problem. Composition keeps each piece independent and lets you swap parts at runtime, which better matches how real systems evolve. The common pitfall is forcing an IS-A relationship just to borrow a method, reaching for inheritance when the objects are only loosely related and HAS-A would be more honest and flexible.
+
 ## The Key Question
 
 When designing classes, you face a choice: should class B **inherit from** class A (B IS-A A), or should class B **contain** class A (B HAS-A A)?

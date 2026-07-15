@@ -5,6 +5,10 @@ export const identityOperatorsLesson = {
 
 Identity operators check whether two variables **point to the exact same object in memory**, not just whether they have the same value.
 
+## The Theory — Building the Logic
+
+Identity operators go one level deeper than equality: \`==\` asks "do these have the same value?" while \`is\` asks "are these literally the same object in memory?" Every value in Python is an object with a unique identity, and a variable is just a name pointing at that object rather than a box containing the value. When you write \`b = a\`, you create a second name for the *same* object, so changes made through one name are visible through the other — that is the difference \`is\` reveals. The common pitfall is using \`is\` for ordinary value comparisons; it may seem to work on small integers or short strings because of caching optimizations, but it will fail unpredictably on larger values, so reserve \`is\` for checks like \`is None\`.
+
 ## The Operators
 
 \`\`\`

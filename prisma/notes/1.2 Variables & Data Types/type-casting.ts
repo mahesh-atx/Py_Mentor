@@ -5,6 +5,10 @@ export const typeCastingLesson = {
 
 Sometimes you have a value of one type but you need it in a different type. For example, you might have the number \`25\` as a string \`"25"\` but need to do math with it. **Type casting** is the process of converting a value from one data type to another.
 
+## The Theory — Building the Logic
+
+Type casting is the act of **asking Python to reinterpret one kind of value as another**, creating a new object of the target type rather than mutating the old one. Conversion only works when the source value has a clear meaning in the target type — an \`int("3.14")\` fails because the text holds a decimal that an integer cannot represent without a decision about rounding. Each constructor like \`int()\`, \`float()\`, or \`str()\` follows its own built-in rules about what counts as valid input, so knowing those rules lets you predict success or failure. A frequent pitfall is expecting numbers and strings to cooperate automatically; they will not, so you must cast explicitly before combining them, or you will hit a \`TypeError\`.
+
 ## int() - Convert to Integer
 
 Converts a value to a whole number.

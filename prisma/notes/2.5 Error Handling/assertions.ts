@@ -3,6 +3,10 @@ export const assertionsLesson = {
   slug: "assertions",
   content: `# Assertions (assert)
 
+## The Theory — Building the Logic
+
+An assertion is really a claim about the state of your program at a specific moment: you are telling Python, "I am so confident this is true that if it isn't, my logic has a bug." Under the hood, \`assert condition\` is roughly equivalent to \`if not condition: raise AssertionError\`, so it is a specialized, self-documenting form of raising. Python treats it as a development aid rather than a runtime contract, which is why the \`python -O\` flag strips assertions out entirely at byte-compile time. The common pitfall is using \`assert\` to validate untrusted input (like a password or a user's age), because in optimized mode those checks vanish and your guardrails quietly disappear. Think of assertions as executable notes to your future self about invariants that should be impossible to violate, not as a defense against bad data.
+
 ## What is an Assertion?
 
 An **assertion** is a sanity check - a statement that says "this MUST be true at this point in my code." If it is false, Python immediately raises an \`AssertionError\`, signaling a programming bug (not a user error).

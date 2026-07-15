@@ -5,6 +5,10 @@ export const arithmeticOperatorsLesson = {
 
 Arithmetic operators are used to perform basic mathematical operations. If you have done any math in school, these will feel very familiar.
 
+## The Theory — Building the Logic
+
+At its heart, arithmetic in Python applies familiar math operations to *values* held in memory, and every operation produces a brand-new value rather than changing the originals. Python treats numbers as objects, so an expression like \`5 + 3\` really calls a method such as \`int.__add__\` behind the scenes; this is why adding two strings joins them instead of doing numeric addition. Division in programming is never quite like on paper: \`/\` always returns a float because real division can yield fractions, while \`//\` and \`%\` deliberately keep you in the world of whole counts and remainders. The common pitfall is assuming \`/\` gives an integer, or that \`-7 // 2\` rounds toward zero — floor division always rounds *down*, so it returns -4, not -3.
+
 ## The Operators
 
 \`\`\`

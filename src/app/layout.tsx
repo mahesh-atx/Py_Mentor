@@ -54,8 +54,13 @@ const fontMono = localFont({
   variable: "--font-mono",
 });
 
+import { getPlatformConfig } from "@/lib/config/platform";
+import { PlatformProvider } from "@/components/platform-provider";
+
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-  title: "PyMentor",
+  title: getPlatformConfig().appName,
   description: "Learn Programming by Building Logic.",
 };
 
@@ -64,6 +69,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const config = getPlatformConfig();
+
   return (
     <html lang="en" suppressHydrationWarning className={`${fontSans.variable} ${fontMono.variable} font-sans h-full antialiased`}>
       <body className="min-h-screen bg-background text-foreground">
@@ -74,7 +81,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            {children}
+            <PlatformProvider config={config}>
+              {children}
+            </PlatformProvider>
             <Toaster position="bottom-right" />
           </TooltipProvider>
         </ThemeProvider>

@@ -5,6 +5,10 @@ export const nestedLoopsLesson = {
 
 A **nested loop** is a loop inside another loop. The inner loop runs **completely** for every single iteration of the outer loop. Think of it like a clock: for every 1 hour (outer), the minute hand goes around 60 times (inner).
 
+## The Theory — Building the Logic
+
+A nested loop is simply one loop living inside another, and the defining idea is that the *inner* loop runs to completion on every single pass of the *outer* loop. Python executes them like clockwork: it enters the outer iteration, spins through all inner repetitions, then returns to the outer for the next step, repeating the whole inner cycle each time. This makes the total number of inner iterations multiply rather than add — an outer of size n and inner of size m produce n times m runs — which is exactly why nested loops fit rows-and-columns problems like grids and tables. The mental trap is forgetting that the inner loop restarts fresh each outer pass, so any inner counter must be reset inside the outer loop to behave correctly. Another common pitfall is nesting too deeply, where the multiplied iterations quietly make a simple-looking program very slow.
+
 ## Basic Structure
 
 \`\`\`python

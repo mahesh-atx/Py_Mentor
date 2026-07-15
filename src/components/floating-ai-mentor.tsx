@@ -45,7 +45,7 @@ interface ProviderStatus {
   model: string;
 }
 
-export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: string; code?: string } = {}): string[] {
+export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: string; code?: string } = {}, config: any): string[] {
   if (ctx.code) {
     return [
       "My code isn't working — help me debug",
@@ -69,20 +69,24 @@ export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: 
       "Show me a real-world example",
     ];
   }
+  
   return [
     "Quiz me on something I should know",
     "What should I learn next?",
-    "Explain a Python concept I'm shaky on",
+    `Explain a ${config.languageCapitalized} concept I'm shaky on`,
   ];
 }
+
+import { usePlatform } from "@/components/platform-provider";
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const WELCOME_MESSAGE: Message = {
-  role: "assistant",
-  content: `Hi! I'm **PyMentor**, your AI coding mentor. 👋
+function getWelcomeMessage(config: any): Message {
+  return {
+    role: "assistant",
+    content: `Hi! I'm **${config.appName}**, your AI coding mentor. 👋
 
 I can help you:
 - **Explain** a lesson or concept in plain language
@@ -91,22 +95,26 @@ I can help you:
 - **Suggest** what to learn next
 
 Ask me anything, or tap a suggestion below to get started.`,
-};
+  };
+}
 
-const GENERIC_SUGGESTIONS = [
-  "Quiz me on Python basics",
-  "What should I learn next?",
-  "Explain variables like I'm 5",
-  "Give me a quick practice problem",
-];
+function getGenericSuggestions(config: any) {
+  return [
+    `Quiz me on ${config.languageCapitalized} basics`,
+    "What should I learn next?",
+    "Explain variables like I'm 5",
+    "Give me a quick practice problem",
+  ];
+}
 
 // Regex that captures model-generated "what you can ask next" follow-up block.
 // Matches the exact format the system prompt instructs the model to emit.
 const SUGGESTION_BLOCK_REGEX = /\n*>>>\s*What you can ask next:\s*\n([\s\S]*?)$/i;
 
 export function FloatingAiMentor() {
+  const config = usePlatform();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([getWelcomeMessage(config)]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -177,10 +185,10 @@ export function FloatingAiMentor() {
       topicSlug: context.topicSlug,
       exerciseSlug: context.exerciseSlug,
       code: context.code,
-    });
+    }, config);
     // Prefer context-aware ones, fall back to generic.
-    return fromContext.length > 0 ? fromContext.slice(0, 4) : GENERIC_SUGGESTIONS;
-  }, [context.topicSlug, context.exerciseSlug, context.code]);
+    return fromContext.length > 0 ? fromContext.slice(0, 4) : getGenericSuggestions(config);
+  }, [context.topicSlug, context.exerciseSlug, context.code, config]);
 
   // ── Parse a model reply into (body, followUpSuggestions) ───────────────
   function parseSuggestions(content: string): { body: string; followUps: string[] } {
@@ -343,7 +351,7 @@ export function FloatingAiMentor() {
     abortRef.current?.abort();
     chatIdRef.current = null;
     setError(null);
-    setMessages([WELCOME_MESSAGE]);
+    setMessages([getWelcomeMessage(config)]);
   };
 
   // Determine the most recent assistant follow-up suggestions (for the chips).
@@ -594,7 +602,7 @@ export function FloatingAiMentor() {
             {/* Follow-up suggestion chips after the last assistant reply */}
             {showFollowUps && followUps.length > 0 && (
               <div className="flex flex-wrap gap-2 pl-11">
-                {followUps.map((q, i) => (
+                {followUps.map((q: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => handleSuggestion(q)}
@@ -610,7 +618,7 @@ export function FloatingAiMentor() {
             {/* Initial suggestions under the welcome message */}
             {messages.length === 1 && !isTyping && (
               <div className="flex flex-wrap gap-2 pl-11">
-                {suggestions.map((q, i) => (
+                {suggestions.map((q: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => handleSuggestion(q)}

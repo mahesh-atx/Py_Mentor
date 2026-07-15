@@ -3,6 +3,10 @@ export const strAndReprLesson = {
   slug: "str-and-repr",
   content: `# __str__() and __repr__() Methods
 
+## The Theory — Building the Logic
+
+\`__str__\` and \`__repr__\` are part of Python's *protocol* system: special double-underscore methods that let your ordinary objects hook into built-in operations like \`print()\` and \`str()\`, so custom types feel like native ones. The guiding idea is that every object has two audiences — a human user who wants a friendly summary, and a developer who needs an unambiguous, debuggable view — and Python calls the appropriate method depending on *who* is looking. \`__repr__\` is considered the "official" representation and is the fallback when \`__str__\` is missing, which is why the convention is to make it look like a valid constructor call such as \`Dog(name='Rex')\`. Understanding this split saves hours of confusion when objects print differently inside a list than on their own — containers always prefer \`__repr__\`. A common pitfall is writing only \`__str__\` and then struggling to debug, since containers and the REPL fall back to the unhelpful default memory-address form; always define at least \`__repr__\`.
+
 ## The Problem Without These Methods
 
 Without \`__str__\` or \`__repr__\`, printing an object gives you a useless memory address:

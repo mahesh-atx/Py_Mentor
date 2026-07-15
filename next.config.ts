@@ -9,6 +9,8 @@ const nextConfig: NextConfig = {
   // the platform uses its own build output anyway.
   output: "standalone",
 
+  serverExternalPackages: ["better-sqlite3", "@prisma/adapter-better-sqlite3"],
+
   experimental: {
     staleTimes: {
       dynamic: 30,

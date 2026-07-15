@@ -5,6 +5,10 @@ export const dictionaryComprehensionLesson = {
 
 Dictionary comprehension is a concise way to create dictionaries, similar to list comprehension but using \`{}\` and producing key-value pairs.
 
+## The Theory — Building the Logic
+
+A comprehension is a shift in thinking from *how* to build a dictionary to *what* the dictionary should be — you describe the rule that maps each source item to a key-value pair, and Python performs the loop for you. The mental model is a tiny pipeline: take an iterable, optionally **filter** items with an \`if\`, then **transform** each survivor into a \`key: value\` pair. This declarative style is not just shorter; it signals intent — "this is a transformation" — making the logic easier to verify at a glance than an equivalent multi-line loop. Because keys must stay unique, the key pitfall is a **silent collision**: if your key expression produces the same key for two different items (for example when inverting a dictionary whose values repeat), later pairs quietly overwrite earlier ones and entries seem to "vanish" — always ask whether your key expression is guaranteed to be unique.
+
 ## Basic Syntax
 
 \`\`\`python

@@ -5,6 +5,10 @@ export const parametersAndArgumentsLesson = {
 
 Parameters are how functions receive input. Python provides several ways to pass arguments, giving you tremendous flexibility.
 
+## The Theory — Building the Logic
+
+A parameter is a placeholder name written in the function's definition; an argument is the actual value you supply at call time — the distinction matters because the definition describes a slot, while the call fills it. Python matches arguments to parameters by position first, then by name, doing this binding work exactly once at the moment the function is called to build a temporary local namespace. Default values are evaluated a single time when the function is *defined*, not on each call, which is why a mutable default (like a list) gets shared and mutated across calls — a subtle but classic trap. The key intuition is that Python never infers your intent; it mechanically binds names to values in a fixed order, so mismatched arguments silently produce wrong results rather than errors. Once that binding model clicks, \`*args\` and \`**kwargs\` stop being magic and become obvious: they simply collect the leftovers into a tuple and into a dict.
+
 ## Positional Arguments
 
 The simplest form - arguments are matched to parameters by their **position** (order).

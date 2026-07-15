@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { usePathname } from "next/navigation";
+import { usePlatform } from "@/components/platform-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
@@ -30,6 +31,7 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
   const [searchOpen, setSearchOpen] = useState(false);
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
+  const config = usePlatform();
   
   // Find matching topic context
   let breadcrumbs: { title: string; href?: string }[] = [];
@@ -81,7 +83,7 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/">PyMentor</BreadcrumbLink>
+              <BreadcrumbLink href="/">{config.appName}</BreadcrumbLink>
             </BreadcrumbItem>
             
             {breadcrumbs.map((crumb, index) => (

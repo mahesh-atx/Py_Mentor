@@ -5,6 +5,10 @@ export const typeAndIdLesson = {
 
 Python gives you built-in tools to inspect your variables. Two of the most useful inspection functions are \`type()\` and \`id()\`.
 
+## The Theory — Building the Logic
+
+\`type()\` and \`id()\` are your windows into how Python actually represents values: \`type()\` reveals the class an object belongs to, while \`id()\` reveals its unique identity in memory. Because every value is an object, two variables can hold equal *content* yet point at different *objects*, which is the crucial difference between \`==\` (same value) and \`is\` (same object). Python reuses objects in some cases — such as small integers and short strings — for efficiency, which is why identical-looking values sometimes share an \`id\` and sometimes do not. A common pitfall is using \`is\` to compare values by content; reserve \`is\` for identity (and \`None\`) and use \`==\` or \`isinstance()\` for what you actually mean to check.
+
 ## type() Function
 
 The \`type()\` function tells you **what kind of data** a variable is holding. This is very useful when you are not sure what type a value is, especially when debugging.

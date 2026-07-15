@@ -21,16 +21,18 @@ export interface RoadmapData {
 export interface RoadmapClientProps {
   roadmaps: RoadmapData[];
 }
+import { usePlatform } from "@/components/platform-provider";
 
 export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
+  const config = usePlatform();
   return (
     <div className="max-w-4xl mx-auto pb-16 pt-4">
       
       <div className="mb-12 text-center">
         <Badge variant="outline" className="mb-4 text-primary border-primary/30">Official Curriculum</Badge>
-        <h1 className="text-4xl font-extrabold tracking-tight mb-3">Python Developer Roadmap</h1>
+        <h1 className="text-4xl font-extrabold tracking-tight mb-3">{config.languageCapitalized} Developer Roadmap</h1>
         <p className="text-muted-foreground max-w-xl mx-auto">
-          Master Python from scratch. Complete phases sequentially to unlock advanced concepts and earn your certification.
+          Master {config.languageCapitalized} from scratch. Complete phases sequentially to unlock advanced concepts and earn your certification.
         </p>
       </div>
 

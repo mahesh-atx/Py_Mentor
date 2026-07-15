@@ -5,6 +5,10 @@ export const methodsLesson = {
 
 Python classes support three types of methods, each with a different purpose and way of accessing class/instance data.
 
+## The Theory — Building the Logic
+
+The three method types are really three different answers to the question "what context does this function need?": an instance method is bound to a specific object, a class method is bound to the class itself, and a static method is bound to neither. Python expresses this binding through the first parameter — \`self\` for the instance, \`cls\` for the class, or nothing at all — and the \`@classmethod\` / \`@staticmethod\` decorators are what tell Python to change what gets injected. This is why a class method can see and alter shared class state (and even build new objects as an alternative constructor) while a static method is just a neatly organized helper with no automatic access to \`self\` or \`cls\`. The unifying mental model is that a method is a normal function that has been *attached* to a class and given a pre-filled first argument. A common pitfall is reaching for a static method when you actually need class data, or writing an instance method that never touches \`self\` — if you never use \`self\`, the method belongs at the class or module level, not on the instance.
+
 ## Instance Methods
 
 **Instance methods** are the most common. They always take \`self\` as the first parameter and can access and modify both instance variables and class variables.

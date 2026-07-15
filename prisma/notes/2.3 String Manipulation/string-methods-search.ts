@@ -5,6 +5,10 @@ export const stringMethodsSearchLesson = {
 
 These methods help you find characters or substrings within a string and count their occurrences.
 
+## The Theory — Building the Logic
+
+Search methods do not transform the string — they report information about it: where something appears, how often, or whether it starts or ends a certain way. \`find\` and \`index\` return a position, while \`count\`, \`startswith\`, and \`endswith\` return numbers or booleans, letting you decide before editing anything. The real design choice is how 'not found' is handled: \`find\` returns \`-1\` so you can branch gracefully, while \`index\` raises an error because a missing substring is treated as a genuine fault. The pitfall is using \`index\` where absence is normal (crashing your program) or treating \`find\`'s \`-1\` as a truthy found position instead of comparing it with \`!= -1\`.
+
 ## find() - Find a Substring
 
 \`find()\` searches for a substring and returns the **index of the first occurrence**. If not found, it returns \`-1\` (not an error).

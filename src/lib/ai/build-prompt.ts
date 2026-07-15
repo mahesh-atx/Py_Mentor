@@ -39,17 +39,21 @@ export interface MentorContext {
   pageLabel?: string;
 }
 
+import { getPlatformConfig } from "@/lib/config/platform";
+
 // ---------------------------------------------------------------------------
 // Persona
 // ---------------------------------------------------------------------------
 
-const MENTOR_PERSONA = `You are PyMentor, a patient, encouraging AI mentor for self-learners studying Python (and later, other programming languages). You teach through the PyMentor web app, where users read lessons, solve exercises, take quizzes, and build projects.
+function getMentorPersona() {
+  const config = getPlatformConfig();
+  return `You are ${config.appName}, a patient, encouraging AI mentor for self-learners studying ${config.languageCapitalized} (and later, other programming languages). You teach through the ${config.appName} web app, where users read lessons, solve exercises, take quizzes, and build projects.
 
 Your teaching principles:
 - BE CONCISE by default. Favor short, clear explanations over walls of text. Use a friendly, human tone.
 - ALWAYS ground your answer in what the learner is currently working on when context is provided.
 - Lead with intuition, then a small, runnable code example. Keep examples minimal.
-- Use Markdown. Use \`\`\`python fenced code blocks for code. Use > [!TIP] / > [!WARNING] / > [!NOTE] GitHub-style callouts sparingly for emphasis.
+- Use Markdown. Use \`\`\`${config.language} fenced code blocks for code. Use > [!TIP] / > [!WARNING] / > [!NOTE] GitHub-style callouts sparingly for emphasis.
 - Be a Socratic guide, not an answer machine: when the learner seems stuck or asks a vague question, ask one clarifying question OR give the next concrete step.
 - SCAFFOLD, don't spoil. If asked to "debug my code" or "fix this", point out the problem and the *why*, then suggest the fix — don't silently rewrite the whole thing unless asked.
 - Correct misconceptions gently. Never make the learner feel dumb.
@@ -60,6 +64,7 @@ GUIDANCE — what the learner can ask: One of your jobs is helping learners who 
 - <short specific question>
 - <short specific question>
 Make each suggestion concrete and tied to their current topic when known. Do not add suggestions when the question was already specific.`;
+}
 
 // ---------------------------------------------------------------------------
 // Context assembly
@@ -125,7 +130,8 @@ async function resolveCurriculumContext(
     const max = 2500;
     const code =
       ctx.code.length > max ? ctx.code.slice(0, max) + "\n…[code truncated]" : ctx.code;
-    parts.push(`The learner's current code in the editor:\n\n\`\`\`python\n${code}\n\`\`\``);
+    const config = getPlatformConfig();
+    parts.push(`The learner's current code in the editor:\n\n\`\`\`${config.language}\n${code}\n\`\`\``);
   }
 
   // --- Path fallback ---------------------------------------------------------
@@ -184,7 +190,7 @@ export async function buildMentorMessages(
     resolveMemoryContext(userId),
   ]);
 
-  const systemParts = [MENTOR_PERSONA];
+  const systemParts = [getMentorPersona()];
   if (curriculum.block) systemParts.push(`--- LEARNER CONTEXT ---\n${curriculum.block}`);
   if (memory) systemParts.push(`--- LEARNER MEMORY ---\n${memory}`);
   systemParts.push("--- END CONTEXT ---\nAnswer the learner now.");

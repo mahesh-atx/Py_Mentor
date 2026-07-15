@@ -265,9 +265,11 @@ try {
     },
     files: [
       "bin/",
-      "dist/",
+      "server/",
+      "seed/",
       "prisma/",
       "public/",
+      "src/",
     ],
     scripts: {
       start: "node dist/server/server.js",
@@ -279,7 +281,8 @@ try {
       "@prisma/client": rootPkg.dependencies["@prisma/client"] || "^7.8.0",
       "@prisma/adapter-better-sqlite3": rootPkg.dependencies["@prisma/adapter-better-sqlite3"] || "^7.8.0",
       "better-sqlite3": "^12.11.1",
-      "sql.js": rootPkg.dependencies["sql.js"] || "^1.14.1"
+      "sql.js": rootPkg.dependencies["sql.js"] || "^1.14.1",
+      "@inquirer/prompts": rootPkg.dependencies["@inquirer/prompts"] || "^5.3.8"
     },
     keywords: rootPkg.keywords,
     engines: rootPkg.engines,

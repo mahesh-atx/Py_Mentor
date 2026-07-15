@@ -3,6 +3,10 @@ export const creatingDictionariesLesson = {
   slug: "creating-dictionaries",
   content: `# Creating Dictionaries
 
+## The Theory — Building the Logic
+
+A dictionary is Python's implementation of a **hash map** — the mental model is a set of labelled drawers, where each label (key) points directly to one drawer (value). Instead of remembering *positions* like a list, you remember *meaningful names*, which is why dictionaries shine when data has identity rather than order. Under the hood Python runs each key through a **hash function** to compute where its value lives, which is why lookups feel instant no matter how big the dictionary grows — and also why keys must be **immutable**: if a key could change after insertion, its hash would no longer point to the right place. This same hashing is the reason keys must be unique, since two identical keys would compute to the same slot and the later one simply overwrites the earlier. A common logical pitfall is assuming order or position matters when creating a dict; think in terms of "which label finds this value?" rather than "which slot holds this value?".
+
 ## What is a Dictionary?
 
 A dictionary is an **unordered collection of key-value pairs**. Instead of accessing items by a numeric index like lists, you access them by a **key** - which can be any immutable value like a string, number, or tuple.

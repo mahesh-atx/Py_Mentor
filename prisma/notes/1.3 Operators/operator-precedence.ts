@@ -7,6 +7,10 @@ When you write an expression with multiple operators, Python needs to know which
 
 This is exactly like the BODMAS/PEMDAS rule you learned in math class.
 
+## The Theory — Building the Logic
+
+Operator precedence is the grammar of expressions: just as word order decides the meaning of a sentence, precedence decides which operation Python performs first when several compete. The rule exists because an expression like \`2 + 3 * 4\` must have exactly one unambiguous answer, so Python assigns each operator a fixed rank rather than reading strictly left to right. Parentheses are the override mechanism — they act like punctuation that forces a specific grouping, and they always win. The common pitfall is trusting your eye over the rules: assuming \`2 + 3 * 4\` equals 20, or forgetting that \`**\` evaluates right to left, so \`2 ** 3 ** 2\` is \`2 ** 9\`, not \`8 ** 2\`.
+
 ## The Precedence Table
 
 Operators higher in the table are evaluated **first**. Operators on the same row have equal precedence (evaluated left to right).

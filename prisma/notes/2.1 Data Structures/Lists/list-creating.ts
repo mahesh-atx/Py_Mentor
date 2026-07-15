@@ -3,6 +3,10 @@ export const listCreatingLesson = {
   slug: "list-creating",
   content: `# Creating Lists
 
+## The Theory — Building the Logic
+
+A list is Python's general-purpose sequence: an ordered container of object references that you can change after it is created. Because it stores references rather than raw values, a single list can hold mixed types and even other lists as elements. Ordering means position is meaningful — two lists with the same items in a different order are not equal — and mutability means edits happen in place without building a new object. The pitfall is treating a list like an immutable string, for example by expecting reassignment of one element to leave the original unchanged.
+
 ## What is a List?
 
 A list is one of the most important data structures in Python. It is an **ordered, mutable collection** that can hold multiple items of any type - all in a single variable.

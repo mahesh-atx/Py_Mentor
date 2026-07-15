@@ -5,6 +5,10 @@ export const listComprehensionLesson = {
 
 List comprehension is a concise, readable way to create lists. Instead of writing a \`for\` loop to build a list, you can do it in a single line.
 
+## The Theory — Building the Logic
+
+A list comprehension is syntactic sugar for a loop that builds a list: Python evaluates the expression once per element of the iterable and collects the results into a new list. An \`if\` at the end filters before collection, while an \`if-else\` inside the expression chooses a value for every element instead. Because it is still a loop underneath, a comprehension stays fast and readable only while the rule is simple. The pitfall is cramming complex nested logic into one line, which hurts readability more than the equivalent \`for\` loop.
+
 ## The Problem List Comprehension Solves
 
 \`\`\`python

@@ -5,6 +5,10 @@ export const listMethodsOrganizeLesson = {
 
 These methods help you sort, reverse, and copy lists.
 
+## The Theory — Building the Logic
+
+\`sort()\` and \`reverse()\` mutate the list in place and return \`None\`, because Python's design favors methods that change state quietly over ones that build new values. \`sorted()\` instead returns a fresh list and preserves the original, a distinction that mirrors "change versus copy" thinking. \`copy()\` builds a new outer list, but its inner elements are still the same objects — a shallow copy — so nested lists remain shared between the two. The biggest pitfall is writing \`my_list = my_list.sort()\`, which throws the list away and leaves you holding \`None\`.
+
 ## sort() - Sort a List In-Place
 
 \`sort()\` arranges items in ascending order by default. It modifies the original list.

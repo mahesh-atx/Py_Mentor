@@ -3,6 +3,10 @@ export const lambdaFunctionsLesson = {
   slug: "lambda-functions",
   content: `# Lambda (Anonymous) Functions
 
+## The Theory — Building the Logic
+
+A lambda is just a function written in expression form — syntactically compressed, but under the hood it creates the exact same function object as \`def\`. The real constraint is that a lambda body can only be a single expression, because Python evaluates that expression and returns its value automatically (there is no \`return\` keyword to write). This makes lambdas ideal as throwaway logic passed directly into another function, like a sorting key, where defining a full named function would be heavier than the idea deserves. The mental model is "a function as a value you build inline," not a different kind of thing. The pitfall is overusing lambdas for anything past trivial logic; once you need multiple lines, error handling, or a name for clarity, a normal \`def\` is clearer and is what Python's own style guide recommends.
+
 ## What is a Lambda Function?
 
 A **lambda function** is a small, anonymous function defined in a single line using the \`lambda\` keyword. Unlike regular functions defined with \`def\`, lambdas have no name (unless assigned to a variable) and can only contain a single expression.

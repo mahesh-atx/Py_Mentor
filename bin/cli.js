@@ -124,6 +124,9 @@ function saveEnv(key, value) {
 
   lines.push(`${key}=${value}`);
   fs.writeFileSync(ENV_PATH, lines.join("\n") + "\n");
+
+  // Update process.env so it's immediately available to the server
+  process.env[key] = value;
 }
 
 function getDBSizeMB() {
@@ -211,14 +214,49 @@ function getVersion() {
 // Commands
 // ---------------------------------------------------------------------------
 
-function cmdSetup() {
-  console.log("\n🎯 First run detected — setting up PyMentor...\n");
+/**
+ * Prompt the user to choose their learning language.
+ * @returns {Promise<string>} 'python' or 'javascript'
+ */
+async function promptLanguage() {
+  console.log("\n\x1b[36m┌─\x1b[0m PyMentor Setup");
+
+  const { select } = await import('@inquirer/prompts');
+  
+  return select({
+    message: 'Which language would you like to learn?',
+    choices: [
+      {
+        name: 'Python (Fundamentals & OOP)',
+        value: 'python'
+      },
+      {
+        name: 'JavaScript (Web Development)',
+        value: 'javascript',
+        description: 'Learn JavaScript for Web Development'
+      },
+    ],
+  });
+}
+
+async function cmdSetup() {
+  
 
   ensureDataDir();
 
+  // Step 0: Ask user which language they want to learn
+  let language = "python";
+  try {
+    language = await promptLanguage();
+  } catch (e) {
+    console.log("\x1b[36m│\x1b[0m  \x1b[33mℹ Language selection skipped, defaulting to Python.\x1b[0m");
+  }
+  const langName = language === "javascript" ? "JavaScript" : "Python";
+  console.log(`\x1b[36m│\x1b[0m  \x1b[36mℹ Initializing ${langName} track...\x1b[0m\n\x1b[36m│\x1b[0m`);
+
   // Step 1: Create the SQLite database using migration SQL
   if (!fs.existsSync(DB_PATH)) {
-    console.log("  📦 Creating SQLite database...");
+    console.log("\x1b[36m├─\x1b[0m Database");
 
     const initMigration = path.join(
       MIGRATION_DIR,
@@ -234,7 +272,7 @@ function cmdSetup() {
 
     try {
       applyMigration(initMigration);
-      console.log("  ✅ Database created");
+      console.log("\x1b[36m│  └─\x1b[0m \x1b[32m✔ Created SQLite database\x1b[0m\n\x1b[36m│\x1b[0m");
     } catch (error) {
       console.error("  ❌ Failed to create database:", error.message);
       console.error("     Try installing better-sqlite3: npm install better-sqlite3");
@@ -244,39 +282,49 @@ function cmdSetup() {
   }
 
   // Step 2: Seed curriculum data
-  console.log("  🌱 Seeding curriculum data...");
+  console.log("\x1b[36m├─\x1b[0m Curriculum");
   try {
     const originalSeedPath = path.join(ROOT_DIR, "prisma", "seed.ts");
     const distSeedPath = path.join(ROOT_DIR, "dist", "seed", "seed.js");
+
+    const seedEnv = {
+      ...process.env,
+      DATABASE_URL: `file:${DB_PATH}`,
+      SEED_LANG: language,
+    };
 
     if (fs.existsSync(originalSeedPath)) {
       execSync(`npx tsx "${originalSeedPath}"`, {
         cwd: ROOT_DIR,
         stdio: "inherit",
-        env: { ...process.env, DATABASE_URL: `file:${DB_PATH}` },
+        env: seedEnv,
       });
     } else if (fs.existsSync(distSeedPath)) {
       execSync(`node "${distSeedPath}"`, {
         cwd: ROOT_DIR,
         stdio: "inherit",
-        env: { ...process.env, DATABASE_URL: `file:${DB_PATH}` },
+        env: seedEnv,
       });
     } else {
-      console.log("  ⚠️  Seed script not found. Skipping curriculum seeding.");
+      console.log("\x1b[36m│  └─\x1b[0m \x1b[33m⚠️ Seed script not found\x1b[0m\n\x1b[36m│\x1b[0m");
     }
-    console.log("  ✅ Curriculum seeded");
+    console.log("\x1b[36m│  └─\x1b[0m \x1b[32m✔ Seeding complete\x1b[0m\n\x1b[36m│\x1b[0m");
   } catch (error) {
     console.error("  ⚠️  Seeding failed (non-fatal):", error.message);
     console.error("     The app will still start, but lessons may be empty.");
   }
 
-  // Step 3: Save first-run flag
+  // Step 3: Save first-run flag and chosen language
   const config = loadConfig();
   config.firstRunCompleted = true;
   config.installedAt = new Date().toISOString();
+  config.language = language;
   saveConfig(config);
 
-  console.log("\n  ✅ Setup complete!\n");
+  // Save to .env so the Next.js server picks it up
+  saveEnv("SEED_LANG", language);
+
+  console.log("\x1b[36m└─\x1b[0m \x1b[32m✔ Setup finished successfully\x1b[0m\n");
 }
 
 /**
@@ -368,7 +416,7 @@ run().catch(e => { console.error(e.message); process.exit(1); });
 async function cmdStart(port = 3000) {
   // First-run auto-setup
   if (isFirstRun()) {
-    cmdSetup();
+    await cmdSetup();
   }
 
   ensureDataDir();
@@ -378,8 +426,7 @@ async function cmdStart(port = 3000) {
   const portAvailable = await isPortAvailable(port);
   if (!portAvailable) {
     const newPort = await findAvailablePort(port + 1);
-    console.log(`\n⚠️  Port ${port} is already in use.`);
-    console.log(`   Using port ${newPort} instead.\n`);
+    console.log(`\n\x1b[33mℹ Port ${port} is in use. Using ${newPort} instead.\x1b[0m\n`);
     port = newPort;
   }
 
@@ -394,7 +441,8 @@ async function cmdStart(port = 3000) {
     process.exit(1);
   }
 
-  console.log(`\n🚀 Starting PyMentor on http://localhost:${port}...\n`);
+  console.log(`\x1b[36m┌─\x1b[0m Server`);
+  console.log(`\x1b[36m│  ►\x1b[0m Starting PyMentor...`);
 
   const server = spawn("node", [SERVER_PATH], {
     cwd: SERVER_DIR,
@@ -410,9 +458,9 @@ async function cmdStart(port = 3000) {
   // Open browser after a short delay to let the server start
   setTimeout(() => {
     openBrowser(`http://localhost:${port}`);
-    console.log(`  📖 Opening browser at http://localhost:${port}`);
-    console.log(`  💾 Data directory: ${DATA_DIR}`);
-    console.log(`  🛑 Press Ctrl+C to stop\n`);
+    console.log(`\x1b[36m│  \x1b[32m✔\x1b[0m Ready on http://localhost:${port}`);
+    console.log(`\x1b[36m│  ►\x1b[0m Data directory: ${DATA_DIR}`);
+    console.log(`\x1b[36m└─ \x1b[33mℹ\x1b[0m Press Ctrl+C to stop\n`);
   }, 2000);
 
   // Handle server exit
@@ -425,7 +473,7 @@ async function cmdStart(port = 3000) {
 
   // Handle Ctrl+C gracefully
   process.on("SIGINT", () => {
-    console.log("\n\n🛑 Stopping PyMentor...");
+    console.log("\n\n\x1b[36m└─ \x1b[33mℹ\x1b[0m Stopping PyMentor...");
     server.kill("SIGTERM");
     setTimeout(() => process.exit(0), 1000);
   });
@@ -491,18 +539,17 @@ function cmdConfig(setKeyArg) {
 
 function cmdReset() {
   if (!fs.existsSync(DB_PATH)) {
-    console.log("\n⚠️  No database found. Nothing to reset.\n");
+    console.log("\n\x1b[33mℹ No database found. Nothing to reset.\x1b[0m\n");
     return;
   }
 
-  console.log("\n⚠️  WARNING: This will delete ALL your data!");
-  console.log(`    Database: ${DB_PATH}`);
-  console.log(`    Size: ${getDBSizeMB()} MB`);
-  console.log();
+  console.log("\n\x1b[36m┌─\x1b[0m Factory Reset");
+  console.log("\x1b[36m│  \x1b[31m⚠️ WARNING: This will delete ALL your data!\x1b[0m");
+  console.log(`\x1b[36m│  ►\x1b[0m Database: ${DB_PATH}`);
+  console.log(`\x1b[36m│  ►\x1b[0m Size: ${getDBSizeMB()} MB`);
 
   if (!process.argv.includes("--force")) {
-    console.log("  To proceed, run: pymentor reset --force");
-    console.log();
+    console.log("\x1b[36m└─ \x1b[33mℹ\x1b[0m To proceed, run: pymentor reset --force\n");
     return;
   }
 
@@ -512,21 +559,34 @@ function cmdReset() {
 
   try {
     cmdBackup(backupPath);
-    console.log(`  📦 Backup created: ${backupPath}`);
+    console.log(`\x1b[36m│  \x1b[32m✔\x1b[0m Backup created: ${backupPath}`);
   } catch {
-    console.log("  ⚠️  Could not create backup before reset");
+    console.log("\x1b[36m│  \x1b[31m⚠️ Could not create backup\x1b[0m");
   }
 
   // Delete the database
   fs.unlinkSync(DB_PATH);
-  console.log("  🗑️  Database deleted");
+  console.log("\x1b[36m│  \x1b[32m✔\x1b[0m Database deleted");
+
+  // Clear Next.js cache so it doesn't serve stale curriculum
+  const cacheDirs = [
+    path.join(ROOT_DIR, ".next", "cache"),
+    path.join(SERVER_DIR, ".next", "cache"),
+    path.join(ROOT_DIR, "dist", "server", ".next", "cache")
+  ];
+  for (const dir of cacheDirs) {
+    if (fs.existsSync(dir)) {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  }
+  console.log("\x1b[36m│  \x1b[32m✔\x1b[0m Cache cleared");
 
   // Reset config
   const config = loadConfig();
   delete config.firstRunCompleted;
   saveConfig(config);
 
-  console.log("\n  ✅ PyMentor has been reset. Run 'pymentor' to set up again.\n");
+  console.log("\x1b[36m└─ \x1b[32m✔\x1b[0m PyMentor reset. Run 'pymentor' to setup again.\n");
 }
 
 function cmdBackup(outputPath) {

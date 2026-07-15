@@ -5,6 +5,10 @@ export const stringIndexingSlicingLesson = {
 
 You already know how to access a single character using an index. **Slicing** lets you extract a portion (substring) of a string by specifying a start and end position.
 
+## The Theory — Building the Logic
+
+Slicing is a window you slide over the sequence, described by \`[start:stop:step]\`, where start and stop are positions and step is the stride between them. Python returns the characters strictly between start and stop, which is why the length of a slice is simply stop - start and why the stop index is exclusive. A negative step reverses the walk, so \`[::-1]\` reads the string backward from the end. The pitfall is expecting stop to be included (causing off-by-one mistakes), and also that slicing never raises an error even when indices are out of range — it silently shrinks, which can hide bugs.
+
 ## Slicing Syntax
 
 \`\`\`python

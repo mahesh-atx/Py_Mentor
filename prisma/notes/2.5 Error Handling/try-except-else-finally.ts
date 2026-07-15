@@ -3,6 +3,10 @@ export const tryExceptElseFinallyLesson = {
   slug: "try-except-else-finally",
   content: `# try / except / else / finally
 
+## The Theory — Building the Logic
+
+Think of error handling as planning for the paths your program can take besides the happy one: \`try\` is "attempt this," \`except\` is "if it breaks this way, do that," and together they let a program survive conditions it cannot control. Python's model is that exceptions *unwind the call stack* - when one is raised, normal execution stops and Python searches outward through enclosing \`try\` blocks until it finds a matching \`except\`, which is why a single handler can guard a whole block of risky code. The \`else\` clause is a subtle but powerful idea: it runs only when nothing went wrong, so success-only code stays out of the \`try\` and won't be mistakenly shielded by the \`except\`. The \`finally\` clause expresses a guarantee - cleanup like closing a file or releasing a lock must happen whether the operation succeeded, failed, or even returned early. The common pitfall is putting too much code inside \`try\`, which catches errors you never meant to handle and can mask real bugs as if they were the expected failure.
+
 ## Why Error Handling?
 
 Programs encounter unexpected situations: a file does not exist, a user types letters instead of a number, a network request fails, division by zero. Without error handling, these cause the program to crash with an ugly traceback. With error handling, you can respond gracefully.

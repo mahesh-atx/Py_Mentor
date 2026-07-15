@@ -5,6 +5,10 @@ export const membershipOperatorsLesson = {
 
 Membership operators check whether a value **exists inside a collection** (like a string, list, tuple, set, or dictionary). They return \`True\` or \`False\`.
 
+## The Theory — Building the Logic
+
+Membership operators answer the question "is this item inside that collection?" by scanning the structure according to its own rules rather than comparing whole objects. For a string they check substrings, for lists and tuples they check element by element, and for a dictionary they check *keys* by default — so \`"Alice" in student\` is False because that is a value, not a key. Under the hood the speed depends on the container: a list must be searched one item at a time, while sets and dictionaries use a hash so the lookup is near-instant even for millions of items. The common pitfall is forgetting that \`in\` on a dict looks at keys, leading to mistaken "not found" results when you actually wanted to test the values.
+
 ## The Operators
 
 \`\`\`

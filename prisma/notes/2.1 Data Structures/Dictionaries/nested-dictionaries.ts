@@ -5,6 +5,10 @@ export const nestedDictionariesLesson = {
 
 A nested dictionary is a dictionary where the **values are themselves dictionaries**. This creates a hierarchical structure perfect for representing complex real-world data.
 
+## The Theory — Building the Logic
+
+Nesting works because a dictionary value can be *any* Python object — including another dictionary — so structure can grow to any depth, mirroring how real-world data is naturally organised into wholes and parts. The mental model is a tree: each key is a branch, and following a chain of keys like \`data["a"]["b"]["c"]\` walks you down one path to a leaf. This layering is powerful but introduces two logic traps to respect. First, accessing a missing intermediate key raises a \`KeyError\` immediately, which is why chained \`get(key, {})\` calls are the safe way to drill down without crashing. Second — and more subtle — inner dictionaries are stored by **reference**, so a shallow \`copy()\` duplicates only the outer shell while the nested dictionaries stay shared; editing a nested value in the "copy" silently mutates the original, and only \`copy.deepcopy()\` gives you a truly independent structure.
+
 ## Creating Nested Dictionaries
 
 \`\`\`python

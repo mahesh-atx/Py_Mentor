@@ -7,10 +7,12 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Monitor, Moon, Sun, Bell, Shield, UserCog } from "lucide-react";
+import { usePlatform } from "@/components/platform-provider";
 
 export function SettingsClient() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const config = usePlatform();
 
   useEffect(() => {
     setMounted(true);
@@ -47,7 +49,7 @@ export function SettingsClient() {
           <Card>
             <CardHeader>
               <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how PyMentor looks on your device.</CardDescription>
+              <CardDescription>Customize how {config.appName} looks on your device.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="flex items-center justify-between">

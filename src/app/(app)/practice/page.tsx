@@ -1,12 +1,12 @@
 import { CurriculumService } from "@/lib/services/curriculum.service";
 import { PracticeListClient } from "./practice-list-client";
 import { Dumbbell, TerminalSquare } from "lucide-react";
+import { getPlatformConfig } from "@/lib/config/platform";
 
 export default async function PracticeDashboard() {
   const roadmaps = await CurriculumService.getRoadmapsWithExercises();
   const modules = roadmaps.flatMap((r: any) => r.modules);
-
-
+  const config = getPlatformConfig();
 
   return (
     <div className="max-w-5xl mx-auto py-12 px-6 animate-in fade-in duration-700">
@@ -21,7 +21,7 @@ export default async function PracticeDashboard() {
           Practice Arena
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Sharpen your logic and master Python. Choose a challenge below to jump straight into the interactive coding environment.
+          Sharpen your logic and master {config.languageCapitalized}. Choose a challenge below to jump straight into the interactive coding environment.
         </p>
       </header>
 

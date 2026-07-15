@@ -5,6 +5,10 @@ export const docstringsLesson = {
 
 A **docstring** (documentation string) is a string literal that appears as the first statement in a function, class, or module. It documents what the code does. Python stores it in the \`__doc__\` attribute.
 
+## The Theory — Building the Logic
+
+A docstring is not a comment — it is a real string object that Python attaches to the function as its \`__doc__\` attribute, which is why tools like \`help()\` can read it back later. The deeper idea is that code is read far more often than it is written, so a docstring is a contract: it records *what* a function promises to do, *what* it expects, and *what* it gives back. Because it lives inside the program itself rather than in a separate document, the documentation cannot drift too far from the code without someone noticing. The underlying logic is introspection — Python lets objects describe themselves at runtime — and docstrings are the standard way functions participate in that. The pitfall is writing docstrings that merely restate the code (such as "Add a to b") instead of explaining behavior, edge cases, and errors, which adds noise without building understanding.
+
 ## Basic Docstrings
 
 \`\`\`python

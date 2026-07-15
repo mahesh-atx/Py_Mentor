@@ -3,6 +3,10 @@ export const initAndSelfLesson = {
   slug: "init-and-self",
   content: `# __init__() Constructor & self Keyword
 
+## The Theory — Building the Logic
+
+\`__init__\` exists because an object must be given its required starting state at the moment of creation; without it, you bolt attributes on manually afterward and any forgotten step produces a broken object. The \`self\` parameter is the crux of how Python connects a method to its object: it is not magic but a plain reference to the specific instance, automatically supplied by Python when you call \`dog.bark()\`, which is really shorthand for \`Dog.bark(dog)\`. This is why every method lists \`self\` first even though you never pass it yourself, and why the same method code operates correctly on a thousand different objects. Thinking of \`self\` as "the object currently receiving this message" makes inheritance and shared behavior far easier to reason about. A common pitfall is forgetting that \`__init__\` is an *initializer*, not a constructor — Python already creates the empty object before \`__init__\` runs, so you are filling in state, not building the object from nothing.
+
 ## The Problem Without __init__
 
 Without a constructor, you have to manually set attributes after creating an object - easy to forget and error-prone:

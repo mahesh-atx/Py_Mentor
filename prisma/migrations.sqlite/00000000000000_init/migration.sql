@@ -1,6 +1,6 @@
 -- CreateTable: User
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "name" TEXT,
     "email" TEXT NOT NULL,
     "emailVerified" DATETIME,
@@ -12,7 +12,7 @@ CREATE TABLE "User" (
 
 -- CreateTable: Account
 CREATE TABLE "Account" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "userId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
@@ -29,7 +29,7 @@ CREATE TABLE "Account" (
 
 -- CreateTable: Session
 CREATE TABLE "Session" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "sessionToken" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "expires" DATETIME NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE "VerificationToken" (
 
 -- CreateTable: Submission
 CREATE TABLE "Submission" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "code" TEXT NOT NULL,
     "language" TEXT NOT NULL DEFAULT 'python',
     "stdout" TEXT,
@@ -65,7 +65,7 @@ CREATE TABLE "Submission" (
 
 -- CreateTable: Progress
 CREATE TABLE "Progress" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "status" TEXT NOT NULL DEFAULT 'not_started',
     "score" INTEGER,
     "completedAt" DATETIME,
@@ -79,7 +79,7 @@ CREATE TABLE "Progress" (
 
 -- CreateTable: QuizSubmission
 CREATE TABLE "QuizSubmission" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "score" INTEGER NOT NULL,
     "total" INTEGER NOT NULL,
     "completedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -90,7 +90,7 @@ CREATE TABLE "QuizSubmission" (
 
 -- CreateTable: Streak
 CREATE TABLE "Streak" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "date" DATETIME NOT NULL,
     "userId" TEXT NOT NULL,
     CONSTRAINT "Streak_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
@@ -98,7 +98,7 @@ CREATE TABLE "Streak" (
 
 -- CreateTable: Achievement
 CREATE TABLE "Achievement" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "icon" TEXT NOT NULL,
@@ -109,7 +109,7 @@ CREATE TABLE "Achievement" (
 
 -- CreateTable: UserAchievement
 CREATE TABLE "UserAchievement" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "unlockedAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "userId" TEXT NOT NULL,
     "achievementId" TEXT NOT NULL,
@@ -119,7 +119,7 @@ CREATE TABLE "UserAchievement" (
 
 -- CreateTable: Note
 CREATE TABLE "Note" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "content" TEXT NOT NULL,
     "module" TEXT,
     "lessonRef" TEXT,
@@ -131,7 +131,7 @@ CREATE TABLE "Note" (
 
 -- CreateTable: Bookmark
 CREATE TABLE "Bookmark" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "type" TEXT NOT NULL,
     "targetId" TEXT NOT NULL,
@@ -143,7 +143,7 @@ CREATE TABLE "Bookmark" (
 
 -- CreateTable: AIChat
 CREATE TABLE "AIChat" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT,
     "context" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -154,7 +154,7 @@ CREATE TABLE "AIChat" (
 
 -- CreateTable: AIChatMessage
 CREATE TABLE "AIChatMessage" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "role" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "code" TEXT,
@@ -165,7 +165,7 @@ CREATE TABLE "AIChatMessage" (
 
 -- CreateTable: UserMemory
 CREATE TABLE "UserMemory" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "key" TEXT NOT NULL,
     "value" TEXT NOT NULL,
     "updatedAt" DATETIME NOT NULL,
@@ -175,7 +175,7 @@ CREATE TABLE "UserMemory" (
 
 -- CreateTable: Roadmap
 CREATE TABLE "Roadmap" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -187,7 +187,7 @@ CREATE TABLE "Roadmap" (
 
 -- CreateTable: Module
 CREATE TABLE "Module" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -201,7 +201,7 @@ CREATE TABLE "Module" (
 
 -- CreateTable: Topic
 CREATE TABLE "Topic" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -215,7 +215,7 @@ CREATE TABLE "Topic" (
 
 -- CreateTable: Lesson
 CREATE TABLE "Lesson" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "content" TEXT NOT NULL,
@@ -232,7 +232,7 @@ CREATE TABLE "Lesson" (
 
 -- CreateTable: Exercise
 CREATE TABLE "Exercise" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -252,7 +252,7 @@ CREATE TABLE "Exercise" (
 
 -- CreateTable: Quiz
 CREATE TABLE "Quiz" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,
@@ -267,7 +267,7 @@ CREATE TABLE "Quiz" (
 
 -- CreateTable: QuizQuestion
 CREATE TABLE "QuizQuestion" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "question" TEXT NOT NULL,
     "options" TEXT NOT NULL,
     "correctOption" INTEGER NOT NULL,
@@ -279,7 +279,7 @@ CREATE TABLE "QuizQuestion" (
 
 -- CreateTable: Project
 CREATE TABLE "Project" (
-    "id" TEXT NOT NULL PRIMARY KEY DEFAULT (lower(hex(randomblob(4)) || '-' || hex(randomblob(2)) || '-4' || substr(hex(randomblob(2)),2) || '-' || substr('89ab',abs(random()) % 4 + 1, 1) || substr(hex(randomblob(2)),2) || '-' || hex(randomblob(6)))),
+    "id" TEXT NOT NULL PRIMARY KEY,
     "title" TEXT NOT NULL,
     "slug" TEXT NOT NULL,
     "description" TEXT NOT NULL,

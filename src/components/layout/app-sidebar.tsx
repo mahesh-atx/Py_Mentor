@@ -150,17 +150,20 @@ function LearnAccordion({ roadmaps, pathname }: { roadmaps?: any[]; pathname: st
   );
 }
 
-export function AppSidebar({ roadmaps }: { roadmaps?: any[] }) {
+import { usePlatform } from "@/components/platform-provider";
+
+export function AppSidebar({ roadmaps, ...props }: { roadmaps?: any[] } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { state } = useSidebar();
+  const config = usePlatform();
 
   return (
-    <Sidebar collapsible="icon" className="bg-background !border-r-0" style={{ borderRight: 'none' }}>
+    <Sidebar collapsible="icon" className="bg-background !border-r-0" style={{ borderRight: 'none' }} {...props}>
       <SidebarHeader className="p-4 border-b flex flex-col gap-2">
         <div className="font-bold text-xl text-primary flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden">
             <Terminal className="h-6 w-6 shrink-0 text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
-            <span className="drop-shadow-[0_0_8px_rgba(var(--primary),0.3)] truncate group-data-[collapsible=icon]:hidden">PyMentor</span>
+            <span className="drop-shadow-[0_0_8px_rgba(var(--primary),0.3)] truncate group-data-[collapsible=icon]:hidden">{config.appName}</span>
           </div>
           {state === "expanded" && <SidebarTrigger className="h-6 w-6 ml-auto" />}
         </div>

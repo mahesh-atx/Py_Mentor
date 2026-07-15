@@ -7,6 +7,10 @@ Every value in Python has a **type**. A data type tells Python what kind of valu
 
 Think of it like real life: you handle money differently than you handle a name or a yes/no answer.
 
+## The Theory — Building the Logic
+
+Every value in Python is an **object**, and its type is the class that defines what that object can do. Instead of the computer merely storing raw bytes, Python attaches a "blueprint" to each value that knows how to add, compare, or print it — so the type lives *with* the data, not in a separate declaration. Numbers, text, and the \`True\`/\`False\` flags are fundamentally different kinds of objects, which is why you cannot sensibly add a word to a number any more than you can subtract a sentence. A common pitfall is assuming Python will automatically convert between types for you; it will not, and mixing an \`int\` with a \`str\` raises an error rather than silently "doing the right thing".
+
 ## int (Integer)
 
 Integers are whole numbers, both positive and negative, with no decimal point.

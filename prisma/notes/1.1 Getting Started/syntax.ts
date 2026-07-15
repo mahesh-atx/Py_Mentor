@@ -7,6 +7,10 @@ Every language, whether spoken (like English) or programmatic (like Python), has
 
 Python is famous for having an incredibly clean, uncluttered syntax that is designed to be highly readable.
 
+## The Theory — Building the Logic
+
+Syntax is the grammar of a language — the rules that decide which arrangements of symbols are meaningful. Most languages use explicit markers (semicolons, braces) to show where a statement ends and a block begins. Python instead makes **structure itself carry meaning**: indentation is not decoration, it *is* the syntax that defines a block. So the visual layout of your code and its logical structure are the same thing — you cannot have code that merely looks grouped but isn't. The mental model: in Python, *shape equals meaning*. A logic error caused by misplaced braces in other languages becomes a visible indentation error you can catch at a glance.
+
 ## No Semicolons or Curly Braces
 
 If you have seen other languages like C++, JavaScript, or Java, you're probably used to seeing code drowning in semicolons \`;\` and curly braces \`{}\`. 

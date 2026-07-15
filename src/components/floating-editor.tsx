@@ -6,36 +6,59 @@ import { Play, Terminal as TerminalIcon, X, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { usePyodide } from "@/lib/hooks/usePyodide";
-
-const DEFAULT_CODE = `# Quick Practice Editor
-# Write your Python code here and run it instantly.
-
-def hello_world():
-    print("Ready to code!")
-
-hello_world()
-`;
+import { usePlatform } from "@/components/platform-provider";
 
 export function FloatingEditor() {
+  const config = usePlatform();
   const [isOpen, setIsOpen] = useState(false);
+  
+  const DEFAULT_CODE = config.language === "javascript" 
+    ? `// Quick Practice Editor\n// Write your JavaScript code here and run it instantly.\n\nfunction helloWorld() {\n    console.log("Ready to code!");\n}\n\nhelloWorld();\n`
+    : `# Quick Practice Editor\n# Write your Python code here and run it instantly.\n\ndef hello_world():\n    print("Ready to code!")\n\nhello_world()\n`;
+
   const [code, setCode] = useState(DEFAULT_CODE);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
-  const { isPyodideLoading, runPython } = usePyodide(isOpen);
+  
+  // We only enable Pyodide if Python is the language.
+  const { isPyodideLoading, runPython } = usePyodide(isOpen && config.language === "python");
 
   const runCode = async () => {
     setIsRunning(true);
     setOutput("Executing...\n");
     
     try {
-      const result = await runPython(code);
-      
-      if (result.error) {
-        setOutput((prev) => prev + result.output + "\nError: " + result.error);
-      } else if (result.output) {
-        setOutput(result.output);
+      if (config.language === "javascript") {
+        // Native JavaScript evaluation
+        const logs: string[] = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        
+        console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+        console.error = (...args) => logs.push('ERROR: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+
+        try {
+          await new Promise(r => setTimeout(r, 200)); 
+          const result = new Function(code)();
+          if (result !== undefined) {
+             logs.push(String(result));
+          }
+          setOutput(logs.length > 0 ? logs.join('\n') : "Execution finished without output.");
+        } catch (err: any) {
+          setOutput((logs.length > 0 ? logs.join('\n') + '\n' : '') + "Error: " + err.toString());
+        } finally {
+          console.log = originalLog;
+          console.error = originalError;
+        }
       } else {
-        setOutput("Execution finished without output.");
+        const result = await runPython(code);
+        if (result.error) {
+          setOutput((prev) => prev + result.output + "\nError: " + result.error);
+        } else if (result.output) {
+          setOutput(result.output);
+        } else {
+          setOutput("Execution finished without output.");
+        }
       }
     } catch (error) {
       setOutput(`Internal Error: Failed to execute code.\n${error}`);
@@ -119,7 +142,7 @@ export function FloatingEditor() {
                 <div className="absolute inset-0 top-9">
                   <Editor
                     height="100%"
-                    defaultLanguage="python"
+                    defaultLanguage={config.language}
                     theme="vs-dark"
                     value={code}
                     onChange={(val) => setCode(val || "")}

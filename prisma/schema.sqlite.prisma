@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,35 +6,30 @@ datasource db {
   provider = "sqlite"
 }
 
-// ============================================================
-// ENGINE 1: AUTHENTICATION
-// ============================================================
-
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String    @unique
-  emailVerified DateTime?
-  image         String?
-  passwordHash  String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  // Relations
+  id              String            @id @default(uuid())
+  name            String?
+  email           String            @unique
+  emailVerified   DateTime?
+  image           String?
+  passwordHash    String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  aiChats         AIChat[]
+  accounts        Account[]
+  bookmarks       Bookmark[]
+  notes           Note[]
   progress        Progress[]
+  quizSubmissions QuizSubmission[]
+  sessions        Session[]
+  streaks         Streak[]
   submissions     Submission[]
   achievements    UserAchievement[]
-  quizSubmissions QuizSubmission[]
-  notes           Note[]
-  bookmarks       Bookmark[]
-  aiChats         AIChat[]
-  streaks         Streak[]
-  sessions        Session[]
-  accounts        Account[]
+  UserMemory      UserMemory[]
 }
 
 model Account {
-  id                String  @id @default(cuid())
+  id                String  @id @default(uuid())
   userId            String
   type              String
   provider          String
@@ -49,205 +41,161 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
 }
 
 model Session {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model VerificationToken {
   identifier String
-  token      String   @unique
+  token      String
   expires    DateTime
 
-  @@unique([identifier, token])
+  @@id([identifier, token])
 }
-
-// ============================================================
-// ENGINE 6: SUBMISSIONS
-// ============================================================
 
 model Submission {
-  id         String   @id @default(cuid())
-  code       String
-  language   String   @default("python")
-  stdout     String?
-  stderr     String?
-  status     String   // "passed", "failed", "error", "pending"
-  score      Int?     // 0-100
-  testResults String? // JSON array of individual test results
-  aiReview   String?  // AI-generated code review (Markdown)
-  timeTaken  Int?     // seconds spent coding
-  createdAt  DateTime @default(now())
-
-  userId     String
-  exerciseId String?  // Now stores the static exercise ID (slug)
-  projectId  String?  // Now stores the static project ID (slug)
-
-  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id          String   @id @default(uuid())
+  code        String
+  language    String   @default("python")
+  stdout      String?
+  stderr      String?
+  status      String
+  score       Int?
+  testResults String?
+  aiReview    String?
+  timeTaken   Int?
+  createdAt   DateTime @default(now())
+  userId      String
+  exerciseId  String?
+  projectId   String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// ENGINE 10: PROGRESS & GAMIFICATION
-// ============================================================
-
 model Progress {
-  id          String   @id @default(cuid())
-  status      String   @default("not_started") // not_started, in_progress, completed
+  id          String    @id @default(uuid())
+  status      String    @default("not_started")
   score       Int?
   completedAt DateTime?
-  timeSpent   Int      @default(0) // total seconds
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  userId   String
-  lessonId String // Now stores the static lesson ID (slug)
-
-  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  timeSpent   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  userId      String
+  lessonId    String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, lessonId])
 }
 
 model QuizSubmission {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   score       Int
   total       Int
   completedAt DateTime @default(now())
-
   userId      String
-  quizId      String // Now stores the static quiz ID (slug)
-
-  user        User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, quizId])
 }
 
 model Streak {
-  id        String   @id @default(cuid())
-  date      DateTime // The specific day
-  userId    String
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id     String   @id @default(uuid())
+  date   DateTime
+  userId String
+  user   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, date])
 }
 
-// ============================================================
-// ENGINE 14: ACHIEVEMENTS
-// ============================================================
-
 model Achievement {
-  id          String @id @default(cuid())
-  title       String @unique
+  id          String            @id @default(uuid())
+  title       String            @unique
   description String
-  icon        String // Lucide icon name
-  color       String // Tailwind color class
-  xpReward    Int    @default(100)
-  condition   String // JSON describing the unlock condition
-
-  users UserAchievement[]
+  icon        String
+  color       String
+  xpReward    Int               @default(100)
+  condition   String
+  users       UserAchievement[]
 }
 
 model UserAchievement {
-  id            String   @id @default(cuid())
-  unlockedAt    DateTime @default(now())
-
+  id            String      @id @default(uuid())
+  unlockedAt    DateTime    @default(now())
   userId        String
   achievementId String
-
-  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  achievement Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+  user          User        @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, achievementId])
 }
 
-// ============================================================
-// ENGINE 15: NOTES & BOOKMARKS
-// ============================================================
-
 model Note {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   content   String
-  module    String?  // Which module this note is related to
-  lessonRef String?  // Optional reference to a static lesson ID
+  module    String?
+  lessonRef String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Bookmark {
-  id        String   @id @default(cuid())
+  id        String   @id @default(uuid())
   title     String
-  type      String   // "lesson", "exercise", "quiz", "project"
-  targetId  String   // The ID of the bookmarked static item
+  type      String
+  targetId  String
   module    String?
   createdAt DateTime @default(now())
-
-  userId String
-  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, targetId])
 }
 
-// ============================================================
-// ENGINE 7: AI MENTOR
-// ============================================================
-
 model AIChat {
-  id        String   @id @default(cuid())
+  id        String          @id @default(uuid())
   title     String?
-  context   String?  // JSON: { lessonId, topicId, moduleId }
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  userId   String
-  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  messages AIChatMessage[]
+  context   String?
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  userId    String
+  user      User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  messages  AIChatMessage[]
 }
 
 model AIChatMessage {
-  id        String   @id @default(cuid())
-  role      String   // "user", "assistant", "system"
+  id        String   @id @default(uuid())
+  role      String
   content   String
-  code      String?  // Optional code context
+  code      String?
   createdAt DateTime @default(now())
-
-  chatId String
-  chat   AIChat @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  chatId    String
+  chat      AIChat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
 }
 
-// ============================================================
-// ENGINE 16: MEMORY
-// ============================================================
-
 model UserMemory {
-  id        String   @id @default(cuid())
-  key       String   // "weak_topics", "common_mistakes", "explanation_style"
-  value     String   // JSON value
+  id        String   @id @default(uuid())
+  key       String
+  value     String
   updatedAt DateTime @updatedAt
-
-  userId String
+  userId    String
+  User      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, key])
 }
 
-// ============================================================
-// ENGINE 20: CURRICULUM
-// ============================================================
-
 model Roadmap {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   title       String
   slug        String   @unique
   description String
@@ -255,12 +203,11 @@ model Roadmap {
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  modules Module[]
+  modules     Module[]
 }
 
 model Module {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   title       String
   slug        String   @unique
   description String
@@ -268,110 +215,102 @@ model Module {
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  roadmapId String
-  roadmap   Roadmap @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
-  topics    Topic[]
+  roadmapId   String
+  roadmap     Roadmap  @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+  topics      Topic[]
 }
 
 model Topic {
-  id          String   @id @default(cuid())
+  id          String     @id @default(uuid())
   title       String
-  slug        String   @unique
+  slug        String     @unique
   description String
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  moduleId String
-  module   Module @relation(fields: [moduleId], references: [id], onDelete: Cascade)
-
-  lessons   Lesson[]
-  exercises Exercise[]
-  quizzes   Quiz[]
-  projects  Project[]
+  order       Int        @default(0)
+  isPublished Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  moduleId    String
+  exercises   Exercise[]
+  lessons     Lesson[]
+  projects    Project[]
+  quizzes     Quiz[]
+  module      Module     @relation(fields: [moduleId], references: [id], onDelete: Cascade)
 }
 
 model Lesson {
-  id          String   @id @default(cuid())
+  id          String   @id @default(uuid())
   title       String
   slug        String
-  content     String   // Markdown
-  objectives  String   // JSON array of strings (stored as text in SQLite)
-  duration    Int      // Minutes
+  content     String
+  objectives  String
+  duration    Int
   xpReward    Int      @default(50)
   order       Int      @default(0)
   isPublished Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId     String
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@unique([topicId, slug])
 }
 
 model Exercise {
-  id             String   @id @default(cuid())
-  title          String
-  slug           String
-  description    String   // Markdown
-  starterCode    String
-  solution       String
-  testCases      String   // JSON array of test case objects (stored as text in SQLite)
-  hints          String   // JSON array of strings (stored as text in SQLite)
-  difficulty     String   // "beginner", "intermediate", "advanced", "expert"
-  xpReward       Int      @default(20)
-  order          Int      @default(0)
-  isPublished    Boolean  @default(false)
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  id          String   @id @default(uuid())
+  title       String
+  slug        String
+  description String
+  starterCode String
+  solution    String
+  testCases   String
+  hints       String
+  difficulty  String
+  xpReward    Int      @default(20)
+  order       Int      @default(0)
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  topicId     String
+  topic       Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@unique([topicId, slug])
 }
 
 model Quiz {
-  id          String   @id @default(cuid())
+  id          String         @id @default(uuid())
   title       String
   slug        String
   description String
-  xpReward    Int      @default(100)
-  order       Int      @default(0)
-  isPublished Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
-
-  questions QuizQuestion[]
+  xpReward    Int            @default(100)
+  order       Int            @default(0)
+  isPublished Boolean        @default(false)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  topicId     String
+  topic       Topic          @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  questions   QuizQuestion[]
 
   @@unique([topicId, slug])
 }
 
 model QuizQuestion {
-  id            String   @id @default(cuid())
+  id            String @id @default(uuid())
   question      String
-  options       String   // JSON array of strings (stored as text in SQLite)
-  correctOption Int      // Index
+  options       String
+  correctOption Int
   explanation   String
-  order         Int      @default(0)
-
-  quizId String
-  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  order         Int    @default(0)
+  quizId        String
+  quiz          Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
 }
 
 model Project {
-  id           String   @id @default(cuid())
+  id           String   @id @default(uuid())
   title        String
   slug         String
   description  String
-  requirements String   // JSON array of strings (stored as text in SQLite)
-  milestones   String   // JSON array of objects (stored as text in SQLite)
+  requirements String
+  milestones   String
   starterCode  String?
   solution     String?
   difficulty   String
@@ -379,9 +318,8 @@ model Project {
   isPublished  Boolean  @default(false)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
-
-  topicId String
-  topic   Topic  @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  topicId      String
+  topic        Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
 
   @@unique([topicId, slug])
 }

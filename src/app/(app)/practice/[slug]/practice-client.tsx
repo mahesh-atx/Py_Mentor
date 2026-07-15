@@ -18,6 +18,7 @@ import {
   MentorContextProvider,
   useMentorContextUpdater,
 } from "@/components/mentor-context";
+import { usePlatform } from "@/components/platform-provider";
 
 export function PracticeClient({ exercise, initialIsCompleted = false }: { exercise: any, initialIsCompleted?: boolean }) {
   // Provider lives here so the mentor (rendered at the app layout level) can
@@ -39,7 +40,8 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { isPyodideLoading, runPython } = usePyodide();
+  const config = usePlatform();
+  const { isPyodideLoading, runPython } = usePyodide(config.language === "python");
 
   // Keep the mentor context's `code` in sync with the editor so "debug my code"
   // includes exactly what the learner is looking at.
@@ -87,14 +89,34 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
     setOutput("Executing...\n");
     
     try {
-      const result = await runPython(code);
-      
-      if (result.error) {
-        setOutput(`Error: ${result.error}`);
-      } else if (result.output) {
-        setOutput(result.output);
+      if (config.language === "javascript") {
+        const logs: string[] = [];
+        const originalLog = console.log;
+        const originalError = console.error;
+        console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+        console.error = (...args) => logs.push('ERROR: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+        
+        try {
+          await new Promise(r => setTimeout(r, 200)); 
+          const result = new Function(code)();
+          if (result !== undefined) logs.push(String(result));
+          setOutput(logs.length > 0 ? logs.join('\n') : "Execution finished without output.");
+        } catch (err: any) {
+          setOutput((logs.length > 0 ? logs.join('\n') + '\n' : '') + "Error: " + err.toString());
+        } finally {
+          console.log = originalLog;
+          console.error = originalError;
+        }
       } else {
-        setOutput("Execution finished without output.");
+        const result = await runPython(code);
+        
+        if (result.error) {
+          setOutput(`Error: ${result.error}`);
+        } else if (result.output) {
+          setOutput(result.output);
+        } else {
+          setOutput("Execution finished without output.");
+        }
       }
     } catch (error) {
       setOutput(`Internal Error: Failed to execute code.\n${error}`);
@@ -109,10 +131,10 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
     if (!testCases || testCases.length === 0) {
       // Fallback if no test cases defined
       setTimeout(() => {
-        setIsSuccess(code.includes('print'));
+        setIsSuccess(code.includes('console.log') || code.includes('print'));
         setIsSubmitting(false);
         setShowResults(true);
-        if (code.includes('print')) setIsCompleted(true);
+        if (code.includes('console.log') || code.includes('print')) setIsCompleted(true);
       }, 500);
       return;
     }
@@ -122,12 +144,34 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
 
     for (const tc of testCases) {
       try {
-        const result = await runPython(code, tc.input || "");
+        let actualOutput = "";
+        let error;
+
+        if (config.language === "javascript") {
+          const logs: string[] = [];
+          const originalLog = console.log;
+          const originalError = console.error;
+          console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+          console.error = (...args) => logs.push('ERROR: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+          try {
+            await new Promise(r => setTimeout(r, 50)); 
+            const result = new Function(code)();
+            if (result !== undefined) logs.push(String(result));
+            actualOutput = logs.join('\n');
+          } catch (err: any) {
+            error = err.toString();
+          } finally {
+            console.log = originalLog;
+            console.error = originalError;
+          }
+        } else {
+          const result = await runPython(code, tc.input || "");
+          actualOutput = result.output || "";
+          error = result.error;
+        }
         
-        const actualOutput = result.output || "";
         const expected = tc.expectedOutput || "";
-        
-        const passed = actualOutput.trim() === expected.trim() && !result.error;
+        const passed = actualOutput.trim() === expected.trim() && !error;
         
         if (!passed) {
           allPassed = false;
@@ -138,7 +182,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
           input: tc.input || "",
           expectedOutput: expected,
           actualOutput: actualOutput,
-          error: result.error || undefined
+          error: error || undefined
         });
 
       } catch (error) {
@@ -340,7 +384,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
                 <div className="absolute inset-0 top-10">
                   <Editor
                     height="100%"
-                    defaultLanguage="python"
+                    defaultLanguage={config.language}
                     theme="vs-dark"
                     value={code}
                     onChange={(val) => setCode(val || "")}

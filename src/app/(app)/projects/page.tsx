@@ -1,9 +1,11 @@
 import { CurriculumService } from "@/lib/services/curriculum.service";
 import Link from "next/link";
 import { FolderDot, ArrowRight, TerminalSquare, Calculator, CreditCard, HelpCircle, Receipt, Clock } from "lucide-react";
+import { getPlatformConfig } from "@/lib/config/platform";
 
 export default async function ProjectsPage() {
   const dbProjects = await CurriculumService.getAllProjects();
+  const config = getPlatformConfig();
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty.toLowerCase()) {
@@ -27,7 +29,7 @@ export default async function ProjectsPage() {
           Real-World Projects
         </h1>
         <p className="text-lg text-muted-foreground max-w-2xl leading-relaxed">
-          Put your Python knowledge to the test. These guided projects simulate real-world applications and will solidify your understanding of core concepts while helping you build a portfolio.
+          Put your {config.languageCapitalized} knowledge to the test. These guided projects simulate real-world applications and will solidify your understanding of core concepts while helping you build a portfolio.
         </p>
       </header>
 

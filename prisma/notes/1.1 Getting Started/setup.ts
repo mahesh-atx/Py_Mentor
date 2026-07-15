@@ -5,6 +5,10 @@ export const setupLesson = {
 
 Before we can write Python code, we need to install Python on your computer and set up a good environment to write our code in.
 
+## The Theory — Building the Logic
+
+Before any code runs, your computer needs two things: a **runtime** (the Python interpreter) that can execute instructions, and a **place to write** them. Installing Python puts the interpreter on your system and — via the PATH variable on Windows — tells the terminal where to find it; without that link, typing \`python\` does nothing because the OS has no idea where the program lives. A code editor is not required to run code, but it gives you live feedback (highlighting, error hints) that helps you *see your logic* as you build it. Think of setup as laying the foundation: the interpreter is the engine, the editor is the dashboard.
+
 ## 1. Installing Python
 
 Python is completely free. To install it:

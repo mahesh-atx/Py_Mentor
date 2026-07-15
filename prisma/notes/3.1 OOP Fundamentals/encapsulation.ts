@@ -3,6 +3,10 @@ export const encapsulationLesson = {
   slug: "encapsulation",
   content: `# Encapsulation: Public, Protected, Private & @property
 
+## The Theory — Building the Logic
+
+Encapsulation is fundamentally about *designing a contract* between an object and the code that uses it: you expose a small, stable set of operations and hide the messy internal state behind them, so the outside world never needs to know how the object really works. Python takes an unusual philosophical stance — "we are all consenting adults here" — meaning it trusts you rather than forcibly blocking access, which is why a single underscore is only a polite warning and even double underscores can still be reached with name mangling. The real protection name mangling offers is not secrecy but *name-collision avoidance*: by renaming \`__pin\` to \`_ClassName__pin\`, Python prevents a subclass from accidentally overwriting a parent's private attribute. The deeper lesson is that good encapsulation is about controlling *how* state changes (through validated setters) rather than preventing access outright. A common pitfall is treating double underscores as truly private fields like in Java or C++ and being surprised they remain reachable — the safety comes from convention and discipline, not the language.
+
 ## What is Encapsulation?
 
 **Encapsulation** means bundling data and the methods that work on that data together, and **controlling access** to that data. It prevents outside code from directly messing with an object's internal state.

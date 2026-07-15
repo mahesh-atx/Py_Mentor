@@ -3,6 +3,10 @@ export const userInputLesson = {
   slug: "user-input",
   content: `# Input from User
 
+## The Theory — Building the Logic
+
+\`input()\` is the bridge between the human typing at a keyboard and your program, and Python treats everything that crosses that bridge as **raw text** by design. This is because the interpreter cannot know in advance whether the user will type a number, a name, or nonsense, so the safest universal representation is a string. Whatever you receive must therefore be explicitly converted before you can calculate with it, which is why \`int(input())\` is such a common pattern. A frequent pitfall is doing arithmetic directly on the result of \`input()\`; the value looks like \`25\` but is really \`"25"\`, so an addition will concatenate text or raise an error instead of computing a number.
+
 ## The input() Function
 
 Programs become much more useful when they can interact with users. The \`input()\` function pauses your program and waits for the user to type something and press Enter. Whatever the user types is returned as a **string**.

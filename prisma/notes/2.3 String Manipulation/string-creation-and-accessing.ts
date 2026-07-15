@@ -3,6 +3,10 @@ export const stringCreationLesson = {
   slug: "string-creation-and-accessing",
   content: `# String Creation & Accessing Characters
 
+## The Theory — Building the Logic
+
+A string is an ordered sequence, which is why Python assigns every position a number called an index, starting at 0 rather than 1. Indexing is simply asking for the character stored at position n, and negative indices are a convenience that counts backward from the end so you rarely need to compute \`len(s) - 1\`. Viewing a string as a row of numbered slots makes slicing and loops intuitive. The pitfall is forgetting that numbering begins at 0, so the last valid index is always \`len(s) - 1\`, and reading past the end raises an IndexError instead of returning anything.
+
 ## What is a String?
 
 A string is a **sequence of characters**. Characters can be letters, numbers, symbols, spaces - anything you can type on a keyboard. Strings are used to represent text in Python.

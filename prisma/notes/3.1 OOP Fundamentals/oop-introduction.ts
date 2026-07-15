@@ -3,6 +3,10 @@ export const oopIntroductionLesson = {
   slug: "oop-introduction",
   content: `# What is OOP & Why Use It
 
+## The Theory — Building the Logic
+
+Object-oriented programming is, at its heart, a way of *bundling state and behavior together* so the logic for manipulating some data lives right next to that data instead of in faraway functions. The leap in thinking is to model your program around the "things" in your domain — a student, a bank account, a car — each carrying its own attributes and the actions it can perform, which mirrors how we naturally describe the real world. Because every object is self-contained, you can create many independent instances from one blueprint and change the internal logic in a single place without hunting through disconnected functions. The four pillars (encapsulation, inheritance, polymorphism, abstraction) are not separate features so much as lenses on the same goal: keeping complexity manageable as a program grows. A common pitfall is forcing OOP onto a tiny script where a few plain functions would be clearer — OOP pays off when you have many instances of related things and behavior that must evolve over time.
+
 ## The Problem OOP Solves
 
 Imagine you are building a student management system. Without OOP, you might store student data in separate variables and functions:

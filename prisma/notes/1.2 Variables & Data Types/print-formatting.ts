@@ -5,6 +5,10 @@ export const printFormattingLesson = {
 
 When you display information to users, raw \`print()\` statements often are not enough. You want to display values neatly combined with text. Python provides several ways to format output.
 
+## The Theory — Building the Logic
+
+Formatting is really about **building one piece of text out of fixed words and changing values** so the computer composes a readable sentence for the human. Under the hood each method — f-strings, \`.format()\`, or the old \`%\` operator — evaluates the placeholders and stitches the results into a single string before \`print()\` ever sees it. Python does the substitution at the moment the string is created, which means an expression like \`{age + 1}\` is computed and then converted to text, not printed literally. A common pitfall is forgetting that the result is always text: formatted numbers are strings now, so you cannot do math on a value you just formatted without converting it back.
+
 ## Basic print() Function
 
 Before diving into formatting, let us review \`print()\` basics:

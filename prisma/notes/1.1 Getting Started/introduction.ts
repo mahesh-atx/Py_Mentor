@@ -7,6 +7,10 @@ Welcome to the world of Python! 🐍
 
 Python is one of the most popular and versatile programming languages in the world. Whether you want to build websites, analyze data, create artificial intelligence, or just automate boring tasks, Python is the perfect tool for the job.
 
+## The Theory — Building the Logic
+
+At its core, Python is a **tool for giving instructions to a machine using a notation that humans can read**. A programming language is really a translator: it lets you express logic ("do this, then that, but only if X") in a structured form. Python's defining idea is that *readability is a feature* — the language is designed so the structure of the code mirrors the structure of your thinking. When you write Python you are not just commanding the computer; you are also writing for the next human (often future you) who must understand the logic. Keep this in mind: clear code is correct code, because logic you can't read is logic you can't verify.
+
 ## What is Python?
 
 Created by Guido van Rossum and first released in 1991, Python is a **high-level, interpreted, general-purpose programming language**. 

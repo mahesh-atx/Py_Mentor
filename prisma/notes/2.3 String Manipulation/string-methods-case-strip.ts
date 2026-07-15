@@ -7,6 +7,10 @@ Python strings come with many built-in **methods** - functions that belong to a 
 
 In this lesson we cover methods for changing case and removing whitespace.
 
+## The Theory — Building the Logic
+
+String methods are operations defined on the string object itself: each one reads the characters and returns a transformed result rather than editing in place. Because strings are immutable, every method produces a new string, which is exactly why you can chain \`strip().lower().title()\` — each step hands its output to the next. Seeing methods as pipelines of fresh strings makes chaining predictable. The pitfall is assuming case changes touch everything: they only affect letters, leaving digits and symbols alone, and \`strip()\` removes characters only from the two edges, never the spaces in the middle of the string.
+
 ## Calling String Methods
 
 \`\`\`python

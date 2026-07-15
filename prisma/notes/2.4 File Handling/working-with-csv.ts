@@ -3,6 +3,10 @@ export const workingWithCsvLesson = {
   slug: "working-with-csv",
   content: `# Working with CSV Files
 
+## The Theory — Building the Logic
+
+CSV is a deceptively simple idea: represent a table as plain text where each line is a row and columns are separated by a delimiter such as a comma. The trap is that real-world data is messy — values can contain the very comma or quote you are using as a separator — so a naive split(',') silently corrupts rows by counting separators that belong inside a value. Python's csv module solves this by treating the file as a *parser* that understands quoting rules: it reads quoted fields as single units and escapes inner quotes, so each row maps cleanly to a list or dictionary. Opening with newline="" matters because CSV controls its own line endings, and letting Python translate newlines on top of that double-processes them. A common pitfall is hand-rolling your own CSV parser with string splitting, which breaks the moment a value contains a comma, a quote, or a line break.
+
 ## What is CSV?
 
 **CSV** (Comma-Separated Values) is one of the most common formats for storing tabular data. It is plain text where each row is a line and columns are separated by commas (or other delimiters).

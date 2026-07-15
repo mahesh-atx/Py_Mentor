@@ -3,6 +3,10 @@ export const inheritanceLesson = {
   slug: "inheritance",
   content: `# Inheritance
 
+## The Theory — Building the Logic
+
+Inheritance is fundamentally about *sharing an identity and a behavior contract*, not merely avoiding duplicate code. A child class is built on top of its parent: it automatically carries all the parent's attributes and methods, and Python resolves any name lookup by walking up the chain from the instance, to the child, to the parent, and finally to \`object\`. That chain is fixed when the class is defined and stored as the Method Resolution Order (MRO), which is why \`super()\` does not literally mean "the parent" but "the next class in the MRO." The logical pitfall is using inheritance purely to reuse a few methods from an unrelated class; that creates a false IS-A link and an over-coupled design, when genuine "is-a" sameness should be the only reason for inheriting—reuse alone is better served by composition.
+
 ## What is Inheritance?
 
 **Inheritance** allows a class (child/subclass) to **inherit** attributes and methods from another class (parent/superclass). The child class gets everything the parent has, and can add more or change what it inherits.

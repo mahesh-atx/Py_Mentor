@@ -3,6 +3,10 @@ export const customExceptionsLesson = {
   slug: "custom-exceptions",
   content: `# Custom Exception Classes
 
+## The Theory — Building the Logic
+
+When you raise a generic \`ValueError\`, the caller only knows that "something about the value was wrong," but not whether it was a missing field, a negative number, or a malformed string - custom exceptions let you name the *specific* failure so code can react precisely. Python implements exceptions as ordinary classes, so a custom exception inherits all the behavior of \`Exception\` (a \`.args\` tuple, string conversion, traceback) while letting you attach your own attributes like \`error_code\` or \`field\`. This mirrors how real systems categorize problems: a \`ConnectionError\` and a \`ValidationError\` are both failures, but a caller may want to retry one and reject the other, which a shared hierarchy makes possible through inheritance. Because \`except\` matches by class and its parents, defining a base \`AppError\` lets one handler catch every error your module produces without accidentally trapping unrelated library errors. The pitfall is inheriting from \`BaseException\` instead of \`Exception\`, which can interfere with interpreter-level signals such as program exit.
+
 ## Why Custom Exceptions?
 
 Built-in exceptions like \`ValueError\` and \`TypeError\` are generic. Custom exceptions let you:

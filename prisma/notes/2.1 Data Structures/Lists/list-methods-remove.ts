@@ -5,6 +5,10 @@ export const listMethodsRemoveLesson = {
 
 Python gives you several ways to remove items from a list: \`remove()\`, \`pop()\`, and \`clear()\`. Each one works differently.
 
+## The Theory — Building the Logic
+
+Removing items is really about shifting references inside the same list object so the remaining items stay contiguous. \`remove()\` finds a value then deletes it, \`pop()\` deletes by position and hands the value back, and \`clear()\` empties everything while keeping the same list object. Because deletion shifts later elements left, removing items while iterating forward can skip the neighbor that slides into the deleted slot. The pitfall is forgetting that \`remove()\` only deletes the first match and raises \`ValueError\` if the value is absent.
+
 ## remove() - Remove by Value
 
 \`remove(value)\` finds the **first occurrence** of the value and removes it.
