@@ -1,5 +1,5 @@
 export const exercises: Record<string, any[]> = {
-  "while-loops": [
+  "while-loop": [
     {
       "title": "Count Down",
       "prompt": "Use a `while` loop to print numbers from 3 down to 1 (inclusive), one per line.",
@@ -121,7 +121,7 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 60
     }
   ],
-  "for-loops": [
+  "for-loop": [
     {
       "title": "Iterate a List",
       "prompt": "Given `fruits = ['apple', 'banana']`, use a `for` loop to print each fruit.",
@@ -361,7 +361,7 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 30
     }
   ],
-  "loop-control": [
+  "loop-control-statements": [
     {
       "title": "Break the Loop",
       "prompt": "Write a `for` loop from 1 to 5 using `range(1, 6)`. Print the number, but `break` the loop when the number equals 3.",

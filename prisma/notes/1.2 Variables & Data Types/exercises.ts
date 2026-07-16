@@ -147,7 +147,7 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 30
     }
   ],
-  "type-id": [
+  "type-and-id-functions": [
     {
       "title": "Print Object ID",
       "prompt": "Create a variable `x = 10` and print its memory address using the `id()` function.",

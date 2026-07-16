@@ -47,7 +47,7 @@ async function findAvailablePort(startPort, maxAttempts = 10) {
   return startPort;
 }
 
-function createWindow(port) {
+function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1280,
     height: 800,
@@ -57,9 +57,16 @@ function createWindow(port) {
       preload: path.join(__dirname, 'preload.js'),
     },
     autoHideMenuBar: true,
+    show: false, // Don't show until ready to prevent flashing
+    backgroundColor: '#09090b' // Zinc 950
   });
 
-  mainWindow.loadURL(`http://localhost:${port}`);
+  // Load the loading screen first!
+  mainWindow.loadFile(path.join(__dirname, 'loading.html'));
+  
+  mainWindow.once('ready-to-show', () => {
+    mainWindow.show();
+  });
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -193,21 +200,28 @@ async function startNextServer() {
     autoUpdater.checkForUpdates();
   }
 
-  // Wait until the server actually binds the port, then create the window
+  // Wait until the server actually binds the port
   await waitForServer(port);
-  createWindow(port);
+  
+  // Now load the real URL
+  if (mainWindow) {
+    mainWindow.loadURL(`http://localhost:${port}`);
+  }
 }
 
 app.whenReady().then(() => {
   if (isDev) {
-    createWindow(3000);
+    createWindow();
+    mainWindow.loadURL(`http://localhost:3000`);
   } else {
+    createWindow();
     startNextServer();
   }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
-      if (isDev) createWindow(3000);
+      createWindow();
+      if (isDev) mainWindow.loadURL(`http://localhost:3000`);
     }
   });
 });

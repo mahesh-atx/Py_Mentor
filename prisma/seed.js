@@ -572,7 +572,7 @@ var exercises2 = {
       xpReward: 60
     }
   ],
-  "type-id": [
+  "type-and-id-functions": [
     {
       title: "Print Object ID",
       prompt: "Create a variable `x = 10` and print its memory address using the `id()` function.",
@@ -4852,7 +4852,7 @@ var controlFlowModule = {
 
 // prisma/notes/1.5 Loops/exercises.ts
 var exercises5 = {
-  "while-loops": [
+  "while-loop": [
     {
       title: "Count Down",
       prompt: "Use a `while` loop to print numbers from 3 down to 1 (inclusive), one per line.",
@@ -4896,7 +4896,7 @@ var exercises5 = {
       xpReward: 85
     }
   ],
-  "for-loops": [
+  "for-loop": [
     {
       title: "Iterate a List",
       prompt: "Given `fruits = ['apple', 'banana']`, use a `for` loop to print each fruit.",
@@ -4978,7 +4978,7 @@ var exercises5 = {
       xpReward: 90
     }
   ],
-  "loop-control": [
+  "loop-control-statements": [
     {
       title: "Break the Loop",
       prompt: "Write a `for` loop from 1 to 5 using `range(1, 6)`. Print the number, but `break` the loop when the number equals 3.",
