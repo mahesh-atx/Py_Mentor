@@ -1,6 +1,6 @@
 {
   "name": "pymentor",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
@@ -14,7 +14,7 @@
   },
   "bin": {
     "pymentor": "./bin/cli.js"
-  },  
+  },
   "files": [
     "bin/",
     "scripts/",
