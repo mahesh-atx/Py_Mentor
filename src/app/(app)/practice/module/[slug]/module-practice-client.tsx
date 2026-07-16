@@ -54,7 +54,7 @@ export function ModulePracticeClient({ exercises, completedExerciseSlugs }: { ex
     if (filterStatus === "Unsolved" && isCompleted) return false;
     
     return true;
-  }).sort((a, b) => getDifficultyWeight(a.difficulty) - getDifficultyWeight(b.difficulty));
+  });
 
   return (
     <div className="space-y-8">

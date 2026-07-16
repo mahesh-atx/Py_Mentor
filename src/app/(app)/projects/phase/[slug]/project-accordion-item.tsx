@@ -44,8 +44,28 @@ export function ProjectAccordionItem({
   } catch(e) {}
 
   const requirements = project.requirements && project.requirements.startsWith('[') ? JSON.parse(project.requirements) : parsedSkills;
-  const milestones = project.milestones ? JSON.parse(project.milestones) : [];
-  const hints = project.hints ? JSON.parse(project.hints) : [];
+  let parsedMilestones: Milestone[] = [];
+  try {
+    if (project.milestones && project.milestones.startsWith('[')) {
+      parsedMilestones = JSON.parse(project.milestones);
+    } else if (project.milestones) {
+      parsedMilestones = project.milestones.split('\n').map((line: string) => {
+        const match = line.match(/^\d+\.\s+(.*)/);
+        return { title: match ? match[1] : line.trim(), description: "" };
+      });
+    }
+  } catch(e) {}
+  const milestones = parsedMilestones;
+
+  let parsedHints = [];
+  try {
+    if (project.hints && project.hints.startsWith('[')) {
+      parsedHints = JSON.parse(project.hints);
+    } else if (project.hints) {
+      parsedHints = project.hints.split('\n').map((s: string) => s.trim());
+    }
+  } catch(e) {}
+  const hints = parsedHints;
 
   let ProjectIcon = HelpCircle;
   if (project.slug.includes("calculator")) ProjectIcon = Calculator;

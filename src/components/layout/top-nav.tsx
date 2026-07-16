@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { usePlatform } from "@/components/platform-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings, User, DownloadCloud } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,11 +25,37 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { UpdateModal } from "@/components/update-modal";
+import { VersionInfo } from "@/lib/services/version.service";
+import { motion } from "framer-motion";
 
 export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }) {
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
   const config = usePlatform();
+  
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  useEffect(() => {
+    // Check for updates quietly in the background
+    const checkForUpdates = async () => {
+      try {
+        const res = await fetch("/api/version");
+        if (res.ok) {
+          const data = await res.json();
+          setVersionInfo(data);
+        }
+      } catch (e) {
+        console.error("Failed to check for updates");
+      }
+    };
+    
+    checkForUpdates();
+    // Poll every 4 hours just in case the app is left open
+    const interval = setInterval(checkForUpdates, 14400000); 
+    return () => clearInterval(interval);
+  }, []);
   
   // Find matching topic context
   let breadcrumbs: { title: string; href?: string }[] = [];
@@ -103,7 +129,24 @@ export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }
         
         <div className="ml-auto flex items-center gap-2 md:gap-4">
 
-          
+          {versionInfo?.updateAvailable && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="hidden sm:flex items-center gap-1.5 border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary hover:text-primary transition-all rounded-full px-3 h-8"
+                onClick={() => setUpdateModalOpen(true)}
+              >
+                <DownloadCloud className="h-4 w-4" />
+                <span className="text-xs font-semibold">Update Available</span>
+              </Button>
+            </motion.div>
+          )}
+
           <ThemeToggle />
           
           <DropdownMenu>
@@ -137,7 +180,12 @@ export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }
           </DropdownMenu>
         </div>
       </header>
-
+      
+      <UpdateModal 
+        open={updateModalOpen} 
+        onOpenChange={setUpdateModalOpen} 
+        versionInfo={versionInfo} 
+      />
     </>
   );
 }
