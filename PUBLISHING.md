@@ -1,6 +1,39 @@
-# Publishing PyMentor to NPM
+# Building & Publishing PyMentor
 
-This guide explains how to build and publish PyMentor to the NPM registry, specifically addressing Windows environments where the default bash script (`build:npm`) might not run automatically.
+This guide explains how to build the standalone Windows desktop application (Electron `.exe`), as well as how to publish the core server to the NPM registry.
+
+---
+
+## 📦 Building the Windows Desktop App (.exe)
+
+PyMentor is packaged as a standalone Windows application using Electron and a bundled Node.js runtime. This allows it to run completely offline without requiring end-users to install Node.js, Python, or configure any environments.
+
+### 1. Generate and Populate the Database (`pymentor.db`)
+Before packaging the app, you MUST ensure that your local SQLite database is fully up-to-date and seeded with the latest Python curriculum data. The Electron packager directly copies your local `pymentor.db` file into the final installer.
+
+Run the following commands in the root of the project:
+```powershell
+# 1. Create or update the database tables based on your Prisma schema
+npm run db:push
+
+# 2. Seed the database with all Python curriculum content
+npm run db:seed
+```
+
+### 2. Build the Executable Installer
+Once the database is successfully populated, you can generate the `.exe` installer. This single command handles building the Next.js production server, copying the database and static assets, and packaging the Electron application.
+
+```powershell
+npm run build:electron
+```
+
+When the process finishes, your installer will be located in the `release/` directory (e.g., `release/PyMentor Setup 1.0.10.exe`).
+
+---
+
+## ☁️ Publishing to NPM
+
+If you need to publish the raw Next.js application to NPM (for developers), follow these steps. Note that the default bash scripts might not work automatically on Windows.
 
 ## Prerequisites
 1. Ensure you have Node.js 18+ installed.

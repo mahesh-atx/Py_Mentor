@@ -38,7 +38,7 @@ export async function completeOnboarding(data: { name: string; avatarUrl: string
 
     // 3. Seed curriculum for the selected track
     try {
-      await seedCurriculum(data.trackId as "python" | "javascript", true);
+      await seedCurriculum(true);
     } catch (seedError) {
       console.error("Failed to seed curriculum during onboarding:", seedError);
       // We don't fail the entire onboarding if seeding has a minor issue, 

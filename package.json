@@ -12,6 +12,45 @@
   "bugs": {
     "url": "https://github.com/mahesh-atx/Py_Mentor/issues"
   },
+  "main": "electron/main.js",
+  "build": {
+    "appId": "com.pymentor.app",
+    "productName": "PyMentor",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "mahesh-atx",
+        "repo": "Py_Mentor"
+      }
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "npmRebuild": false,
+    "files": [
+      "electron/**/*",
+      "prisma/**/*",
+      "seed/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "node_modules/@prisma/engines",
+        "to": "prisma-engines",
+        "filter": [
+          "query-engine*"
+        ]
+      },
+      {
+        "from": "dist",
+        "to": "dist"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  },
   "bin": {
     "pymentor": "./bin/cli.js"
   },
@@ -50,6 +89,8 @@
     "seed": "npx tsx prisma/seed.ts"
   },
   "scripts": {
+    "db:push": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma db push --schema=prisma/schema.sqlite.prisma",
+    "db:seed": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma db seed",
     "dev": "next dev",
     "build": "next build",
     "build:npm": "bash scripts/build.sh",
@@ -58,13 +99,13 @@
     "download-pyodide": "bash scripts/download-pyodide.sh",
     "start": "next start",
     "start:dist": "node dist/server/server.js",
-    "setup:python": "node scripts/setup-env.js python",
-    "setup:javascript": "node scripts/setup-env.js javascript",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:sqlite": "vitest run __tests__/sqlite-schema.test.ts __tests__/json-helper.test.ts __tests__/db-provider.test.ts __tests__/schema-sync.test.ts",
-    "prepublishOnly": "npm run build:npm && npm test"
+    "prepublishOnly": "npm run build:npm && npm test",
+    "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "build:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate --schema=prisma/schema.sqlite.prisma && next build && node scripts/prepare-dist.js && electron-builder build --win"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",
@@ -81,6 +122,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
+    "electron-updater": "^6.8.9",
     "framer-motion": "^12.42.0",
     "highlight.js": "^11.11.1",
     "lucide-react": "^1.23.0",
@@ -107,15 +149,22 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^10.0.3",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.4.2",
+    "electron": "^43.1.1",
+    "electron-builder": "^26.15.3",
+    "electron-is-dev": "^3.0.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.9",
     "tailwindcss": "^4",
     "tsx": "^4.22.4",
     "typescript": "^5",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wait-on": "^9.0.10"
   }
 }

@@ -20,6 +20,8 @@
 # production
 /build
 /dist
+/release
+pymentor.db
 
 # misc
 .DS_Store

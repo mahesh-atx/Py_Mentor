@@ -1,4 +1,4 @@
-export type PlatformLanguage = "python" | "javascript";
+export type PlatformLanguage = "python";
 
 export interface PlatformConfig {
   appName: string;
@@ -7,17 +7,6 @@ export interface PlatformConfig {
 }
 
 export function getPlatformConfig(): PlatformConfig {
-  // Read purely from server environment variables (no NEXT_PUBLIC_)
-  const lang = (process.env.SEED_LANG || "python").toLowerCase();
-  
-  if (lang === "javascript") {
-    return {
-      appName: "JSMentor",
-      language: "javascript",
-      languageCapitalized: "JavaScript",
-    };
-  }
-
   return {
     appName: "PyMentor",
     language: "python",

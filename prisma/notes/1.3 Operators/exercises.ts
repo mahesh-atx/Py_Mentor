@@ -47,34 +47,6 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 75
     },
     {
-      "title": "Basic Math",
-      "prompt": "Print the result of 15 modulus 4 (15 % 4).",
-      "starterCode": "# Print 15 modulo 4\n",
-      "solutionCode": "print(15 % 4)",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "3\n"
-        }
-      ],
-      "difficulty": "beginner",
-      "xpReward": 20
-    },
-    {
-      "title": "Area of a Circle",
-      "prompt": "Given `pi = 3.14` and `r = 5`, calculate the area of a circle (`pi * r^2`) using the exponentiation operator `**`. Print the result.",
-      "starterCode": "pi = 3.14\nr = 5\n# Calculate and print the area\n",
-      "solutionCode": "pi = 3.14\nr = 5\nprint(pi * (r ** 2))",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "78.5\n"
-        }
-      ],
-      "difficulty": "intermediate",
-      "xpReward": 30
-    },
-    {
       "title": "Floor Division vs Standard Division",
       "prompt": "Given `x = 20` and `y = 3`. Print the standard division of x by y, followed by the floor division (`//`) of x by y on a new line.",
       "starterCode": "x = 20\ny = 3\n# Print standard division, then floor division\n",
@@ -101,20 +73,6 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
-    },
-    {
-      "title": "Simple Calculator",
-      "prompt": "Write a program that takes two numbers and an operator (+, -, *, /) as input and performs the operation. If the operator is '/' and the second number is 0, print 'Cannot divide by zero'. Use float() for inputs. (Input: 10, +, 5 → Output: 15.0)",
-      "starterCode": "# Read two numbers and an operator, perform the operation\n",
-      "solutionCode": "num1 = float(input())\nop = input().strip()\nnum2 = float(input())\nif op == '+':\n    print(num1 + num2)\nelif op == '-':\n    print(num1 - num2)\nelif op == '*':\n    print(num1 * num2)\nelif op == '/':\n    if num2 == 0:\n        print('Cannot divide by zero')\n    else:\n        print(num1 / num2)",
-      "testCases": [
-        {
-          "input": "10\n+\n5\n",
-          "expectedOutput": "15.0\n"
-        }
-      ],
-      "difficulty": "expert",
-      "xpReward": 75
     }
   ],
   "assignment-operators": [
@@ -165,34 +123,6 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 60
     },
     {
-      "title": "Add and Assign",
-      "prompt": "Given `x = 10`, use the `+=` operator to add 5 to `x`, then print `x`.",
-      "starterCode": "x = 10\n# Use += to add 5, then print x\n",
-      "solutionCode": "x = 10\nx += 5\nprint(x)",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "15\n"
-        }
-      ],
-      "difficulty": "beginner",
-      "xpReward": 20
-    },
-    {
-      "title": "Multiply and Assign",
-      "prompt": "Given `savings = 100`, use the `*=` operator to multiply it by 2 (doubling it). Then print `savings`.",
-      "starterCode": "savings = 100\n# Double the savings using *=, then print\n",
-      "solutionCode": "savings = 100\nsavings *= 2\nprint(savings)",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "200\n"
-        }
-      ],
-      "difficulty": "intermediate",
-      "xpReward": 30
-    },
-    {
       "title": "Chaining Assignments",
       "prompt": "Start with `score = 50`. Simulate finding an item by adding 10 (`+=`), then hitting a trap which halves your score (`/=` or `//=`). Print the final score as an integer.",
       "starterCode": "score = 50\n# Add 10, then divide by 2 using assignment operators. Print result as int\n",
@@ -205,20 +135,6 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
-    },
-    {
-      "title": "Discount Calculator",
-      "prompt": "A store offers a discount. Read the original price and discount percentage as inputs. Calculate the final price after discount using assignment operators. If the discount percentage is 0 or negative, print 'Invalid discount'. (Input: 100, 20 → Output: 80.0)",
-      "starterCode": "# Read price and discount, calculate final price\n",
-      "solutionCode": "price = float(input())\ndiscount = float(input())\nif discount <= 0:\n    print('Invalid discount')\nelse:\n    discount_amount = price * (discount / 100)\n    price -= discount_amount\n    print(price)",
-      "testCases": [
-        {
-          "input": "100\n20\n",
-          "expectedOutput": "80.0\n"
-        }
-      ],
-      "difficulty": "intermediate",
-      "xpReward": 60
     }
   ],
   "comparison-operators": [
@@ -269,34 +185,6 @@ export const exercises: Record<string, any[]> = {
       "xpReward": 80
     },
     {
-      "title": "Compare Numbers",
-      "prompt": "Print the boolean result of checking if 100 is greater than or equal to 100.",
-      "starterCode": "# Print if 100 is >= 100\n",
-      "solutionCode": "print(100 >= 100)",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "True\n"
-        }
-      ],
-      "difficulty": "beginner",
-      "xpReward": 20
-    },
-    {
-      "title": "Check Equality",
-      "prompt": "Print the boolean result of checking if the string 'Apple' is equal to the string 'apple' (case-sensitive!).",
-      "starterCode": "# Print if 'Apple' == 'apple'\n",
-      "solutionCode": "print('Apple' == 'apple')",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "False\n"
-        }
-      ],
-      "difficulty": "intermediate",
-      "xpReward": 30
-    },
-    {
       "title": "Chained Comparisons",
       "prompt": "Given `x = 15`, use a chained comparison to verify if `10 < x <= 20`. Print the boolean result.",
       "starterCode": "x = 15\n# Print if x is between 10 (exclusive) and 20 (inclusive)\n",
@@ -309,20 +197,6 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "beginner",
       "xpReward": 20
-    },
-    {
-      "title": "BMI Calculator",
-      "prompt": "Write a program that reads weight (kg) and height (m) as inputs, calculates BMI, and prints the category: 'Underweight' (<18.5), 'Normal' (18.5-24.9), 'Overweight' (25-29.9), or 'Obese' (>=30). Use the formula: BMI = weight / (height ** 2). (Input: 70, 1.75 → Output: Normal)",
-      "starterCode": "# Read weight and height, calculate BMI, print category\n",
-      "solutionCode": "weight = float(input())\nheight = float(input())\nbmi = weight / (height ** 2)\nif bmi < 18.5:\n    print('Underweight')\nelif bmi < 25:\n    print('Normal')\nelif bmi < 30:\n    print('Overweight')\nelse:\n    print('Obese')",
-      "testCases": [
-        {
-          "input": "70\n1.75\n",
-          "expectedOutput": "Normal\n"
-        }
-      ],
-      "difficulty": "expert",
-      "xpReward": 80
     }
   ],
   "logical-operators": [
@@ -371,20 +245,6 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 80
-    },
-    {
-      "title": "Logical AND",
-      "prompt": "Given `a = True` and `b = False`, print the result of `a and b`.",
-      "starterCode": "a = True\nb = False\n# Print a and b\n",
-      "solutionCode": "a = True\nb = False\nprint(a and b)",
-      "testCases": [
-        {
-          "input": "",
-          "expectedOutput": "False\n"
-        }
-      ],
-      "difficulty": "beginner",
-      "xpReward": 20
     },
     {
       "title": "Logical NOT",

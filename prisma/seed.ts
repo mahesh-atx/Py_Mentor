@@ -18,19 +18,8 @@ import { oopFundamentalsModule } from "./notes/3.1 OOP Fundamentals";
 import { oopPillarsModule } from "./notes/3.2 OOP Pillars";
 import { fileHandlingModule } from "./notes/2.4 File Handling";
 import { errorHandlingModule } from "./notes/2.5 Error Handling";
+import { seedProjects } from "./seed-projects";
 
-// ── JavaScript module imports ──────────────────────────────────────────
-import { basicsModule as jsBasicsModule } from "./notes/js/11-basics";
-import { loopsConditionalsModule as jsLoopsModule } from "./notes/js/12-loops-conditionals";
-import { functionsModule as jsFunctionsModule } from "./notes/js/13-functions";
-import { arraysObjectsModule as jsArraysObjectsModule } from "./notes/js/14-arrays-objects";
-import { domModule as jsDomModule } from "./notes/js/15-dom";
-import { eventsModule as jsEventsModule } from "./notes/js/16-events";
-import { browserApiModule as jsBrowserApiModule } from "./notes/js/17-browser-api";
-import { oopModule as jsOopModule } from "./notes/js/18-oop";
-import { asyncModule as jsAsyncModule } from "./notes/js/19-async";
-import { errorHandlingModule as jsErrorHandlingModule } from "./notes/js/20-error-handling";
-import { advancedModule as jsAdvancedModule } from "./notes/js/21-advanced";
 
 // ============================================================
 // PHASE DEFINITIONS — Grouping modules into progressive roadmaps
@@ -77,46 +66,6 @@ const pythonPhases = [
   },
 ];
 
-const javascriptPhases = [
-  {
-    slug: "js-phase-1",
-    title: "Phase 1: JavaScript Fundamentals",
-    description:
-      "Learn core JavaScript: variables, data types, operators, loops, conditionals, and functions.",
-    order: 1,
-    modules: [
-      jsBasicsModule,
-      jsLoopsModule,
-      jsFunctionsModule,
-      jsArraysObjectsModule,
-    ],
-  },
-  {
-    slug: "js-phase-2",
-    title: "Phase 2: DOM, Events & Browser APIs",
-    description:
-      "Master the DOM, event handling, browser storage, and the Fetch API to build interactive web apps.",
-    order: 2,
-    modules: [
-      jsDomModule,
-      jsEventsModule,
-      jsBrowserApiModule,
-    ],
-  },
-  {
-    slug: "js-phase-3",
-    title: "Phase 3: Advanced JavaScript",
-    description:
-      "Level up with OOP, async programming, error handling, and performance optimisation techniques.",
-    order: 3,
-    modules: [
-      jsOopModule,
-      jsAsyncModule,
-      jsErrorHandlingModule,
-      jsAdvancedModule,
-    ],
-  },
-];
 
 // ============================================================
 // ACHIEVEMENT DEFINITIONS
@@ -167,10 +116,9 @@ const achievements = [
 // ============================================================
 // EXPORTED SEED FUNCTION
 // ============================================================
-export async function seedCurriculum(lang: "python" | "javascript" = "python", force: boolean = false) {
-  const SEED_LANG = lang.toLowerCase();
+export async function seedCurriculum(force: boolean = false) {
   const FORCE = force;
-  const phases = SEED_LANG === "javascript" ? javascriptPhases : pythonPhases;
+  const phases = pythonPhases;
   
 
   // ── Force-reset path (opt-in via --force) ──────────────────────────
@@ -335,15 +283,15 @@ export async function seedCurriculum(lang: "python" | "javascript" = "python", f
     });
   }
 
-  
-  
+  // ── Seed projects ───────────────────────────────────────────────
+  console.log("\x1b[36m│  ├─ ►\x1b[0m Seeding projects...");
+  await seedProjects();
 }
 
 // Allow running from CLI directly
 if (require.main === module) {
   const cliForce = process.argv.includes("--force");
-  const cliLang = (process.env.SEED_LANG || "python").toLowerCase() as "python" | "javascript";
-  seedCurriculum(cliLang, cliForce)
+  seedCurriculum(cliForce)
     .catch((e) => {
       console.error(e);
       process.exit(1);

@@ -112,7 +112,25 @@ function getDirSizeMB(dir) {
 // Main
 // ---------------------------------------------------------------------------
 
-function main() {
+async function downloadNode() {
+  const https = require('https');
+  const nodeVersion = process.version; // e.g., v20.x
+  const url = `https://nodejs.org/dist/${nodeVersion}/win-x64/node.exe`;
+  const dest = path.join(DIST, "server", "node.exe");
+  console.log(`  → Downloading node.exe (${nodeVersion}) for standalone execution...`);
+  return new Promise((resolve, reject) => {
+    https.get(url, (res) => {
+      if (res.statusCode !== 200) {
+        return reject(new Error(`Failed to download node.exe: HTTP ${res.statusCode}`));
+      }
+      const file = fs.createWriteStream(dest);
+      res.pipe(file);
+      file.on('finish', () => { file.close(); resolve(); });
+    }).on('error', reject);
+  });
+}
+
+async function main() {
   console.log("\n📦 Preparing dist/ for npm distribution...\n");
 
   // ── Clean previous dist ──────────────────────────────────────────────
@@ -145,18 +163,19 @@ function main() {
   console.log("  → Copying public/ assets...");
   copyDir(path.join(ROOT, "public"), path.join(DIST, "server", "public"));
 
-  // ── 4. Copy Prisma SQLite schema + migrations ───────────────────────
-  console.log("  → Copying Prisma SQLite schema...");
+  // ── 4. Copy Prisma SQLite schema and Database ───────────────────────
+  console.log("  → Copying Prisma SQLite schema and pymentor.db...");
   copyFile(
     path.join(ROOT, "prisma", "schema.sqlite.prisma"),
     path.join(DIST, "prisma", "schema.sqlite.prisma")
   );
 
-  if (fs.existsSync(path.join(ROOT, "prisma", "migrations.sqlite"))) {
-    copyDir(
-      path.join(ROOT, "prisma", "migrations.sqlite"),
-      path.join(DIST, "prisma", "migrations.sqlite")
-    );
+  const localDb = path.join(ROOT, "pymentor.db");
+  if (fs.existsSync(localDb)) {
+    copyFile(localDb, path.join(DIST, "pymentor.db"));
+  } else {
+    console.error("❌ pymentor.db not found! Please run 'npm run db:push' and 'npm run db:seed' first to populate it.");
+    process.exit(1);
   }
 
   // ── 5. Copy seed script + curriculum data ────────────────────────────
@@ -172,63 +191,7 @@ function main() {
     );
   }
 
-  if (fs.existsSync(path.join(ROOT, "prisma", "notes"))) {
-    copyDir(
-      path.join(ROOT, "prisma", "notes"),
-      path.join(DIST, "prisma", "notes")
-    );
-  }
-
-  // ── 6. Create seed wrapper ──────────────────────────────────────────
-  // The seed script is TypeScript and imports from ../src/lib/db/prisma.
-  // The wrapper uses tsx to run it, resolving paths relative to the
-  // project root (where node_modules and src/ are available).
-  console.log("  → Creating seed wrapper...");
-  const seedWrapper = `#!/usr/bin/env node
-/**
- * Seed wrapper for npm distribution.
- * Uses tsx to run the TypeScript seed script at runtime.
- * Resolves paths relative to the installed package root.
- */
-const { execSync } = require("child_process");
-const path = require("path");
-const fs = require("fs");
-
-// The seed.ts is at dist/prisma/seed.ts — find the package root from here
-const seedDir = path.join(__dirname, "..", "prisma");
-const seedPath = path.join(seedDir, "seed.ts");
-
-// The package root is where node_modules, src/ etc. live
-// When installed globally, __dirname is inside dist/seed/
-let projectRoot = path.join(__dirname, "..");
-
-// Walk up to find the root (has node_modules or package.json)
-while (!fs.existsSync(path.join(projectRoot, "node_modules")) && projectRoot !== "/") {
-  projectRoot = path.dirname(projectRoot);
-}
-
-const seedPathJs = path.join(seedDir, "seed.js");
-
-if (!fs.existsSync(seedPathJs)) {
-  console.error("❌ Seed script not found at:", seedPathJs);
-  process.exit(1);
-}
-
-try {
-  execSync(\`node "\${seedPathJs}"\`, {
-    cwd: projectRoot,
-    stdio: "inherit",
-    env: { ...process.env },
-  });
-} catch (error) {
-  console.error("❌ Seeding failed:", error.message);
-  process.exit(1);
-}
-`;
-  fs.mkdirSync(path.join(DIST, "seed"), { recursive: true });
-  fs.writeFileSync(path.join(DIST, "seed", "seed.js"), seedWrapper);
-
-  // ── 7. Create a minimal package.json for the dist server ─────────────
+  // Removed seed wrapper creation because we now copy a pre-populated db!
   const serverPkgPath = path.join(DIST, "server", "package.json");
   if (fs.existsSync(serverPkgPath)) {
     const pkg = JSON.parse(fs.readFileSync(serverPkgPath, "utf-8"));
@@ -333,6 +296,14 @@ try {
     console.warn("  ⚠️  Could not locate sql.js WASM binary");
   }
 
+  // ── 12. Download node.exe for Electron standalone ─────────────────────
+  try {
+    await downloadNode();
+  } catch (error) {
+    console.error("  ❌ Failed to download node.exe:", error.message);
+    process.exit(1);
+  }
+
   // ── Summary ──────────────────────────────────────────────────────────
   console.log("\n✅ dist/ prepared successfully!\n");
   console.log("  📊 Size breakdown:");
@@ -347,4 +318,4 @@ try {
   console.log("     3. Publish: npm publish --access public\n");
 }
 
-main();
+main().catch(console.error);

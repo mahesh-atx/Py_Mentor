@@ -162,12 +162,8 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
   const scrollRef = useRef<HTMLDivElement>(null);
   const [showScrollHint, setShowScrollHint] = useState(false);
 
-  const isJS = topic?.slug?.startsWith("js-") || topic?.module?.slug?.startsWith("js-");
-  const language = isJS ? "javascript" : "python";
-
-  const DEFAULT_CODE = isJS 
-    ? `// Practice the code from the lesson here\n// Write JavaScript and click Run ▸\nconsole.log("Hello JS!");\n`
-    : `# Practice the code from the lesson here\n# Write Python and click Run ▸\n`;
+  const language = "python";
+  const DEFAULT_CODE = `# Practice the code from the lesson here\n# Write Python and click Run ▸\n`;
   const [code, setCode] = useState(DEFAULT_CODE);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
@@ -194,40 +190,15 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
     setOutput("Executing...\n");
     
     try {
-      if (language === "javascript") {
-        // Native JavaScript evaluation
-        const logs: string[] = [];
-        const originalLog = console.log;
-        const originalError = console.error;
-        
-        console.log = (...args) => logs.push(args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
-        console.error = (...args) => logs.push('ERROR: ' + args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
-
-        try {
-          // Add a slight artificial delay to make the UI feel like it's running
-          await new Promise(r => setTimeout(r, 200)); 
-          const result = new Function(code)();
-          if (result !== undefined) {
-             logs.push(String(result));
-          }
-          setOutput(logs.length > 0 ? logs.join('\n') : "Execution finished without output.");
-        } catch (err: any) {
-          setOutput((logs.length > 0 ? logs.join('\n') + '\n' : '') + "Error: " + err.toString());
-        } finally {
-          console.log = originalLog;
-          console.error = originalError;
-        }
+      // Python Pyodide evaluation
+      const result = await runPython(code);
+      
+      if (result.error) {
+        setOutput((prev) => prev + result.output + "\nError: " + result.error);
+      } else if (result.output) {
+        setOutput(result.output);
       } else {
-        // Python Pyodide evaluation
-        const result = await runPython(code);
-        
-        if (result.error) {
-          setOutput((prev) => prev + result.output + "\nError: " + result.error);
-        } else if (result.output) {
-          setOutput(result.output);
-        } else {
-          setOutput("Execution finished without output.");
-        }
+        setOutput("Execution finished without output.");
       }
     } catch (error) {
       setOutput(`Internal Error: Failed to execute code.\n${error}`);

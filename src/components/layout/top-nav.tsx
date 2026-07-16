@@ -38,23 +38,34 @@ export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
 
   useEffect(() => {
-    // Check for updates quietly in the background
-    const checkForUpdates = async () => {
-      try {
-        const res = await fetch("/api/version");
-        if (res.ok) {
-          const data = await res.json();
-          setVersionInfo(data);
+    // 1. Electron auto-updater listener
+    if (typeof window !== 'undefined' && window.electron) {
+      window.electron.onUpdateAvailable((info) => {
+        setVersionInfo({
+          currentVersion: "Current",
+          latestVersion: info.version || "New",
+          updateAvailable: true
+        });
+      });
+      // The main process automatically checks for updates on startup
+    } else {
+      // 2. Fallback to NPM check for web/cli
+      const checkForUpdates = async () => {
+        try {
+          const res = await fetch("/api/version");
+          if (res.ok) {
+            const data = await res.json();
+            setVersionInfo(data);
+          }
+        } catch (e) {
+          console.error("Failed to check for updates");
         }
-      } catch (e) {
-        console.error("Failed to check for updates");
-      }
-    };
-    
-    checkForUpdates();
-    // Poll every 4 hours just in case the app is left open
-    const interval = setInterval(checkForUpdates, 14400000); 
-    return () => clearInterval(interval);
+      };
+      
+      checkForUpdates();
+      const interval = setInterval(checkForUpdates, 14400000); 
+      return () => clearInterval(interval);
+    }
   }, []);
   
   // Find matching topic context

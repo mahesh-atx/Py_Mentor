@@ -242,9 +242,8 @@ const projects = [
   },
 ];
 
-async function seedProjects() {
-  console.log("Seeding projects into proper phases...");
-  
+export async function seedProjects() {
+
   // Define which projects belong to which phase based on their position in the array.
   // Projects 0-7: Phase 1, Projects 8-15: Phase 2, Projects 16-24: Phase 3
   
@@ -299,10 +298,8 @@ async function seedProjects() {
         topicId: targetTopicId,
       },
     });
-    console.log(`Seeded project: ${p.title} -> Topic ${targetTopicId}`);
   }
-  
-  console.log("Done.");
+
 }
 
 if (require.main === module) {
