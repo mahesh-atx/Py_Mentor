@@ -3,9 +3,7 @@ export const dictionaryAccessModifyLesson = {
   slug: "dictionary-access-modify",
   content: `# Accessing, Adding, Updating & Deleting Dictionary Items
 
-## The Theory — Building the Logic
-
-Every operation on a dictionary — reading, adding, updating, deleting — is really the same underlying question: "does this key already exist?". Python answers that by hashing the key to find its slot, and the *presence or absence* of a value there decides what happens next, which is why \`dict[key] = value\` both adds a brand-new pair and overwrites an existing one with identical syntax. This is also why accessing a missing key raises a \`KeyError\` rather than silently returning nothing: Python refuses to guess your intent, forcing you to be explicit about what "missing" should mean in your logic. Safe-access tools like \`get()\` and \`pop()\` with defaults exist precisely to let you *decide* that fallback behaviour instead of crashing. The classic pitfall is confusing keys with values — the \`in\` operator checks **keys only**, so asking \`"Alice" in person\` when Alice is a value will quietly report \`False\` and mislead your logic.
+Every dictionary operation comes down to the same question — "does this key exist?" — which is why \`dict[key] = value\` both adds a new pair and overwrites an existing one with identical syntax. Accessing a missing key raises a \`KeyError\` (use \`get()\`/\`pop()\` with defaults to avoid it), and remember the \`in\` operator checks **keys only**, not values.
 
 ## Accessing Items
 

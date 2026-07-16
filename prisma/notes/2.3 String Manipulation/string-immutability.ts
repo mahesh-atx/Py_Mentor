@@ -3,9 +3,7 @@ export const stringImmutabilityLesson = {
   slug: "string-immutability",
   content: `# String Immutability
 
-## The Theory — Building the Logic
-
-Immutability means that once a string object is created, its characters are locked in place in memory, so any apparent change is really the creation of a brand-new string that your variable is then pointed at. Python chooses this because fixed, unchangeable text is safer to share and can be used as dictionary keys and set members. This mental model explains why string methods never alter the original. The pitfall is calling a method and expecting the original to change: \`text.upper()\` returns a new string and is discarded unless you assign it back, so forgetting \`text = text.upper()\` leaves the old value untouched.
+Immutability means that once a string object is created its characters are locked in place in memory, so any apparent change is really the creation of a brand-new string that your variable is then pointed at — which is why strings can safely be used as dictionary keys and set members. The pitfall is calling a method and expecting the original to change: text.upper() returns a new string that is discarded unless you assign it back, so forgetting text = text.upper() leaves the old value untouched.
 
 ## What is Immutability?
 

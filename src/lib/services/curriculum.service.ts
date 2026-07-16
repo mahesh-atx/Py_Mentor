@@ -184,7 +184,8 @@ export const CurriculumService = {
         include: {
           topic: {
             include: {
-              module: { include: { roadmap: true } }
+              module: { include: { roadmap: true } },
+              exercises: { where: { isPublished: true }, orderBy: { order: "asc" } }
             }
           }
         }

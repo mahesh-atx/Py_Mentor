@@ -3,9 +3,7 @@ export const raisingExceptionsLesson = {
   slug: "raising-exceptions",
   content: `# Raising Exceptions (raise)
 
-## The Theory — Building the Logic
-
-Raising an exception is your function's way of refusing to continue on impossible or invalid terms, rather than returning a fake value like \`-1\` that the caller might mistake for real data. Conceptually, \`raise\` transfers control upward: instead of your function guessing how the caller wants to recover, it signals failure and lets the caller decide, which keeps error-handling logic where it belongs. Python builds the exception at the point of failure and walks back up the stack, preserving a traceback so you can see the exact path that led to the problem. Raising early - as soon as you detect bad input - follows the "fail fast" principle: an error caught immediately is far easier to debug than one that corrupts state and explodes much later. The pitfall is returning \`None\` or a sentinel to indicate errors, because callers often forget to check and then hit a confusing \`TypeError\` far from the true cause.
+Raising an exception is your function refusing to continue on invalid terms and transferring control upward to the caller, who then decides how to recover — following the fail-fast principle that an error caught immediately is easier to debug. The pitfall is returning \`None\` or a sentinel to signal errors, because callers often forget to check and then hit a confusing \`TypeError\` far from the true cause.
 
 ## Why Raise Exceptions?
 

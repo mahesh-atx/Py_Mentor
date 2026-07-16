@@ -3,9 +3,7 @@ export const polymorphismLesson = {
   slug: "polymorphism",
   content: `# Polymorphism
 
-## The Theory — Building the Logic
-
-Polymorphism is the principle that one piece of code can operate correctly on many different types because each type supplies its own meaning for the same operation. In Python this works through *late binding*: when you call \`obj.something()\`, Python looks up the method on the actual object at runtime rather than deciding at write time what type the object is. That is why a loop over \`Dog\`, \`Cat\`, and \`Robot\` objects can call the same method and get different results—the language never checks the type, only that the method exists, which is the essence of duck typing. The conceptual pitfall is assuming polymorphism requires a shared parent class; in Python it usually does not, because the only requirement is that the objects respond to the same message, so the same function can work across unrelated classes.
+Polymorphism lets one piece of code operate correctly on many different types because each supplies its own meaning for the same operation, resolved by *late binding* at runtime — so a loop over \`Dog\`, \`Cat\`, and \`Robot\` can call the same method and get different results. The pitfall is assuming polymorphism requires a shared parent class; in Python it usually does not, since the only requirement is that the objects respond to the same message.
 
 ## What is Polymorphism?
 

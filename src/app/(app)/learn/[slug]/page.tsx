@@ -23,12 +23,12 @@ export default async function LessonPage({ params }: { params: Promise<{ slug: s
 
   // 4. Get User Progress
   const user = await UserService.getLocalUser();
-  const isCompleted = lesson ? await ProgressService.isLessonCompleted(user.id, lesson.id) : false;
+  const isCompleted = lesson ? await ProgressService.isLessonCompleted(user.id, lesson.slug) : false;
 
   return (
     <LessonClient 
       topic={topic}
-      lessonId={lesson?.id}
+      lessonId={lesson?.slug}
       lessonContent={lessonContent}
       prevTopic={prevTopic}
       nextTopic={nextTopic}

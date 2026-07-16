@@ -3,9 +3,7 @@ export const scopeLesson = {
   slug: "scope",
   content: `# Scope: Local, Global & nonlocal
 
-## The Theory — Building the Logic
-
-Scope is the set of rules Python uses to decide which name refers to which value at any given line, and it searches in a fixed order known as LEGB: Local, then Enclosing, then Global, then Built-in. The key idea is that a name is looked up *at the moment you use it*, walking outward from the current function until it finds a match — so an inner scope can read an outer variable but does not automatically share writes with it. Assigning to a name inside a function creates a brand-new local by default, which is why modifying a global without the \`global\` keyword (or an enclosing variable without \`nonlocal\`) fails or silently shadows it. The mental model is layers of visibility: each function is a bubble, and names defined inside stay inside unless you explicitly reach out. The pitfall is variable shadowing, where a local name quietly hides a global of the same name, leading to "why didn't my change take effect?" bugs.
+Scope is the set of rules Python uses to decide which name refers to which value, searching in the fixed LEGB order: Local, Enclosing, Global, Built-in. The pitfall is variable shadowing, where a local name quietly hides a global of the same name, leading to "why didn't my change take effect?" bugs.
 
 ## What is Scope?
 

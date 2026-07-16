@@ -78,7 +78,7 @@ const MemoizedMarkdown = memo(function MemoizedMarkdown({
             <Button
               variant="secondary"
               size="sm"
-              className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-opacity h-8 gap-1"
+              className="absolute top-2 right-2 opacity-0 group-hover/code:opacity-100 transition-all duration-200 transform translate-y-1 group-hover/code:translate-y-0 h-8 gap-1 active:scale-95"
               onClick={() => {
                 onCopyToEditor(codeString);
                 toast.success("Copied to editor!");
@@ -473,15 +473,25 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
             </p>
             <Link 
               href={targetHref}
-              className="block group relative p-6 bg-card border border-border/50 rounded-xl hover:border-primary/50 transition-all hover:shadow-[0_8px_30px_rgb(0,0,0,0.12)] overflow-hidden"
+              className="block group relative bg-card border border-border/50 rounded-2xl hover:border-primary/50 transition-all duration-300 hover:shadow-xl overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-              <div className="relative z-10">
-                <div className={`mb-4 inline-flex items-center justify-center p-3.5 rounded-xl transition-all duration-300 group-hover:scale-110 ${colorClass}`}>
-                  {TargetIconComponent && <TargetIconComponent className="h-6 w-6" />}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+              
+              <div className="flex flex-col md:flex-row items-center justify-between p-6 gap-6 relative z-10">
+                <div className="flex-1 space-y-4">
+                  <div className={`inline-flex items-center justify-center p-3.5 rounded-xl transition-transform duration-300 group-hover:scale-110 ${colorClass}`}>
+                    {TargetIconComponent && <TargetIconComponent className="h-6 w-6" />}
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold mb-1 group-hover:text-primary transition-colors text-foreground">{targetTitle}</h3>
+                    <p className="text-muted-foreground text-sm max-w-sm">{targetDesc}</p>
+                  </div>
                 </div>
-                <h3 className="text-lg font-bold mb-1 group-hover:text-primary transition-colors text-foreground">{targetTitle}</h3>
-                <p className="text-muted-foreground text-sm">{targetDesc}</p>
+
+                <div className="shrink-0 w-full md:w-1/3 max-w-[160px] opacity-90 group-hover:opacity-100 transition-opacity duration-500">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/images/illustrations/stairs.jpg" alt="Next Lesson" className="w-full h-auto rounded-xl shadow-md mix-blend-luminosity group-hover:mix-blend-normal transition-all duration-500 transform group-hover:scale-105" />
+                </div>
               </div>
             </Link>
           </div>
@@ -508,7 +518,7 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
           {lessonId && !isCompleted && (
             <Button 
               variant="default" 
-              className="flex-1 sm:flex-none gap-2 bg-success text-success-foreground hover:bg-success/90" 
+              className="flex-1 sm:flex-none gap-2 bg-success text-success-foreground hover:bg-success/90 hover:scale-[1.02] active:scale-[0.98] transition-transform" 
               onClick={handleComplete}
               disabled={isCompleting}
             >

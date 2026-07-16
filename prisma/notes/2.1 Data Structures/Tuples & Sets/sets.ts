@@ -3,9 +3,7 @@ export const setsLesson = {
   slug: "sets",
   content: `# Sets
 
-## The Theory — Building the Logic
-
-A set is Python's implementation of the mathematical idea of a **collection of distinct things**, where membership — not position — is what matters. Because order is irrelevant and duplicates are forbidden, Python stores set elements in a hash table, which is why membership tests like \`x in s\` are extremely fast (roughly constant time) compared to scanning a list element by element. The trade-off is that elements must themselves be \`hashable\` (immutable), so you can put numbers, strings, and tuples inside a set but not lists. To build intuition, think of a set as answering questions like "is this item present?" or "what do these two groups have in common?", rather than "what is the third item?". A common pitfall is expecting a fixed order or trying to index a set; also note that \`{}\` creates an empty *dictionary*, so you must use \`set()\` to make an empty set.
+A set is an unordered, hash-backed collection of distinct items where membership matters more than position, so lookups like \`x in s\` are O(1). A common pitfall is that \`{}\` creates an empty *dictionary* (use \`set()\`), and sets cannot be indexed.
 
 ## What is a Set?
 

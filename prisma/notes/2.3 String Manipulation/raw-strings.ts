@@ -3,9 +3,7 @@ export const rawStringsLesson = {
   slug: "raw-strings",
   content: `# Raw Strings
 
-## The Theory — Building the Logic
-
-A raw string is not a new data type — it is the exact same str object, just interpreted differently by Python at parse time. The r prefix tells the lexer to switch off escape processing, so every backslash stays a literal backslash instead of merging with the following character. This matters whenever a string naturally contains many backslashes, such as Windows paths or regular expressions, where doubling each one by hand would be tedious and error-prone. The pitfall is thinking raw strings escape the normal rules of str: after creation they behave exactly like any other string, and a raw literal still cannot end on a single trailing backslash because the lexer would assume the quote is escaped.
+A raw string is not a new data type — it is the exact same str object, just interpreted differently by Python at parse time: the r prefix switches off escape processing so every backslash stays literal instead of merging with the next character. The pitfall is thinking raw strings escape the normal rules of str: after creation they behave exactly like any other string, and a raw literal still cannot end on a single trailing backslash.
 
 ## What is a Raw String?
 

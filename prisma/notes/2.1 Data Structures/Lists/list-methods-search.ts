@@ -3,11 +3,7 @@ export const listMethodsSearchLesson = {
   slug: "list-methods-search",
   content: `# List Methods - Search & Count
 
-Two simple but very useful methods: \`index()\` finds where an item is, and \`count()\` counts how many times it appears.
-
-## The Theory — Building the Logic
-
-\`index()\` and \`count()\` both work by scanning the list from left to right until they meet a match, which is why they report the first occurrence and why they slow down as the list grows. \`index()\` is an inquiry that raises an error when nothing matches, while \`count()\` returns \`0\`, reflecting their different design intent. Because searching is linear, these methods are simple but not efficient for very large lists. A common pitfall is calling \`index()\` without first checking membership with \`in\`, which crashes the program on a missing value.
+Two simple but very useful methods: \`index()\` finds where an item is, and \`count()\` counts how many times it appears. Under the hood, \`index()\` and \`count()\` both scan the list left-to-right, so they report the first match and slow down as the list grows. The pitfall is calling \`index()\` without first checking membership with \`in\`, which crashes on a missing value.
 
 ## index() - Find the Position of an Item
 

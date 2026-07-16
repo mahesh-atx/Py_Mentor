@@ -10,6 +10,28 @@ export const exercises: Record<string, any[]> = {
       ],
       difficulty: "beginner",
       xpReward: 20
+    },
+    {
+      title: "Car Objects",
+      prompt: "Define a class `Car` with attributes `make` and `speed`, and a method `describe()` that prints `MAKE (speed: SPEED)`. Read N cars (N given first, each line: `make speed`). Create objects and call describe() for each.",
+      starterCode: "# Define Car class and create N cars from input\n",
+      solutionCode: "class Car:\n    def __init__(self, make, speed):\n        self.make = make\n        self.speed = int(speed)\n    \n    def describe(self):\n        print(f'{self.make} (speed: {self.speed})')\n\nn = int(input())\nfor _ in range(n):\n    parts = input().split()\n    Car(parts[0], parts[1]).describe()",
+      testCases: [
+        { input: "2\nToyota 120\nBMW 200\n", expectedOutput: "Toyota (speed: 120)\nBMW (speed: 200)\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 25
+    },
+    {
+      title: "Student Grade (Objects + Method)",
+      prompt: "Define a `Student` class with `name` and `score`. Method `get_grade()` returns 'A' if score >= 90, 'B' if >= 80, else 'C'. Read N students (N given first, each line: `name score`) and print `NAME: GRADE` for each.",
+      starterCode: "# Define Student class with get_grade and create N students\n",
+      solutionCode: "class Student:\n    def __init__(self, name, score):\n        self.name = name\n        self.score = int(score)\n    \n    def get_grade(self):\n        if self.score >= 90: return 'A'\n        elif self.score >= 80: return 'B'\n        return 'C'\n\nn = int(input())\nfor _ in range(n):\n    parts = input().split()\n    s = Student(parts[0], parts[1])\n    print(f'{s.name}: {s.get_grade()}')",
+      testCases: [
+        { input: "3\nAlice 95\nBob 82\nCharlie 75\n", expectedOutput: "Alice: A\nBob: B\nCharlie: C\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 25
     }
   ],
 

@@ -3,11 +3,7 @@ export const nestedListsLesson = {
   slug: "nested-lists",
   content: `# Nested Lists (2D Lists)
 
-A **nested list** is a list that contains other lists as its items. This creates a 2D (or even 3D) structure, perfect for representing grids, matrices, tables, and game boards.
-
-## The Theory — Building the Logic
-
-A nested list is really just an ordinary list whose elements happen to be other lists — Python stores references to those inner lists, not copies of their contents. This means a two-dimensional structure is built from normal one-dimensional lists stacked inside one another, so double indexing like \`matrix[0][0]\` simply means "take element 0, then take element 0 of that result." The key mental model is that each row is an independent object reached through the outer list. A common pitfall is building rows by repetition such as \`[[0]] * rows\`, which makes every row the same object, so editing one silently changes them all.
+A **nested list** is a list that contains other lists as its items. This creates a 2D (or even 3D) structure, perfect for representing grids, matrices, tables, and game boards. Under the hood, a nested list is just an ordinary list whose elements are references to other lists — so double indexing like \`matrix[0][0]\` means "take element 0, then element 0 of that." The pitfall is building rows by repetition such as \`[[0]] * rows\`, which makes every row the same object, so editing one silently changes them all.
 
 ## Creating a Nested List
 

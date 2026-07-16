@@ -93,6 +93,39 @@ export const exercises: Record<string, any[]> = {
       ],
       difficulty: "advanced",
       xpReward: 65
+    },
+    {
+      title: "Timing Block Context Manager",
+      prompt: "Define a `TimingBlock` context manager: `__enter__` prints 'start' and returns self; `__exit__` prints 'end' and returns False. Use it to wrap a print of 'working...'. The output should be: start, working..., end.",
+      starterCode: "# Implement TimingBlock context manager\n",
+      solutionCode: "class TimingBlock:\n    def __enter__(self):\n        print('start')\n        return self\n    def __exit__(self, *args):\n        print('end')\n        return False\n\nwith TimingBlock():\n    print('working...')",
+      testCases: [
+        { input: "", expectedOutput: "start\nworking...\nend\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 25
+    },
+    {
+      title: "Safe Division Context Manager",
+      prompt: "Define a `SafeDivision` context manager. `__enter__` returns a function `divide(a, b)` that returns the result or the string 'Error' if b is 0. `__exit__` returns False. Inside the `with` block, call divide(10, 2) and divide(5, 0) and print each.",
+      starterCode: "# Implement SafeDivision context manager\n",
+      solutionCode: "class SafeDivision:\n    def __enter__(self):\n        def divide(a, b):\n            if b == 0:\n                return 'Error'\n            return a / b\n        self.divide = divide\n        return self\n    def __exit__(self, *args):\n        return False\n\nwith SafeDivision() as sd:\n    print(sd.divide(10, 2))\n    print(sd.divide(5, 0))",
+      testCases: [
+        { input: "", expectedOutput: "5.0\nError\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 40
+    },
+    {
+      title: "Resource Lifecycle Manager",
+      prompt: "Define a `Resource` context manager: `__init__(name)` stores name; `__enter__` prints `Opened NAME` and returns self; `__exit__` prints `Closed NAME` and returns False. Use it to wrap printing 'using resource'.",
+      starterCode: "# Implement Resource context manager\n",
+      solutionCode: "class Resource:\n    def __init__(self, name):\n        self.name = name\n    def __enter__(self):\n        print(f'Opened {self.name}')\n        return self\n    def __exit__(self, *args):\n        print(f'Closed {self.name}')\n        return False\n\nwith Resource('db'):\n    print('using resource')",
+      testCases: [
+        { input: "", expectedOutput: "Opened db\nusing resource\nClosed db\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 25
     }
   ],
 

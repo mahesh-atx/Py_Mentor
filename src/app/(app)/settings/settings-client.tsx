@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
@@ -46,15 +45,16 @@ export function SettingsClient() {
         </div>
 
         <div className="md:col-span-3 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how {config.appName} looks on your device.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Dark Mode</Label>
+          <div className="group relative overflow-hidden flex flex-col p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="mb-8 relative z-10">
+              <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">Appearance</h3>
+              <p className="text-muted-foreground mt-1">Customize how {config.appName} looks on your device.</p>
+            </div>
+            <div className="space-y-6 relative z-10">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Dark Mode</Label>
                   <p className="text-sm text-muted-foreground">Switch between light and dark themes.</p>
                 </div>
                 <Switch 
@@ -62,31 +62,32 @@ export function SettingsClient() {
                   onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} 
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>Configure how you receive alerts and updates.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Daily Reminders</Label>
+          <div className="group relative overflow-hidden flex flex-col p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="mb-8 relative z-10">
+              <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">Notifications</h3>
+              <p className="text-muted-foreground mt-1">Configure how you receive alerts and updates.</p>
+            </div>
+            <div className="space-y-4 relative z-10">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Daily Reminders</Label>
                   <p className="text-sm text-muted-foreground">Get reminded to keep your learning streak.</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Product Updates</Label>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Product Updates</Label>
                   <p className="text-sm text-muted-foreground">Receive news about new courses and features.</p>
                 </div>
                 <Switch defaultChecked={false} />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </div>

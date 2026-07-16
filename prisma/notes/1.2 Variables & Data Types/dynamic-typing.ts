@@ -3,9 +3,7 @@ export const dynamicTypingLesson = {
   slug: "dynamic-typing",
   content: `# Dynamic Typing in Python
 
-## The Theory — Building the Logic
-
-In Python, a name is not a fixed container that holds a type — it is a **label or reference** that points at a value, and the type belongs to the value itself. When you write \`x = 10\` and later \`x = "hi"\`, you are not changing the type of \`x\`; you are simply making the label \`x\` point at a different object. This is why the same name can refer to an integer one moment and a string the next, and it is the opposite of languages where the container's type is locked in advance. The trade-off is that mistakes surface at runtime: because nothing stops a name from later pointing at an unexpected type, an operation that was valid a moment ago can suddenly fail.
+Under the hood, a name in Python is a label that points at a value, and the type belongs to the value itself — not the name — so the same name can refer to different types at different times. The trade-off is that type errors surface only at runtime, because nothing stops a name from later pointing at an unexpected type.
 
 ## What is Dynamic Typing?
 

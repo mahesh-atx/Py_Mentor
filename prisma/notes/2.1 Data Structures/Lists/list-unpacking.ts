@@ -3,11 +3,7 @@ export const listUnpackingLesson = {
   slug: "list-unpacking",
   content: `# List Unpacking
 
-**List unpacking** (also called destructuring) lets you assign individual list items to separate variables in a single line. It is clean, readable, and very Pythonic.
-
-## The Theory — Building the Logic
-
-List unpacking works because Python lets an iterable on the right of an assignment be matched position by position to variables on the left. It is not list-specific magic — any iterable sequence can be unpacked the same way. The \`*\` operator collects a variable number of leftover items into a list, letting you split "the rest" without knowing its length in advance. The common pitfall is mismatching the number of variables and values, which raises a \`ValueError\` unless a star target absorbs the extra items.
+**List unpacking** (also called destructuring) lets you assign individual list items to separate variables in a single line. It is clean, readable, and very Pythonic. Under the hood, unpacking matches an iterable on the right of an assignment position-by-position to variables on the left, with \`*\` collecting any leftover items into a list. The pitfall is mismatching the number of variables and values, which raises a \`ValueError\` unless a star target absorbs the extras.
 
 ## Basic Unpacking
 

@@ -3,9 +3,7 @@ export const instanceVsClassVariablesLesson = {
   slug: "instance-vs-class-variables",
   content: `# Instance Variables vs Class Variables
 
-## The Theory — Building the Logic
-
-The difference between instance and class variables mirrors a real distinction: data that belongs to a *kind* of thing versus data that belongs to a *particular* thing. Python resolves any attribute access by first looking in the object's own \`__dict__\` and then walking up to the class's \`__dict__\`, which is why an instance can read a class variable yet silently create its own copy the moment you assign to it — this is attribute shadowing, not an error. Because class variables live in a single shared location, every instance sees the same value, making them ideal for constants, counters, and configuration that should stay uniform. The subtlety is that "shared" is literal: a mutable object such as a list stored at the class level is the *same list* for every instance, so one object's change is visible to all. A common pitfall is using a mutable class variable (like a shared grades list) expecting each object to get its own — always create mutable state inside \`__init__\` so each instance owns a private copy.
+Instance and class variables mirror real data: per-object state lives in the object's own \`__dict__\`, while class variables live in one shared location Python consults only after the instance has none of its own. The pitfall is using a mutable class variable (like a shared grades list) expecting each object to get its own — always create mutable state inside \`__init__\` so every instance owns a private copy.
 
 ## Instance Variables
 

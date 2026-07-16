@@ -50,6 +50,7 @@ export async function completeLessonAction(lessonId: string) {
 
     revalidatePath("/dashboard");
     revalidatePath("/progress");
+    revalidatePath("/", "layout");
     revalidatePath("/learn/[slug]", "page");
 
     return { success: true, unlockedAchievements };
@@ -99,6 +100,8 @@ export async function submitExerciseAction({
 
     revalidatePath("/dashboard");
     revalidatePath("/progress");
+    revalidatePath("/practice");
+    revalidatePath("/", "layout");
     revalidatePath("/practice/[slug]", "page");
 
     return { success: true, unlockedAchievements };
@@ -132,6 +135,7 @@ export async function submitQuizAction(quizId: string, score: number, total: num
 
     revalidatePath("/dashboard");
     revalidatePath("/progress");
+    revalidatePath("/", "layout");
     revalidatePath("/quiz/[slug]", "page");
 
     return { success: true, earnedXp: result.earnedXp, unlockedAchievements };
@@ -162,6 +166,8 @@ export async function submitProjectAction(projectId: string, repoUrl: string) {
 
     revalidatePath("/dashboard");
     revalidatePath("/progress");
+    revalidatePath("/projects");
+    revalidatePath("/", "layout");
     revalidatePath("/projects/[slug]", "page");
 
     return { success: true, unlockedAchievements };

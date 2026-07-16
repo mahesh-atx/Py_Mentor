@@ -136,6 +136,33 @@ export const exercises: Record<string, any[]> = {
       testCases: [{ input: "", expectedOutput: "False\n" }],
       difficulty: "intermediate",
       xpReward: 30
+    },
+    {
+      title: "Same Object via Assignment",
+      prompt: "Create a list `a = [1, 2, 3]`, then set `b = a`. Print the result of `a is b`, then append `4` to `a` and print `b` to show they share the same object.",
+      starterCode: "a = [1, 2, 3]\n# Assign b = a and print a is b, then append to a and print b\n",
+      solutionCode: "a = [1, 2, 3]\nb = a\nprint(a is b)\na.append(4)\nprint(b)",
+      testCases: [{ input: "", expectedOutput: "True\n[1, 2, 3, 4]\n" }],
+      difficulty: "beginner",
+      xpReward: 20
+    },
+    {
+      title: "Check for None",
+      prompt: "Set `value = None` and print `True` if value is None, otherwise `False`, using the `is` operator.",
+      starterCode: "value = None\n# Print True/False using 'is'\n",
+      solutionCode: "value = None\nprint(value is None)",
+      testCases: [{ input: "", expectedOutput: "True\n" }],
+      difficulty: "beginner",
+      xpReward: 20
+    },
+    {
+      title: "is not Operator",
+      prompt: "Create two separate lists `x = [1, 2]` and `y = [1, 2]`. Print the result of `x is not y` (they are different objects).",
+      starterCode: "x = [1, 2]\ny = [1, 2]\n# Print x is not y\n",
+      solutionCode: "x = [1, 2]\ny = [1, 2]\nprint(x is not y)",
+      testCases: [{ input: "", expectedOutput: "True\n" }],
+      difficulty: "intermediate",
+      xpReward: 30
     }
   ],
   "membership-operators": [

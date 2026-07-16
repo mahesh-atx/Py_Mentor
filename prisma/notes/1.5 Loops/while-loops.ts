@@ -5,9 +5,7 @@ export const whileLoopLesson = {
 
 A \`while\` loop keeps repeating a block of code **as long as a condition remains \`True\`**. Unlike the \`for\` loop which runs for each item in a sequence, the \`while\` loop runs until something changes.
 
-## The Theory — Building the Logic
-
-A \`while\` loop expresses repetition as a *condition* rather than as a collection: it keeps running for as long as a test stays \`True\`, pausing to re-check that test before every single pass. Under the hood the loop is just asking "is this still true?" and acting on the answer, which is why it suits situations where you do not know in advance how many repetitions you need. The crucial mental model is that the loop has no built-in end — it relies entirely on the condition eventually becoming \`False\`, usually because some variable inside the loop is deliberately nudged toward that outcome. This is also its biggest danger: if nothing ever changes the condition, the loop runs forever and freezes your program. A common pitfall is updating the wrong variable (or forgetting to update it at all), leaving the test permanently true.
+A \`while\` loop repeats as long as a condition stays \`True\`, re-checking that test before every pass — ideal when you don't know the repetition count in advance. Its biggest danger is the infinite loop: if nothing inside the loop changes the condition (or you update the wrong variable), it runs forever.
 
 ## How the while Loop Works
 

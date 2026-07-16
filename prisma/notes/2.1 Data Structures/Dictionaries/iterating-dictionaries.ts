@@ -3,11 +3,7 @@ export const iteratingDictionariesLesson = {
   slug: "iterating-dictionaries",
   content: `# Iterating Through Dictionaries
 
-Python provides several ways to iterate over dictionaries. Choosing the right method makes your code cleaner and more efficient.
-
-## The Theory — Building the Logic
-
-Iterating a dictionary is about deciding *what shape of data* each loop step should give you: just the keys, just the values, or both together as a pair. Python treats keys as the default iteration target because keys are the identity of each entry — everything else can be reached *through* a key — which is why \`for k in d\` and \`for k in d.keys()\` behave identically. Since Python 3.7 dictionaries iterate in **insertion order**, so the sequence you see mirrors the sequence you built, giving predictable, reproducible loops. The most important pitfall to internalise is that **you must not add or remove keys while looping over a dictionary**: doing so changes the internal structure mid-traversal and Python raises a \`RuntimeError\` to protect you — the safe logic is to iterate over a snapshot like \`list(d.keys())\` or to build a fresh dictionary with a comprehension.
+Python provides several ways to iterate over dictionaries. Choosing the right method makes your code cleaner and more efficient. Iterating is about picking the *shape* of each step — keys (the default, since \`for k in d\` matches \`for k in d.keys()\`), values, or both as pairs — and since Python 3.7 loops run in **insertion order**. The key pitfall: never add or remove keys while looping, which raises a \`RuntimeError\`; iterate over a snapshot like \`list(d.keys())\` instead.
 
 ## Method 1: Iterate Over Keys (Default)
 

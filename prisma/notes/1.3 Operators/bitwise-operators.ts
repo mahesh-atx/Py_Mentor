@@ -5,9 +5,7 @@ export const bitwiseOperatorsLesson = {
 
 Bitwise operators work on numbers at the **binary level** - meaning they operate on the individual bits (0s and 1s) that make up a number in memory.
 
-## The Theory — Building the Logic
-
-Bitwise operators work on the raw binary representation of integers, treating each number as a row of on/off switches (bits) rather than as a single quantity. Each operator applies a simple per-bit rule — \`&\` keeps a bit on only when both are on, \`|\` when either is on, \`^\` when they differ — which is exactly how digital logic gates behave in hardware. Shifting bits left or right (\`<<\`, \`>>\`) is just a fast way to multiply or divide by powers of two, because moving a bit one place multiplies its place-value by 2. The common pitfall is expecting bitwise \`&\` or \`|\` to return True/False like logical operators; they return an integer built from the resulting bits, so \`5 & 3\` is \`1\`, not \`True\`.
+Bitwise operators act on the raw binary bits of integers, applying a simple per-bit rule for each (e.g., \`&\` keeps a bit on only when both are on) - much like the logic gates in hardware, and shifting left/right multiplies or divides by powers of two. The common pitfall is expecting \`&\` or \`|\` to return \`True\`/\`False\` like logical operators; they return an integer built from the resulting bits, so \`5 & 3\` is \`1\`, not \`True\`.
 
 ## Understanding Binary Numbers
 

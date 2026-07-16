@@ -5,9 +5,7 @@ export const rangeFunctionLesson = {
 
 The \`range()\` function generates a sequence of numbers. It is one of the most frequently used functions in Python, especially with \`for\` loops. Understanding \`range()\` well will make your loops much more powerful.
 
-## The Theory — Building the Logic
-
-\`range()\` is Python's clever answer to the problem of "I want the numbers from A to B" without paying the memory cost of building a giant list. Rather than storing every number up front, \`range()\` returns a lazy *sequence object* that computes each value only at the moment it is needed — so \`range(1000000)\` is tiny in memory but still lets you loop a million times. The other key idea is that \`range()\` is *half-open*: it includes the start value but stops strictly before the end value, which is why \`range(1, 6)\` yields 1, 2, 3, 4, 5. This half-open design turns out to match how lengths and indexes work in Python (an object of length n is indexed 0 to n-1), so loops line up naturally with real data. The most common logical trap is an off-by-one mistake — forgetting that the stop value is excluded and writing \`range(1, 10)\` when you meant to reach 10.
+Rather than building a giant list, \`range()\` returns a lazy sequence that computes each value only when needed, so it stays tiny in memory even for a million numbers. Its key trap is the half-open design — the stop value is excluded, so \`range(1, 10)\` stops at 9 and off-by-one errors are easy to make.
 
 ## Why range() Exists
 

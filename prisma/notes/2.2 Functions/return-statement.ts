@@ -3,9 +3,7 @@ export const returnStatementLesson = {
   slug: "return-statement",
   content: `# Return Statement & Multiple Return Values
 
-## The Theory — Building the Logic
-
-The \`return\` statement is how a function hands a result back to whoever called it — without it, the function still runs but produces \`None\`, Python's way of saying "no value." Crucially, \`return\` does two jobs at once: it supplies a value *and* immediately stops the function, so any code after it never executes. When you write \`return a, b\`, Python is not returning two things in the usual sense; it packs them into a single tuple that the caller can optionally unpack into separate names. The mental model is that a function call is an expression which *becomes* the returned value, so \`add(2, 3)\` can sit anywhere a number could. The common pitfall is writing a function that only \`print\`s its result and forgetting to \`return\` it — the text appears on screen, but the function gives back \`None\` to your code.
+\`return\` hands a value back to the caller and immediately exits the function, so any code after it never runs; without it the function yields \`None\`. A common pitfall is writing a function that only \`print\`s its result and forgetting to \`return\` it — the text shows up, but the function gives back \`None\`.
 
 ## The return Statement
 

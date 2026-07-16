@@ -1,8 +1,16 @@
 import { exercises } from "./exercises";
 import { conditionalStatementsLesson } from "./conditional-statements";
+import { ifElifElseLesson } from "./if-elif-else";
+import { nestedIfLesson } from "./nested-if";
+import { ternaryOperatorLesson } from "./ternary-operator";
+import { matchCaseLesson } from "./match-case";
 
 export {
-  conditionalStatementsLesson
+  conditionalStatementsLesson,
+  ifElifElseLesson,
+  nestedIfLesson,
+  ternaryOperatorLesson,
+  matchCaseLesson
 };
 
 export const controlFlowModule = {
@@ -11,6 +19,10 @@ export const controlFlowModule = {
   description: "Control Flow.",
   order: 4,
   lessons: [
-    { ...conditionalStatementsLesson, exercises: exercises[conditionalStatementsLesson.slug] }
+    { ...conditionalStatementsLesson, exercises: exercises[conditionalStatementsLesson.slug] },
+    { ...ifElifElseLesson, exercises: exercises[ifElifElseLesson.slug] },
+    { ...nestedIfLesson, exercises: exercises[nestedIfLesson.slug] },
+    { ...ternaryOperatorLesson, exercises: exercises[ternaryOperatorLesson.slug] },
+    { ...matchCaseLesson, exercises: exercises[matchCaseLesson.slug] }
   ]
 };

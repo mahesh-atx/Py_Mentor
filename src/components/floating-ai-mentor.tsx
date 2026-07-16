@@ -387,7 +387,7 @@ export function FloatingAiMentor() {
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
       {/* Expanded Chat Window */}
       <div
-        className={`mb-4 w-[90vw] sm:w-[450px] h-[600px] max-h-[calc(100vh-6rem)] bg-background border border-border/60 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right ${
+        className={`mb-4 w-[90vw] sm:w-[450px] h-[600px] max-h-[calc(100vh-6rem)] bg-card/80 backdrop-blur-2xl border border-primary/20 rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-90 translate-y-12 pointer-events-none absolute bottom-16 right-0"
@@ -670,14 +670,15 @@ export function FloatingAiMentor() {
       {/* Floating Action Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group h-12 rounded-full px-3.5 shadow-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-primary/25 flex items-center overflow-hidden ${
+        className={`group relative h-12 rounded-full px-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 flex items-center overflow-hidden bg-primary/90 backdrop-blur-md text-primary-foreground border border-primary/20 hover:bg-primary hover:shadow-primary/50 hover:shadow-lg ${
           isOpen
             ? "translate-y-20 opacity-0 pointer-events-none absolute"
             : "translate-y-0 opacity-100 delay-100"
         }`}
       >
-        <Bot className="h-5 w-5 shrink-0 animate-pulse" />
-        <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm">
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <Bot className="h-5 w-5 shrink-0 animate-pulse relative z-10" />
+        <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm relative z-10">
           Ask AI Mentor
         </span>
       </Button>

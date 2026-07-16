@@ -54,6 +54,36 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
   const [showResults, setShowResults] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [isCompleted, setIsCompleted] = useState(initialIsCompleted);
+  const [autoNavCountdown, setAutoNavCountdown] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (isSuccess && showResults) {
+      setAutoNavCountdown(3);
+    } else {
+      setAutoNavCountdown(null);
+    }
+  }, [isSuccess, showResults]);
+
+  useEffect(() => {
+    if (autoNavCountdown === null) return;
+    
+    if (autoNavCountdown > 0) {
+      const timer = setTimeout(() => setAutoNavCountdown(c => c !== null ? c - 1 : null), 1000);
+      return () => clearTimeout(timer);
+    } else if (autoNavCountdown === 0) {
+      // Navigate!
+      const exercises = exercise.topic?.exercises || [];
+      const currentIndex = exercises.findIndex((e: any) => e.slug === exercise.slug);
+      const nextExercise = currentIndex !== -1 && currentIndex < exercises.length - 1 ? exercises[currentIndex + 1] : null;
+
+      setShowResults(false);
+      if (nextExercise) {
+        router.push(`/practice/${nextExercise.slug}`);
+      } else {
+        router.push(`/learn/${exercise.topic?.slug || ''}`);
+      }
+    }
+  }, [autoNavCountdown, exercise, router]);
 
   interface TestResult {
     passed: boolean;
@@ -207,10 +237,10 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
     }
 
     // Save submission to database (fire and forget)
-    if (exercise?.id) {
+    if (exercise?.slug) {
       import("@/app/actions").then(({ submitExerciseAction }) => {
         submitExerciseAction({
-          exerciseId: exercise.id,
+          exerciseId: exercise.slug,
           code,
           status: allPassed ? "passed" : "failed",
           testResults: results
@@ -236,7 +266,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-background/60 backdrop-blur-sm" 
-        onClick={() => router.back()}
+        onClick={() => { setAutoNavCountdown(null); router.push('/practice'); }}
       />
       
       {/* Centered Window */}
@@ -245,7 +275,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Header */}
       <div className="h-14 border-b bg-muted/30 flex items-center justify-between px-4 lg:px-6 shrink-0">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => router.back()} className="text-muted-foreground">
+          <Button variant="ghost" size="icon" onClick={() => { setAutoNavCountdown(null); router.push('/practice'); }} className="text-muted-foreground">
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <div className="font-semibold hidden md:block">Practice: {exercise.title}</div>
@@ -618,14 +648,14 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
 
                 if (nextExercise) {
                   return (
-                    <Button className="w-full sm:w-auto" onClick={() => { setShowResults(false); router.push(`/practice/${nextExercise.slug}`); }}>
-                      Next Exercise
+                    <Button className="w-full sm:w-auto" onClick={() => { setAutoNavCountdown(null); setShowResults(false); router.push(`/practice/${nextExercise.slug}`); }}>
+                      Next Exercise {autoNavCountdown !== null && `(${autoNavCountdown}s)`}
                     </Button>
                   );
                 } else {
                   return (
-                    <Button className="w-full sm:w-auto" onClick={() => { setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
-                      Return to Lesson
+                    <Button className="w-full sm:w-auto" onClick={() => { setAutoNavCountdown(null); setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
+                      Return to Lesson {autoNavCountdown !== null && `(${autoNavCountdown}s)`}
                     </Button>
                   );
                 }

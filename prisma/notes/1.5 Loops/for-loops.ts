@@ -5,9 +5,7 @@ export const forLoopLesson = {
 
 A \`for\` loop lets you **repeat a block of code** for each item in a sequence. Instead of writing the same code ten times, you write it once and let the loop handle the repetition.
 
-## The Theory — Building the Logic
-
-At its heart, a \`for\` loop is a way of telling Python "walk through this collection, one element at a time, and run the same logic on each." Python treats nearly everything you can loop over — lists, strings, dictionaries, even the output of \`range()\` — as an *iterable*: an object that knows how to hand back its items one by one. On each pass (an iteration) Python automatically grabs the next item and binds it to your loop variable, so you never have to track an index by hand. This is why \`for\` loops feel natural: they describe the *what* (each item) rather than the *how* (counting positions). The mental pitfall beginners hit is confusing the loop variable with the collection itself — reassigning \`fruit\` inside the loop does not change the list, it only rebinds a temporary name.
+Under the hood, a \`for\` loop walks any *iterable* (lists, strings, dicts, \`range()\`) one item at a time, binding each to your loop variable so you never track an index by hand. A common pitfall is confusing that loop variable with the collection — reassigning it inside the loop rebinds the name but does not change the original sequence.
 
 ## How the for Loop Works
 

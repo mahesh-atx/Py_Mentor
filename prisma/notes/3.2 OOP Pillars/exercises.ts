@@ -145,6 +145,29 @@ export const exercises: Record<string, any[]> = {
       ],
       difficulty: "advanced",
       xpReward: 70
+    },
+    {
+      title: "Library HAS-A Books",
+      prompt: "Using composition, define `Book(title, author)` with `describe()` printing `TITLE by AUTHOR`, and `Library` that HAS-A list of books (starts empty) with `add_book(book)` and `list_books()` that prints each book's describe(). Read N books (N first, each line: `title author`), add each to a library, then list them.",
+      starterCode: "# Define Book and Library using composition\n",
+      solutionCode: "class Book:\n    def __init__(self, title, author):\n        self.title = title\n        self.author = author\n    def describe(self):\n        print(f'{self.title} by {self.author}')\n\nclass Library:\n    def __init__(self):\n        self.books = []\n    def add_book(self, book):\n        self.books.append(book)\n    def list_books(self):\n        for b in self.books:\n            b.describe()\n\nlib = Library()\nn = int(input())\nfor _ in range(n):\n    parts = input().split()\n    author = parts[-1]\n    title = ' '.join(parts[:-1])\n    lib.add_book(Book(title, author))\nlib.list_books()",
+      testCases: [
+        { input: "2\nPython Lutz\nClean Code Martin\n", expectedOutput: "Python by Lutz\nClean Code by Martin\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 30
+    },
+    {
+      title: "Vehicle HAS-A Engine",
+      prompt: "Define `Engine(hp)` with `specs()` returning `'Engine: HPhp'`, and `Vehicle(make)` that HAS-A optional engine via `set_engine(engine)`. Read one line `make engine_hp` (engine_hp is 'none' if no engine). Print the make, then the engine specs if present, else 'No engine'.",
+      starterCode: "# Define Vehicle with an optional composed Engine\n",
+      solutionCode: "class Engine:\n    def __init__(self, hp):\n        self.hp = int(hp)\n    def specs(self):\n        return f'Engine: {self.hp}hp'\n\nclass Vehicle:\n    def __init__(self, make):\n        self.make = make\n        self.engine = None\n    def set_engine(self, engine):\n        self.engine = engine\n\nparts = input().split()\nv = Vehicle(parts[0])\nif parts[1] != 'none':\n    v.set_engine(Engine(parts[1]))\nprint(v.make)\nif v.engine:\n    print(v.engine.specs())\nelse:\n    print('No engine')",
+      testCases: [
+        { input: "Toyota 150\n", expectedOutput: "Toyota\nEngine: 150hp\n" },
+        { input: "Ford none\n", expectedOutput: "Ford\nNo engine\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 40
     }
   ],
 

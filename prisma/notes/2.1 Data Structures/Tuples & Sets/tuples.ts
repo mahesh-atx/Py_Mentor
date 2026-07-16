@@ -3,9 +3,7 @@ export const tuplesLesson = {
   slug: "tuples",
   content: `# Tuples
 
-## The Theory — Building the Logic
-
-At its core, a tuple is Python's way of grouping several values into a single **fixed record** rather than a flexible container. Because a tuple is immutable, Python can guarantee that its contents never change, which is why tuples are \`hashable\` and can serve as dictionary keys or set elements while lists cannot. Behind the scenes this fixedness lets Python lay a tuple out in memory more efficiently than a list, which is why tuples are slightly faster and lighter to use. The key mental shift is to treat a tuple as one "thing made of parts" (a coordinate, a date, a database row) rather than a pile of items you sort and grow. A common pitfall is forgetting the trailing comma: \`(42)\` is just the integer 42 in parentheses, while \`(42,)\` is the actual one-item tuple.
+A tuple is an immutable, fixed "record made of parts" (like a coordinate or database row), which is why it's hashable and more memory-efficient than a list. A common pitfall is forgetting the trailing comma: \`(42)\` is just the integer 42, while \`(42,)\` is the actual one-item tuple.
 
 ## What is a Tuple?
 

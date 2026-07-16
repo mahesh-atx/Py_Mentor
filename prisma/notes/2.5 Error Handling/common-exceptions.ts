@@ -3,9 +3,7 @@ export const commonExceptionsLesson = {
   slug: "common-exceptions",
   content: `# Common Exceptions
 
-## The Theory — Building the Logic
-
-Every Python error is an object that belongs to a family tree rooted at \`BaseException\`, and the type of the exception tells you what *category* of assumption your code broke. When an operation fails, Python doesn't just stop - it actively builds an exception object that travels up the call stack until something catches it, which is why an error can surface far from where it actually started. Most everyday errors descend from a single branch, \`Exception\`, and because of inheritance a \`except ValueError\` catches only value problems while \`except Exception\` catches nearly everything below it. A key mental model is that exceptions are *expected failures*, not bugs to be ashamed of: calling \`int("abc")\` doesn't crash Python, it signals that the data didn't match the operation's contract. The pitfall is catching too broadly - a bare \`except:\` swallows even \`KeyboardInterrupt\` and hides genuine logic errors, turning real bugs into mysterious silence.
+Every Python error is an object in a hierarchy rooted at \`BaseException\`, and the exception type tells you which category of assumption broke as the error unwinds the call stack to the first matching handler. The pitfall is catching too broadly — a bare \`except:\` even swallows \`KeyboardInterrupt\` and hides genuine logic errors as mysterious silence.
 
 ## Python's Exception Hierarchy
 

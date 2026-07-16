@@ -5,14 +5,7 @@ export const stringsCompleteLesson = {
 
 > A single, consolidated guide to **everything** about strings in Python: what they are, how they behave, every common method, and how to format them. This is the "one-stop" notes file; the individual lessons in \`2.3 String Manipulation\` cover each area with more exercises.
 
-## The Theory — Building the Logic
-
-A string is Python's way of representing **text as data**. Conceptually, think of it as a *read-only sequence of characters*: a row of letter-slots, each slot numbered from 0. Two ideas follow directly from this mental model and explain almost every string "gotcha":
-
-1. **Strings are sequences** — so everything you can do with a sequence (index it, slice it, loop over it, ask its length, check membership) also works on a string.
-2. **Strings are immutable** — once a string is created, none of its slots can be changed. Any operation that looks like it "changes" a string (uppercasing it, replacing a word, stripping spaces) is secretly *building a brand-new string* and handing it back; the original is untouched.
-
-Keep these two facts in mind and string behaviour stops being mysterious: indexing/slicing just reads slots, and methods always *return* a new string instead of modifying the old one.
+A string is a *read-only sequence of characters* numbered from 0, so anything you can do with a sequence — index, slice, loop, check length or membership — works on it too. Strings are immutable, though: any operation that seems to "change" a string actually builds and returns a brand-new one, leaving the original untouched.
 
 ---
 

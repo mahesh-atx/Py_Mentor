@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { BarChart, Bar, XAxis, YAxis, Tooltip as RechartsTooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
-import { Award, Flame, Zap, CheckCircle2, Target, Trophy, Clock, Repeat, Rocket, Bug } from "lucide-react";
+import { Award, Flame, Zap, CheckCircle2, Target, Trophy, Clock, Repeat, Rocket, Bug, Lock } from "lucide-react";
 import { motion } from "framer-motion";
 
 const iconMap: Record<string, any> = {
@@ -54,59 +54,72 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
 
       {/* Top Stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card className="bg-background shadow-sm">
-          <CardContent className="p-6 flex flex-col justify-between h-full">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-sm font-medium text-muted-foreground">Completed Lessons</span>
-              <CheckCircle2 className="h-4 w-4 text-success" />
+        <div className="relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-success/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl h-full group">
+          <div className="absolute inset-0 bg-gradient-to-r from-success/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="flex flex-row items-start justify-between pb-2 relative z-10">
+            <h3 className="text-sm font-medium text-muted-foreground pr-2">Completed Lessons</h3>
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-success/10 border border-success/20 group-hover:scale-110 transition-transform duration-300 shrink-0">
+              <CheckCircle2 className="h-5 w-5 text-success" />
             </div>
-            <div className="text-3xl font-bold">{stats.lessonsCompleted}</div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="relative z-10 mt-2">
+            <div className="text-3xl font-bold group-hover:text-success transition-colors">{stats.lessonsCompleted}</div>
+          </div>
+        </div>
         
-        <Card className="bg-background shadow-sm">
-          <CardContent className="p-6 flex flex-col justify-between h-full">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-sm font-medium text-muted-foreground">Completed Exercises</span>
-              <CodeIcon className="h-4 w-4 text-info" />
+        <div className="relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-info/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl h-full group">
+          <div className="absolute inset-0 bg-gradient-to-r from-info/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="flex flex-row items-start justify-between pb-2 relative z-10">
+            <h3 className="text-sm font-medium text-muted-foreground pr-2">Completed Exercises</h3>
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-info/10 border border-info/20 group-hover:scale-110 transition-transform duration-300 shrink-0">
+              <CodeIcon className="h-5 w-5 text-info" />
             </div>
-            <div className="text-3xl font-bold">{stats.exercisesCompleted}</div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="relative z-10 mt-2">
+            <div className="text-3xl font-bold group-hover:text-info transition-colors">{stats.exercisesCompleted}</div>
+          </div>
+        </div>
         
-        <Card className="bg-background shadow-sm">
-          <CardContent className="p-6 flex flex-col justify-between h-full">
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-sm font-medium text-muted-foreground">Coding Time</span>
-              <Clock className="h-4 w-4 text-primary" />
+        <div className="relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl h-full group">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="flex flex-row items-start justify-between pb-2 relative z-10">
+            <h3 className="text-sm font-medium text-muted-foreground pr-2">Coding Time</h3>
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-primary/10 border border-primary/20 group-hover:scale-110 transition-transform duration-300 shrink-0">
+              <Clock className="h-5 w-5 text-primary" />
             </div>
-            <div className="text-3xl font-bold">{stats.codingTime}</div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="relative z-10 mt-2">
+            <div className="text-3xl font-bold group-hover:text-primary transition-colors">{stats.codingTime}</div>
+          </div>
+        </div>
         
-        <Card className="bg-background shadow-sm">
-          <CardContent className="p-6 flex flex-col justify-between h-full relative overflow-hidden">
-            <div className="absolute -right-4 -top-4 opacity-10">
-              <Flame className="h-24 w-24 text-destructive" />
+        <div className="relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-destructive/50 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl h-full group">
+          <div className="absolute inset-0 bg-gradient-to-r from-destructive/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="absolute -right-4 -top-4 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
+            <Flame className="h-24 w-24 text-destructive" />
+          </div>
+          <div className="flex flex-row items-start justify-between pb-2 relative z-10">
+            <h3 className="text-sm font-medium text-muted-foreground pr-2">Current Streak</h3>
+            <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-destructive/10 border border-destructive/20 group-hover:scale-110 transition-transform duration-300 shrink-0">
+              <Flame className="h-5 w-5 text-destructive" />
             </div>
-            <div className="flex justify-between items-start mb-4">
-              <span className="text-sm font-medium text-muted-foreground">Current Streak</span>
-              <Flame className="h-4 w-4 text-destructive" />
-            </div>
-            <div className="text-3xl font-bold">{stats.currentStreak} Days</div>
-          </CardContent>
-        </Card>
+          </div>
+          <div className="relative z-10 mt-2">
+            <div className="text-3xl font-bold group-hover:text-destructive transition-colors">{stats.currentStreak} Days</div>
+          </div>
+        </div>
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <Card className="bg-background shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">Coding Activity (This Week)</CardTitle>
-            <CardDescription>Hours spent coding per day.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="group relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl h-full">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="mb-6 relative z-10">
+            <h3 className="text-lg font-bold group-hover:text-primary transition-colors">Coding Activity (This Week)</h3>
+            <p className="text-sm text-muted-foreground">Hours spent coding per day.</p>
+          </div>
+          <div className="relative z-10">
             <div className="h-[250px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.activityData}>
@@ -120,15 +133,16 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
                 </BarChart>
               </ResponsiveContainer>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
-        <Card className="bg-background shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">Topic Mastery</CardTitle>
-            <CardDescription>Identify your strong and weak areas.</CardDescription>
-          </CardHeader>
-          <CardContent>
+        <div className="group relative overflow-hidden flex flex-col p-6 rounded-2xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl h-full">
+          <div className="absolute inset-0 bg-gradient-to-bl from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+          <div className="mb-6 relative z-10">
+            <h3 className="text-lg font-bold group-hover:text-primary transition-colors">Topic Mastery</h3>
+            <p className="text-sm text-muted-foreground">Identify your strong and weak areas.</p>
+          </div>
+          <div className="relative z-10">
             <div className="h-[250px] w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <RadarChart cx="50%" cy="50%" outerRadius="70%" data={topicMastery}>
@@ -142,21 +156,22 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
                 </RadarChart>
               </ResponsiveContainer>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </div>
 
       </div>
 
       {/* Achievements Section */}
       <div>
-        <h2 className="text-xl font-bold tracking-tight mb-6 flex items-center gap-2">
-          <Award className="h-5 w-5 text-warning" /> Achievements
+        <h2 className="text-2xl font-bold tracking-tight mb-6 flex items-center gap-3">
+          <div className="p-2 bg-warning/10 rounded-xl border border-warning/20">
+            <Award className="h-6 w-6 text-warning" />
+          </div>
+          Achievements
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {achievements.map((acc, i) => {
             const IconComponent = iconMap[acc.icon] || Award;
-            // E.g. "text-yellow-500" -> we need bg equivalent or we can just use dynamic styling
-            // Wait, we can extract the base color, but for simplicity we'll just use inline styles or fixed class
             
             return (
               <motion.div 
@@ -164,23 +179,36 @@ export function ProgressClient({ stats, topicMastery, achievements }: ProgressCl
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
+                className="h-full"
               >
-                <Card className={`relative overflow-hidden transition-all h-full ${acc.isUnlocked ? 'border-border shadow-sm' : 'border-dashed border-border/50 bg-muted/20 opacity-60'}`}>
-                  <CardContent className="p-4 flex items-center gap-4">
-                    <div className={`h-12 w-12 rounded-xl flex items-center justify-center shrink-0 ${acc.isUnlocked ? 'bg-primary/10' : 'bg-muted'}`}>
-                      <IconComponent className={`h-6 w-6 ${acc.isUnlocked ? acc.color : 'text-muted-foreground'}`} />
+                <div className={`group relative overflow-hidden flex items-center gap-4 p-4 rounded-2xl transition-all duration-300 h-full ${
+                  acc.isUnlocked 
+                    ? 'border border-border/50 bg-card/30 hover:bg-card hover:-translate-y-1 hover:shadow-lg hover:border-primary/40' 
+                    : 'border border-dashed border-border/50 bg-muted/10 opacity-60 grayscale-[0.5]'
+                }`}>
+                  {acc.isUnlocked && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+                  )}
+                  
+                  <div className={`h-14 w-14 rounded-xl flex items-center justify-center shrink-0 border ${
+                    acc.isUnlocked 
+                      ? 'bg-primary/10 border-primary/20 group-hover:scale-110 transition-transform duration-300 shadow-inner' 
+                      : 'bg-muted border-transparent'
+                  }`}>
+                    <IconComponent className={`h-7 w-7 ${acc.isUnlocked ? acc.color : 'text-muted-foreground'}`} />
+                  </div>
+                  
+                  <div className="relative z-10 flex-1">
+                    <h4 className={`font-bold text-sm ${acc.isUnlocked && 'group-hover:text-primary transition-colors'}`}>{acc.title}</h4>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{acc.description}</p>
+                  </div>
+                  
+                  {!acc.isUnlocked && (
+                    <div className="absolute top-3 right-3">
+                      <Lock className="h-3.5 w-3.5 text-muted-foreground/50" />
                     </div>
-                    <div>
-                      <h4 className="font-semibold text-sm">{acc.title}</h4>
-                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{acc.description}</p>
-                    </div>
-                    {!acc.isUnlocked && (
-                      <div className="absolute top-2 right-2">
-                        <Badge variant="secondary" className="text-[10px] uppercase tracking-wider scale-75">Locked</Badge>
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                  )}
+                </div>
               </motion.div>
             );
           })}

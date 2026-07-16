@@ -5,9 +5,7 @@ export const magicMethodsLesson = {
 
 Magic methods (also called dunder methods - **d**ouble **under**score) are special methods that Python calls automatically in response to specific operations. They give your objects superpowers.
 
-## The Theory — Building the Logic
-
-Magic (dunder) methods are Python's mechanism for letting your own objects plug into the language's built-in operations. When you write \`a + b\`, Python does not hardcode addition—it looks for a \`__add__\` method on \`a\` and calls it, passing \`b\` as an argument. This means operators like \`+\`, indexing with \`[]\`, and even \`len()\` are really just friendly syntax for ordinary method calls, so custom objects can feel "native" to the language. The dispatch is also cooperative: if the left object cannot handle the right one, it returns \`NotImplemented\` and Python tries the reflected method on the other side. A key pitfall is raising an error instead of returning \`NotImplemented\` for unsupported types, which blocks Python from falling back to the other object's operator.
+Magic methods let your own objects plug into Python's built-in operations: \`a + b\` is really a call to \`a.__add__(b)\`, so operators like \`+\`, \`[]\`, and \`len()\` are just friendly syntax for ordinary method calls. The pitfall is raising an error instead of returning \`NotImplemented\` for unsupported types, which blocks Python from falling back to the other object's reflected operator.
 
 ## __add__, __sub__, __mul__ - Arithmetic
 

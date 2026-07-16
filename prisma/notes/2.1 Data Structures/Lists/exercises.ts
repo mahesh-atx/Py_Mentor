@@ -476,6 +476,53 @@ export const exercises: Record<string, any[]> = {
     }
   ],
 
+  "list-vs-array": [
+    {
+      title: "Mixed-Type List",
+      prompt: "Create a Python list `data = [1, 'hello', 3.14, True]` which holds mixed types. Print its length, then print the type name of the first element using `type(data[0]).__name__`.",
+      starterCode: "# Create a mixed-type list and inspect it\n",
+      solutionCode: "data = [1, 'hello', 3.14, True]\nprint(len(data))\nprint(type(data[0]).__name__)",
+      testCases: [
+        { input: "", expectedOutput: "4\nint\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 20
+    },
+    {
+      title: "Typed Integer Array",
+      prompt: "Use the `array` module to create an integer array `arr = array.array('i', [10, 20, 30])`. Append `40` to it, then convert it to a list and print that list. (Shows how typed arrays still enforce one type.)",
+      starterCode: "import array\n# Create array, append, and print as a list\n",
+      solutionCode: "import array\narr = array.array('i', [10, 20, 30])\narr.append(40)\nprint(list(arr))",
+      testCases: [
+        { input: "", expectedOutput: "[10, 20, 30, 40]\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 35
+    },
+    {
+      title: "Float Array Average",
+      prompt: "Create a typed array of doubles `arr = array.array('d', [2.5, 7.5, 10.0, 5.0])`. Compute and print the average (sum divided by length) rounded to 2 decimal places.",
+      starterCode: "import array\n# Compute and print the average of the double array\n",
+      solutionCode: "import array\narr = array.array('d', [2.5, 7.5, 10.0, 5.0])\nprint(round(sum(arr) / len(arr), 2))",
+      testCases: [
+        { input: "", expectedOutput: "6.25\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 35
+    },
+    {
+      title: "List vs Array: Mixed Data",
+      prompt: "A record needs to store a name (str) and an age (int) together. Demonstrate that a Python list can hold both: create `person = ['Alice', 30]` and print it, then print the message 'Lists allow mixed types'.",
+      starterCode: "# Show that a list can hold mixed types\n",
+      solutionCode: "person = ['Alice', 30]\nprint(person)\nprint('Lists allow mixed types')",
+      testCases: [
+        { input: "", expectedOutput: "['Alice', 30]\nLists allow mixed types\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 20
+    }
+  ],
+
   "list-iterating": [
     {
       title: "Print with Index",

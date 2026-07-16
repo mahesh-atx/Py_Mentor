@@ -5,9 +5,7 @@ export const firstClassFunctionsLesson = {
 
 In Python, functions are **first-class objects** - they can be stored in variables, passed as arguments, returned from functions, and stored in data structures, just like any other value (integers, strings, lists).
 
-## The Theory — Building the Logic
-
-"First-class" means a function is a value like any other — it can be assigned to a variable, placed in a list or dict, passed into another function, or returned from one, because at runtime a function is simply an object with a \`__call__\` method. The key insight is the difference between *naming* a function and *calling* it: writing \`greet\` refers to the function object, while \`greet()\` runs it, so you can hand the object around and only call it later. This is what makes higher-order functions possible — a function that takes or returns another function is just one value consuming another value. The mental model is that functions are data you can compute with, not special syntax reserved for the top level. The common pitfall is accidentally calling a function when you meant to pass it (writing \`func()\` instead of \`func\`), which passes the *result* instead of the function and breaks the whole pattern.
+A function is a value like any other — at runtime it's just an object with a \`__call__\` method — so it can be assigned, stored, passed into another function, or returned. The pitfall is accidentally calling a function when you meant to pass it (writing \`func()\` instead of \`func\`), which hands the *result* to the caller instead of the function.
 
 ## Functions Are Objects
 

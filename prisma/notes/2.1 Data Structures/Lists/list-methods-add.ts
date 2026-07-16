@@ -3,11 +3,7 @@ export const listMethodsAddLesson = {
   slug: "list-methods-add",
   content: `# List Methods - Adding Items
 
-Python lists have built-in methods to add items. The three main methods are \`append()\`, \`extend()\`, and \`insert()\`.
-
-## The Theory — Building the Logic
-
-Adding to a list means storing a new reference in its internal array, and because Python lists are dynamic they grow automatically as needed. \`append()\` adds one object — even if that object is itself a list — while \`extend()\` iterates the argument and adds each of its items separately. \`insert()\` shifts every later element right to make room, so it is noticeably slower than adding at the end. The pitfall is reaching for \`append()\` with a list when you meant \`extend()\`, which accidentally nests the whole list as a single element.
+Python lists have built-in methods to add items. The three main methods are \`append()\`, \`extend()\`, and \`insert()\`. Under the hood, adding an item stores a new reference in the list's dynamic array, so it grows automatically — \`append()\` adds one object (even if that object is a list) while \`extend()\` adds each item of an iterable separately. The pitfall is using \`append()\` with a list when you meant \`extend()\`, which nests the whole list as a single element.
 
 ## append() - Add One Item to the End
 

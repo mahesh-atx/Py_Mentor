@@ -3,9 +3,7 @@ export const definingCallingFunctionsLesson = {
   slug: "defining-calling-functions",
   content: `# Defining & Calling Functions
 
-## The Theory — Building the Logic
-
-A function is fundamentally a named container for a chunk of logic you want to reuse: rather than repeating instructions, you label them so the whole sequence can be summoned by a single word. When Python sees \`def\`, it creates a function object and binds it to that name but does *not* run the body — think of defining as "writing the recipe" and calling as "cooking it." Each call creates a fresh local execution frame, so the variables and side effects inside stay isolated from the outside world. The mental model is a black box: you hand in inputs (arguments), work happens behind the curtain, and (if designed well) a result comes back out. The most common beginner pitfall is expecting a function to do something just by defining it — until you actually call it, no code inside runs.
+A function is a named, reusable container for logic: \`def\` only creates the function object (writing the recipe), while calling it actually runs the body in a fresh local frame. A common pitfall is expecting a function to do anything just by defining it — until you call it, none of its code runs.
 
 ## What is a Function?
 

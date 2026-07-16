@@ -214,45 +214,10 @@ function getVersion() {
 // Commands
 // ---------------------------------------------------------------------------
 
-/**
- * Prompt the user to choose their learning language.
- * @returns {Promise<string>} 'python' or 'javascript'
- */
-async function promptLanguage() {
-  console.log("\n\x1b[36m┌─\x1b[0m PyMentor Setup");
-
-  const { select } = await import('@inquirer/prompts');
-  
-  return select({
-    message: 'Which language would you like to learn?',
-    choices: [
-      {
-        name: 'Python (Fundamentals & OOP)',
-        value: 'python'
-      },
-      {
-        name: 'JavaScript (Web Development)',
-        value: 'javascript',
-        description: 'Learn JavaScript for Web Development'
-      },
-    ],
-  });
-}
-
 async function cmdSetup() {
-  
-
   ensureDataDir();
 
-  // Step 0: Ask user which language they want to learn
-  let language = "python";
-  try {
-    language = await promptLanguage();
-  } catch (e) {
-    console.log("\x1b[36m│\x1b[0m  \x1b[33mℹ Language selection skipped, defaulting to Python.\x1b[0m");
-  }
-  const langName = language === "javascript" ? "JavaScript" : "Python";
-  console.log(`\x1b[36m│\x1b[0m  \x1b[36mℹ Initializing ${langName} track...\x1b[0m\n\x1b[36m│\x1b[0m`);
+  console.log(`\x1b[36m│\x1b[0m  \x1b[36mℹ Initializing PyMentor Database...\x1b[0m\n\x1b[36m│\x1b[0m`);
 
   // Step 1: Create the SQLite database using migration SQL
   if (!fs.existsSync(DB_PATH)) {
@@ -281,48 +246,11 @@ async function cmdSetup() {
     }
   }
 
-  // Step 2: Seed curriculum data
-  console.log("\x1b[36m├─\x1b[0m Curriculum");
-  try {
-    const originalSeedPath = path.join(ROOT_DIR, "prisma", "seed.ts");
-    const distSeedPath = path.join(ROOT_DIR, "dist", "seed", "seed.js");
-
-    const seedEnv = {
-      ...process.env,
-      DATABASE_URL: `file:${DB_PATH}`,
-      SEED_LANG: language,
-    };
-
-    if (fs.existsSync(originalSeedPath)) {
-      execSync(`npx tsx "${originalSeedPath}"`, {
-        cwd: ROOT_DIR,
-        stdio: "inherit",
-        env: seedEnv,
-      });
-    } else if (fs.existsSync(distSeedPath)) {
-      execSync(`node "${distSeedPath}"`, {
-        cwd: ROOT_DIR,
-        stdio: "inherit",
-        env: seedEnv,
-      });
-    } else {
-      console.log("\x1b[36m│  └─\x1b[0m \x1b[33m⚠️ Seed script not found\x1b[0m\n\x1b[36m│\x1b[0m");
-    }
-    console.log("\x1b[36m│  └─\x1b[0m \x1b[32m✔ Seeding complete\x1b[0m\n\x1b[36m│\x1b[0m");
-  } catch (error) {
-    console.error("  ⚠️  Seeding failed (non-fatal):", error.message);
-    console.error("     The app will still start, but lessons may be empty.");
-  }
-
-  // Step 3: Save first-run flag and chosen language
+  // Step 2: Save first-run flag
   const config = loadConfig();
   config.firstRunCompleted = true;
   config.installedAt = new Date().toISOString();
-  config.language = language;
   saveConfig(config);
-
-  // Save to .env so the Next.js server picks it up
-  saveEnv("SEED_LANG", language);
 
   console.log("\x1b[36m└─\x1b[0m \x1b[32m✔ Setup finished successfully\x1b[0m\n");
 }

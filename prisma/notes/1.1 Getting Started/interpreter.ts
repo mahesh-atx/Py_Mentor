@@ -7,9 +7,7 @@ When you write Python code, you are writing instructions in a format that humans
 
 So, how does the computer run your Python code? Enter the **Python Interpreter**.
 
-## The Theory — Building the Logic
-
-A computer only understands machine code (binary), but humans write in a higher-level notation, so something must bridge that gap. An **interpreter** reads your source one statement at a time, translates it into instructions the machine can run, and runs them immediately — there is no separate "build" step. This is why you can type a line and see a result instantly. The trade-off: because translation happens at runtime, interpreted code is generally slower than pre-compiled code, but far faster to experiment with. The REPL (Read-Evaluate-Print Loop) is this cycle in its purest form: it reads your input, evaluates it, prints the result, and waits — the same loop your own programs follow internally.
+At its core, the interpreter reads your source one statement at a time, translates it into machine instructions, and runs them immediately — there's no separate build step, which is why a line runs instantly in the REPL. The pitfall is expecting compiled-language speed: because translation happens at runtime, interpreted code is generally slower than pre-compiled code.
 
 ## What is an Interpreter?
 

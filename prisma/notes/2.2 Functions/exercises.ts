@@ -355,6 +355,75 @@ export const exercises: Record<string, any[]> = {
     }
   ],
 
+  "lambda-functions": [
+    {
+      title: "Basic Lambda Square",
+      prompt: "Assign a lambda to `square` that returns its argument squared, then print `square(6)`.",
+      starterCode: "# Assign a lambda to square and call it\n",
+      solutionCode: "square = lambda x: x ** 2\nprint(square(6))",
+      testCases: [
+        { input: "", expectedOutput: "36\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 20
+    },
+    {
+      title: "Lambda with Two Parameters",
+      prompt: "Create a lambda `add` that takes two arguments and returns their sum, then print `add(8, 12)`.",
+      starterCode: "# Create an add lambda and call it\n",
+      solutionCode: "add = lambda a, b: a + b\nprint(add(8, 12))",
+      testCases: [
+        { input: "", expectedOutput: "20\n" }
+      ],
+      difficulty: "beginner",
+      xpReward: 20
+    },
+    {
+      title: "Conditional Lambda",
+      prompt: "Create a lambda `classify` that returns 'even' if its argument is even, otherwise 'odd', then print `classify(7)` and `classify(10)`.",
+      starterCode: "# Create a classify lambda using a conditional expression\n",
+      solutionCode: "classify = lambda n: 'even' if n % 2 == 0 else 'odd'\nprint(classify(7))\nprint(classify(10))",
+      testCases: [
+        { input: "", expectedOutput: "odd\neven\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 35
+    },
+    {
+      title: "Lambda as a Sort Key",
+      prompt: "Given `people = [{'name': 'Bob', 'age': 25}, {'name': 'Alice', 'age': 30}, {'name': 'Carol', 'age': 20}]`, sort it by `age` using a lambda key and print the names in order, joined by commas.",
+      starterCode: "# Sort people by age using a lambda key\n",
+      solutionCode: "people = [{'name': 'Bob', 'age': 25}, {'name': 'Alice', 'age': 30}, {'name': 'Carol', 'age': 20}]\nby_age = sorted(people, key=lambda p: p['age'])\nprint(', '.join(p['name'] for p in by_age))",
+      testCases: [
+        { input: "", expectedOutput: "Carol, Bob, Alice\n" }
+      ],
+      difficulty: "intermediate",
+      xpReward: 40
+    },
+    {
+      title: "Map with Lambda",
+      prompt: "Use `map()` with a lambda that doubles a number to transform `[1, 2, 3, 4, 5]` into a list, then print the result.",
+      starterCode: "# Use map with a lambda to double each number\n",
+      solutionCode: "result = list(map(lambda x: x * 2, [1, 2, 3, 4, 5]))\nprint(result)",
+      testCases: [
+        { input: "", expectedOutput: "[2, 4, 6, 8, 10]\n" }
+      ],
+      difficulty: "advanced",
+      xpReward: 55
+    },
+    {
+      title: "Filter with Lambda",
+      prompt: "Use `filter()` with a lambda that keeps only even numbers to filter `[1, 2, 3, 4, 5, 6]`, convert the result to a list, and print it.",
+      starterCode: "# Use filter with a lambda to keep even numbers\n",
+      solutionCode: "evens = list(filter(lambda x: x % 2 == 0, [1, 2, 3, 4, 5, 6]))\nprint(evens)",
+      testCases: [
+        { input: "", expectedOutput: "[2, 4, 6]\n" }
+      ],
+      difficulty: "advanced",
+      xpReward: 55
+    }
+  ],
+
   "first-class-functions": [
     {
       title: "Functions as Arguments",

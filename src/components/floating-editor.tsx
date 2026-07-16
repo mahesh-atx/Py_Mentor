@@ -73,12 +73,13 @@ export function FloatingEditor() {
       <div className="fixed bottom-[5.5rem] right-6 z-[90] flex flex-col items-end">
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`group h-12 rounded-full px-3.5 shadow-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-primary/25 flex items-center overflow-hidden ${
+          className={`group relative h-12 rounded-full px-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 flex items-center overflow-hidden bg-primary/90 backdrop-blur-md text-primary-foreground border border-primary/20 hover:bg-primary hover:shadow-primary/50 hover:shadow-lg ${
             isOpen ? 'translate-y-20 opacity-0 pointer-events-none absolute' : 'translate-y-0 opacity-100 delay-100'
           }`}
         >
-          <Code2 className="h-5 w-5 shrink-0" />
-          <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm">
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <Code2 className="h-5 w-5 shrink-0 relative z-10" />
+          <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm relative z-10">
             Practice Code
           </span>
         </Button>
@@ -98,7 +99,7 @@ export function FloatingEditor() {
         
         {/* Editor Window */}
         <div 
-          className={`relative w-[95vw] sm:w-[90vw] md:w-[80vw] h-[85vh] max-h-[900px] bg-background border rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`relative w-[95vw] sm:w-[90vw] md:w-[80vw] h-[85vh] max-h-[900px] bg-card/80 backdrop-blur-2xl border border-primary/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-8'
           }`}
         >

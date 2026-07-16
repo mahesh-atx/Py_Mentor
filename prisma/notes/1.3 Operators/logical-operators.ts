@@ -5,9 +5,7 @@ export const logicalOperatorsLesson = {
 
 Logical operators let you combine multiple conditions together. Instead of asking one yes/no question, you can ask multiple questions at once and combine their answers.
 
-## The Theory — Building the Logic
-
-Logical operators let you build richer yes/no questions by combining simpler ones, and at the machine level they simply follow the rules of boolean algebra that underlie all digital circuits. Each of \`and\`, \`or\`, and \`not\` takes truth values and produces a truth value according to fixed truth tables, so you can predict the outcome without running the code. Python also uses *short-circuit evaluation*: it stops as soon as the answer is certain, which is why \`False and (1/0)\` is safe but \`(1/0) and False\` is not. A subtle pitfall is expecting \`and\`/\`or\` to always return \`True\`/\`False\`; with ordinary values they return one of the operands, so \`5 or 10\` gives \`5\`, not \`True\`.
+Under the hood, \`and\`/\`or\`/\`not\` follow fixed truth tables and use short-circuit evaluation (e.g., \`False and (1/0)\` is safe, but \`5 or 10\` returns \`5\`, not \`True\`).
 
 ## The Operators
 

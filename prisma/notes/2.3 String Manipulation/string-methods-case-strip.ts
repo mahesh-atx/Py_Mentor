@@ -3,13 +3,11 @@ export const stringMethodsCaseStripLesson = {
   slug: "string-methods-case-strip",
   content: `# String Methods - Case & Strip
 
-Python strings come with many built-in **methods** - functions that belong to a string and perform operations on it. You call them using dot notation: \`string.method()\`.
+Python strings come with many built-in **methods** - functions that belong to a string and perform operations on it. You call them using dot notation: string.method().
 
 In this lesson we cover methods for changing case and removing whitespace.
 
-## The Theory — Building the Logic
-
-String methods are operations defined on the string object itself: each one reads the characters and returns a transformed result rather than editing in place. Because strings are immutable, every method produces a new string, which is exactly why you can chain \`strip().lower().title()\` — each step hands its output to the next. Seeing methods as pipelines of fresh strings makes chaining predictable. The pitfall is assuming case changes touch everything: they only affect letters, leaving digits and symbols alone, and \`strip()\` removes characters only from the two edges, never the spaces in the middle of the string.
+String methods are operations defined on the string object itself: each one reads the characters and returns a transformed result rather than editing in place, which is exactly why you can chain strip().lower().title() — every step hands its fresh string to the next. The pitfall is assuming case changes touch everything (they only affect letters, leaving digits and symbols alone), and that strip() removes characters only from the two edges, never the spaces in the middle.
 
 ## Calling String Methods
 

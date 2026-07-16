@@ -7,9 +7,7 @@ Writing code isn't just about telling the computer what to do; it's also about e
 
 A comment is text inside your code file that the Python interpreter completely ignores. It is purely for documentation and readability.
 
-## The Theory — Building the Logic
-
-Comments exist for the human reader, not the machine. When the interpreter runs your file, it **strips out** anything marked as a comment before executing — comments never become part of the running program. So a comment cannot change behaviour; it can only clarify (or, if wrong, mislead) the reader. The logical value of a comment is highest when it explains *why* code does something, not *what* the code literally says. A useful habit: write comments for intent and tricky edge cases, because the code already shows the "what."
+Under the hood, the interpreter strips comments before execution, so they can never change your program's behaviour — they only clarify (or, if wrong, mislead) the human reader. The pitfall is commenting the literal "what" the code already shows instead of the "why," since a stale comment is worse than none.
 
 ## Single-Line Comments
 

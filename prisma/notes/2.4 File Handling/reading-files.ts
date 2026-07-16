@@ -3,9 +3,7 @@ export const readingFilesLesson = {
   slug: "reading-files",
   content: `# Reading Files
 
-## The Theory — Building the Logic
-
-At its core, a file on disk is just a long sequence of bytes, and opening it gives you a *file object* — a live handle that points at one position (the cursor) inside that sequence. Every reading method, whether it is read(), readline(), or a for-loop, draws characters starting from the cursor and then advances it forward; nothing resets the cursor for you. That is why reading the whole file with read() leaves readline() returning an empty string — the cursor has already reached the end. Python deliberately treats the file as a *stream* rather than loading everything into memory, which keeps programs fast and light even with huge files, but it also means you must understand the cursor's position to predict what you will read next. A common logical pitfall is assuming each read call starts fresh, when in fact they are all walking the same moving pointer through the file.
+A file on disk is a long sequence of bytes, and opening it gives you a file object — a live handle pointing at one position (the cursor) inside that sequence, where every read method draws characters from the cursor and then advances it forward. The pitfall is assuming each read call starts fresh, when in fact they all walk the same moving pointer, so reading the whole file with read() leaves readline() returning an empty string.
 
 ## Why File Handling Matters
 

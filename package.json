@@ -1,6 +1,6 @@
 {
   "name": "pymentor",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
@@ -58,6 +58,8 @@
     "download-pyodide": "bash scripts/download-pyodide.sh",
     "start": "next start",
     "start:dist": "node dist/server/server.js",
+    "setup:python": "node scripts/setup-env.js python",
+    "setup:javascript": "node scripts/setup-env.js javascript",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest",

@@ -5,9 +5,7 @@ export const loopControlStatementsLesson = {
 
 Sometimes you need more control over how a loop runs. Maybe you want to stop the loop early when you find what you are looking for, or skip certain iterations. Python gives you three statements to control loop execution: \`break\`, \`continue\`, and \`pass\`.
 
-## The Theory — Building the Logic
-
-Break, continue, and pass are the three levers that let you steer a loop's flow instead of letting it run in a straight, predictable line. \`break\` and \`continue\` are about *control*: \`break\` abandons the loop entirely, while \`continue\` discards only the current pass and jumps straight to the next one, both decided by a condition you place inside the body. \`pass\`, by contrast, does nothing at all — it exists purely to satisfy Python's rule that a block cannot be empty, acting as a placeholder while you design your logic. The mental model to keep is that these statements change *where execution goes next*, not the data itself. A frequent pitfall is expecting \`break\` to escape several nested loops at once; it only exits the single loop it sits in, so outer loops keep going unless you add extra logic.
+These three statements steer a loop's flow rather than its data: \`break\` abandons the loop, \`continue\` skips the current pass, and \`pass\` is a do-nothing placeholder. A frequent pitfall is expecting \`break\` to escape several nested loops at once — it only exits the single loop it sits in, so outer loops keep going unless you add extra logic.
 
 ## break - Exit the Loop Immediately
 

@@ -21,11 +21,17 @@ export const ProgressService = {
     const lessonXpMap = new Map<string, number>();
     if (completedLessonSlugs.length > 0) {
       const lessons = await db.lesson.findMany({
-        where: { slug: { in: completedLessonSlugs } },
-        select: { slug: true, xpReward: true },
+        where: {
+          OR: [
+            { slug: { in: completedLessonSlugs } },
+            { id: { in: completedLessonSlugs } }
+          ]
+        },
+        select: { id: true, slug: true, xpReward: true },
       });
       for (const l of lessons) {
         lessonXpMap.set(l.slug, l.xpReward);
+        lessonXpMap.set(l.id, l.xpReward);
       }
     }
 
@@ -277,19 +283,42 @@ export const ProgressService = {
 
     const [lessons, exercises, projects] = await Promise.all([
       lessonSlugs.length > 0
-        ? db.lesson.findMany({ where: { slug: { in: lessonSlugs } }, select: { slug: true, title: true } })
+        ? db.lesson.findMany({ 
+            where: { OR: [{ slug: { in: lessonSlugs } }, { id: { in: lessonSlugs } }] }, 
+            select: { id: true, slug: true, title: true } 
+          })
         : [],
       exerciseSlugs.length > 0
-        ? db.exercise.findMany({ where: { slug: { in: exerciseSlugs } }, select: { slug: true, title: true } })
+        ? db.exercise.findMany({ 
+            where: { OR: [{ slug: { in: exerciseSlugs } }, { id: { in: exerciseSlugs } }] }, 
+            select: { id: true, slug: true, title: true } 
+          })
         : [],
       projectSlugs.length > 0
-        ? db.project.findMany({ where: { slug: { in: projectSlugs } }, select: { slug: true, title: true } })
+        ? db.project.findMany({ 
+            where: { OR: [{ slug: { in: projectSlugs } }, { id: { in: projectSlugs } }] }, 
+            select: { id: true, slug: true, title: true } 
+          })
         : [],
     ]);
 
-    const lessonTitleMap = new Map(lessons.map((l: { slug: string; title: string }) => [l.slug, l.title]));
-    const exerciseTitleMap = new Map(exercises.map((e: { slug: string; title: string }) => [e.slug, e.title]));
-    const projectTitleMap = new Map(projects.map((p: { slug: string; title: string }) => [p.slug, p.title]));
+    const lessonTitleMap = new Map();
+    lessons.forEach((l: { id: string; slug: string; title: string }) => {
+      lessonTitleMap.set(l.slug, l.title);
+      lessonTitleMap.set(l.id, l.title);
+    });
+    
+    const exerciseTitleMap = new Map();
+    exercises.forEach((e: { id: string; slug: string; title: string }) => {
+      exerciseTitleMap.set(e.slug, e.title);
+      exerciseTitleMap.set(e.id, e.title);
+    });
+    
+    const projectTitleMap = new Map();
+    projects.forEach((p: { id: string; slug: string; title: string }) => {
+      projectTitleMap.set(p.slug, p.title);
+      projectTitleMap.set(p.id, p.title);
+    });
 
     // ── Assemble activity items ──────────────────────────────────────────
     type ActivityItem = {

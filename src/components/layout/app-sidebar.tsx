@@ -36,7 +36,8 @@ import {
   Search,
   Settings,
   User,
-  ChevronDown
+  ChevronDown,
+  CheckCircle2
 } from "lucide-react";
 
 const navItems = [
@@ -52,29 +53,38 @@ const secondaryItems = [
 ];
 
 const bottomItems = [
-  { title: "Profile", url: "/profile", icon: User, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
-  { title: "Settings", url: "/settings", icon: Settings, colorClass: "text-muted-foreground hover:text-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
+  { title: "Profile", url: "/profile", icon: User, colorClass: "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
+  { title: "Settings", url: "/settings", icon: Settings, colorClass: "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
 ];
 
-function CollapsibleModule({ mod, pathname }: { mod: any; pathname: string }) {
+function CollapsibleModule({ mod, pathname, completedLessonSlugs }: { mod: any; pathname: string; completedLessonSlugs: string[] }) {
   const isModActive = mod.topics?.some((t: any) => pathname.includes(`/learn/${t.slug}`)) || false;
   // Modules start collapsed by default
   const [isOpen, setIsOpen] = useState(false);
+  const cleanModTitle = mod.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '');
 
   return (
     <SidebarMenuSubItem>
       <SidebarMenuSubButton 
         onClick={(e) => { e.preventDefault(); setIsOpen(!isOpen); }}
         isActive={isModActive && !isOpen} 
-        className="justify-between cursor-pointer w-full"
+        className="justify-between cursor-pointer w-full group/mod"
       >
-        <span className="truncate text-sm font-medium text-foreground/90 hover:text-primary transition-all duration-300">{mod.title}</span>
+        <div className="flex items-center gap-2 overflow-hidden">
+          <FolderDot className="h-4 w-4 shrink-0 text-primary/70 group-hover/mod:text-primary transition-colors" />
+          <span className="truncate text-sm font-medium text-sidebar-foreground/90 group-hover/mod:text-primary transition-all duration-300">
+            {cleanModTitle}
+          </span>
+        </div>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
       </SidebarMenuSubButton>
       {isOpen && (
-        <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-2">
+        <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-4">
           {mod.topics?.map((topic: any) => {
             const isTopicActive = pathname.includes(`/learn/${topic.slug}`);
+            const isCompleted = topic.lessons?.length > 0 && topic.lessons.every((l: any) => completedLessonSlugs.includes(l.slug));
+            const cleanTopicTitle = topic.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '');
+            
             return (
               <SidebarMenuSubItem key={topic.id}>
                 <SidebarMenuSubButton
@@ -85,11 +95,16 @@ function CollapsibleModule({ mod, pathname }: { mod: any; pathname: string }) {
                   )}
                   render={
                     <Link href={`/learn/${topic.slug}`} className="flex items-center gap-2 w-full group/topic">
+                      {isCompleted ? (
+                        <CheckCircle2 className="h-3.5 w-3.5 shrink-0 text-success opacity-80" />
+                      ) : (
+                        <FileText className={`h-3.5 w-3.5 shrink-0 ${isTopicActive ? 'text-primary' : 'text-sidebar-foreground/50 group-hover/topic:text-sidebar-foreground'}`} />
+                      )}
                       <span className={cn(
                         "truncate transition-all duration-300 text-sm font-normal",
-                        isTopicActive ? "text-primary pl-2" : "text-muted-foreground group-hover/topic:text-foreground pl-2"
+                        isTopicActive ? "text-primary" : "text-sidebar-foreground/70 group-hover/topic:text-sidebar-foreground"
                       )}>
-                        {topic.title}
+                        {cleanTopicTitle}
                       </span>
                     </Link>
                   }
@@ -103,25 +118,47 @@ function CollapsibleModule({ mod, pathname }: { mod: any; pathname: string }) {
   );
 }
 
-function SidebarPhase({ roadmap, pathname }: { roadmap: any; pathname: string }) {
+function RoadmapAccordionItem({ roadmap, pathname, completedLessonSlugs }: { roadmap: any, pathname: string, completedLessonSlugs: string[] }) {
+  const isRoadmapActive = roadmap.modules?.some((mod: any) => 
+    mod.topics?.some((t: any) => pathname.includes(`/learn/${t.slug}`))
+  ) || false;
+  
+  const [isOpen, setIsOpen] = useState(isRoadmapActive);
+  const cleanRoadmapTitle = roadmap.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '');
+  
   return (
-    <div className="mb-4 last:mb-0">
-      <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 mb-2 mt-4 px-2">
-        {roadmap.title}
-      </div>
-      <SidebarMenuSub className="mr-0 pr-0 border-none ml-0 space-y-1">
-        {roadmap.modules?.map((mod: any) => (
-          <CollapsibleModule key={mod.id} mod={mod} pathname={pathname} />
-        ))}
-      </SidebarMenuSub>
-    </div>
+    <SidebarMenuSubItem>
+      <SidebarMenuSubButton 
+        onClick={(e) => { 
+          e.preventDefault(); 
+          setIsOpen(!isOpen); 
+        }}
+        isActive={isRoadmapActive && !isOpen} 
+        className="justify-between cursor-pointer w-full group/roadmap"
+      >
+        <span className="truncate text-sm font-semibold text-sidebar-foreground/90 group-hover/roadmap:text-primary transition-all duration-300">
+          {cleanRoadmapTitle}
+        </span>
+        <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+      </SidebarMenuSubButton>
+      
+      {isOpen && (
+        <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-4">
+          {roadmap.modules?.map((mod: any) => (
+            <CollapsibleModule key={mod.id} mod={mod} pathname={pathname} completedLessonSlugs={completedLessonSlugs} />
+          ))}
+        </SidebarMenuSub>
+      )}
+    </SidebarMenuSubItem>
   );
 }
 
-function LearnAccordion({ roadmaps, pathname }: { roadmaps?: any[]; pathname: string }) {
-  const isLearnActive = pathname.startsWith("/learn");
+function LearnAccordion({ roadmaps, pathname, completedLessonSlugs }: { roadmaps?: any[]; pathname: string; completedLessonSlugs: string[] }) {
+  const isLearnActive = pathname.startsWith("/learn") || pathname.startsWith("/practice") || pathname.startsWith("/projects");
   const [isOpen, setIsOpen] = useState(isLearnActive);
   const { state } = useSidebar();
+
+  if (!roadmaps || roadmaps.length === 0) return null;
 
   return (
     <SidebarMenuItem>
@@ -134,15 +171,15 @@ function LearnAccordion({ roadmaps, pathname }: { roadmaps?: any[]; pathname: st
         isActive={isLearnActive && !isOpen}
       >
         <div className="flex items-center gap-2">
-          <BookOpen className="h-4 w-4 shrink-0 text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.6)]" />
+          <BookOpen className="h-4 w-4 shrink-0 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
           <span className="group-data-[collapsible=icon]:hidden">Learn</span>
         </div>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform group-data-[collapsible=icon]:hidden ${isOpen ? "rotate-180" : ""}`} />
       </SidebarMenuButton>
       {isOpen && state === "expanded" && (
         <SidebarMenuSub className="mr-0 pr-0 border-l border-border/50 ml-3 group-data-[collapsible=icon]:hidden">
-          {roadmaps?.map(roadmap => (
-            <SidebarPhase key={roadmap.id} roadmap={roadmap} pathname={pathname} />
+          {roadmaps.map((roadmap) => (
+            <RoadmapAccordionItem key={roadmap.id} roadmap={roadmap} pathname={pathname} completedLessonSlugs={completedLessonSlugs} />
           ))}
         </SidebarMenuSub>
       )}
@@ -152,14 +189,14 @@ function LearnAccordion({ roadmaps, pathname }: { roadmaps?: any[]; pathname: st
 
 import { usePlatform } from "@/components/platform-provider";
 
-export function AppSidebar({ roadmaps, ...props }: { roadmaps?: any[] } & React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ roadmaps, completedLessonSlugs = [], ...props }: { roadmaps?: any[], completedLessonSlugs?: string[] } & React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
   const { state } = useSidebar();
   const config = usePlatform();
 
   return (
-    <Sidebar collapsible="icon" className="bg-background !border-r-0" style={{ borderRight: 'none' }} {...props}>
-      <SidebarHeader className="p-4 border-b flex flex-col gap-2">
+    <Sidebar collapsible="icon" className="!border-r border-border/50 !bg-background/60 backdrop-blur-xl shadow-2xl" style={{ borderRight: '1px solid hsl(var(--border) / 0.5)' }} {...props}>
+      <SidebarHeader className="p-4 border-b border-sidebar-border flex flex-col gap-2">
         <div className="font-bold text-xl text-primary flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden">
             <Terminal className="h-6 w-6 shrink-0 text-primary drop-shadow-[0_0_8px_rgba(var(--primary),0.6)]" />
@@ -173,19 +210,23 @@ export function AppSidebar({ roadmaps, ...props }: { roadmaps?: any[] } & React.
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton isActive={pathname === "/"} render={
-                  <Link href="/"><LayoutDashboard className="h-4 w-4 shrink-0 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" /><span>Dashboard</span></Link>
+                <SidebarMenuButton isActive={pathname === "/"} className="group" render={
+                  <Link href="/" className="flex items-center gap-2">
+                    <LayoutDashboard className="h-4 w-4 shrink-0 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
+                    <span>Dashboard</span>
+                  </Link>
                 } />
               </SidebarMenuItem>
 
-              <LearnAccordion roadmaps={roadmaps} pathname={pathname} />
+              <LearnAccordion roadmaps={roadmaps} pathname={pathname} completedLessonSlugs={completedLessonSlugs} />
 
               {navItems.filter(i => i.title !== "Dashboard").map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.url)}
+                    className="group"
                     render={
-                      <Link href={item.url}>
+                      <Link href={item.url} className="flex items-center gap-2">
                         <item.icon className={cn("h-4 w-4 shrink-0", item.colorClass)} />
                         <span>{item.title}</span>
                       </Link>
@@ -204,8 +245,9 @@ export function AppSidebar({ roadmaps, ...props }: { roadmaps?: any[] } & React.
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.url)}
+                    className="group"
                     render={
-                      <Link href={item.url}>
+                      <Link href={item.url} className="flex items-center gap-2">
                         <item.icon className={cn("h-4 w-4 shrink-0", item.colorClass)} />
                         <span>{item.title}</span>
                       </Link>
@@ -224,8 +266,9 @@ export function AppSidebar({ roadmaps, ...props }: { roadmaps?: any[] } & React.
               {bottomItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
+                    className="group"
                     render={
-                      <Link href={item.url}>
+                      <Link href={item.url} className="flex items-center gap-2">
                         <item.icon className={cn("h-4 w-4 shrink-0", item.colorClass)} />
                         <span>{item.title}</span>
                       </Link>

@@ -25,8 +25,24 @@ import {
 } from "@/components/ui/command"
 import { useRouter } from "next/navigation"
 
-export function CommandPalette({ open, setOpen }: { open: boolean, setOpen: (open: boolean) => void }) {
+export function CommandPalette({ open, setOpen, roadmaps = [] }: { open: boolean, setOpen: (open: boolean) => void, roadmaps?: any[] }) {
   const router = useRouter()
+
+  const topics = React.useMemo(() => {
+    const all: { title: string; href: string; parent: string }[] = [];
+    roadmaps.forEach(r => {
+      r.modules?.forEach((m: any) => {
+        m.topics?.forEach((t: any) => {
+          all.push({
+            title: t.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, ''),
+            href: `/learn/${t.slug}`,
+            parent: m.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '')
+          });
+        });
+      });
+    });
+    return all;
+  }, [roadmaps]);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -47,35 +63,46 @@ export function CommandPalette({ open, setOpen }: { open: boolean, setOpen: (ope
 
   return (
     <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
+      <CommandInput placeholder="Type a command or search topics..." />
       <CommandList>
         <CommandEmpty>No results found.</CommandEmpty>
         <CommandGroup heading="Navigation">
-          <CommandItem onSelect={() => runCommand(() => router.push("/"))}>
+          <CommandItem value="Dashboard" onSelect={() => runCommand(() => router.push("/"))}>
             <LayoutDashboard />
             <span>Dashboard</span>
           </CommandItem>
-          <CommandItem onSelect={() => runCommand(() => router.push("/learn"))}>
+          <CommandItem value="Learn" onSelect={() => runCommand(() => router.push("/learn"))}>
             <BookOpen />
             <span>Learn</span>
           </CommandItem>
         </CommandGroup>
+        
+        {topics.length > 0 && (
+          <>
+            <CommandSeparator />
+            <CommandGroup heading="Topics">
+              {topics.map(topic => (
+                <CommandItem key={topic.href} value={`${topic.title} ${topic.parent}`} onSelect={() => runCommand(() => router.push(topic.href))}>
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  <div className="flex flex-col">
+                    <span>{topic.title}</span>
+                    <span className="text-xs text-muted-foreground">{topic.parent}</span>
+                  </div>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </>
+        )}
+        
         <CommandSeparator />
         <CommandGroup heading="Settings">
-          <CommandItem>
+          <CommandItem value="Profile" onSelect={() => runCommand(() => router.push("/profile"))}>
             <User />
             <span>Profile</span>
-            <CommandShortcut>⌘P</CommandShortcut>
           </CommandItem>
-          <CommandItem>
-            <CreditCard />
-            <span>Billing</span>
-            <CommandShortcut>⌘B</CommandShortcut>
-          </CommandItem>
-          <CommandItem>
+          <CommandItem value="Settings" onSelect={() => runCommand(() => router.push("/settings"))}>
             <Settings />
             <span>Settings</span>
-            <CommandShortcut>⌘S</CommandShortcut>
           </CommandItem>
         </CommandGroup>
       </CommandList>

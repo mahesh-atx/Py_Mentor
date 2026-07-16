@@ -3,9 +3,7 @@ export const classesAndObjectsLesson = {
   slug: "classes-and-objects",
   content: `# Classes & Objects
 
-## The Theory — Building the Logic
-
-A class is best understood as a *factory blueprint* rather than a thing itself: it defines the shape and behavior every object built from it will share, but it occupies no memory until you actually create an instance. When Python evaluates \`Dog()\`, it allocates a fresh, independent object and wires that object's methods back to the class blueprint, which is why two instances stay separate and a change to one never leaks into the other. Under the hood, every value you touch — integers, strings, even functions — is itself an object with its own type and methods, so "object" is not a special category but the default way Python represents *everything*. The key mental shift is to stop thinking of data and actions as separate; a class binds them together so the logic travels with the data it operates on. A common pitfall is assuming that setting a class attribute on one instance changes it for everyone — in reality you usually create a separate instance attribute that merely shadows the shared one.
+A class is a blueprint that defines shared shape and behavior but occupies no memory until instantiated, and because every Python value — integers, strings, even functions — is itself an object, "object" is the default way Python represents *everything*. The pitfall is assuming that setting a class attribute on one instance changes it for everyone — in reality you usually create a separate instance attribute that merely shadows the shared one.
 
 ## Defining a Class
 

@@ -3,9 +3,7 @@ export const writingAppendingFilesLesson = {
   slug: "writing-appending-files",
   content: `# Writing & Appending to Files
 
-## The Theory — Building the Logic
-
-Writing to a file is the mirror image of reading: open() gives you a handle to a byte stream, and write() pushes characters into that stream at the current cursor position. The single most important mental model is that the mode decides the relationship between your stream and the existing file — 'w' points the cursor at the start and discards whatever was there, while 'a' jumps the cursor to the very end and preserves everything. There is no built-in safety net: opening with 'w' destroys old content instantly and irreversibly the moment the file opens, not when you first write. Python treats text as a sequence of characters that must be encoded into bytes, so a mismatched encoding between writer and reader can produce garbled or lost characters. A common pitfall is forgetting that writelines() does not add newlines, so a list of names becomes one concatenated line unless you supply the newline character yourself.
+Writing is the mirror image of reading: open() gives you a handle to a byte stream and write() pushes characters into that stream at the current cursor, where the mode decides the relationship between your stream and the existing file — 'w' points the cursor at the start and discards old content while 'a' jumps to the end and preserves everything. The pitfall is forgetting that opening with 'w' destroys the old content instantly the moment the file opens, and that writelines() does not add newlines, so a list of strings becomes one concatenated line unless you supply the newline yourself.
 
 ## Writing to a File
 

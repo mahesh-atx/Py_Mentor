@@ -1,6 +1,8 @@
 import { db } from "../db/prisma";
 import { computeXpFromRaw } from "./xp-calculator";
 
+import { auth } from "@/auth";
+
 /**
  * UserService
  * Manages the single local user for the single-player experience.
@@ -8,12 +10,16 @@ import { computeXpFromRaw } from "./xp-calculator";
 export const UserService = {
   /** Gets the local user, creating one if it doesn't exist */
   async getLocalUser() {
-    let user = await db.user.findFirst();
+    const session = await auth();
+    const userId = session?.user?.id || "clq3p6f4w000008l4f6d4d1d1";
+
+    let user = await db.user.findUnique({ where: { id: userId } });
     if (!user) {
       user = await db.user.create({
         data: {
+          id: userId,
           name: "Local Developer",
-          email: "local@pymentor.dev",
+          email: `local-${userId}@pymentor.dev`,
           image: "https://ui-avatars.com/api/?name=Local+Developer&background=3B82F6&color=fff&size=128",
         },
       });

@@ -16,7 +16,7 @@ export default async function PracticeSlugPage({ params }: { params: Promise<{ s
   const session = await auth();
   let isCompleted = false;
   if (session?.user?.id) {
-    const history = await SubmissionService.getHistory(session.user.id, exercise.id);
+    const history = await SubmissionService.getHistory(session.user.id, exercise.slug);
     isCompleted = history.some((sub: { status: string }) => sub.status === "passed");
   }
 

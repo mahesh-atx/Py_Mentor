@@ -5,9 +5,7 @@ export const comparisonOperatorsLesson = {
 
 Comparison operators compare two values and always return a **boolean result** - either \`True\` or \`False\`. They are the foundation of decision-making in your programs.
 
-## The Theory — Building the Logic
-
-A comparison operator is really a *question* that always resolves to one of two values, \`True\` or \`False\`, which are the building blocks of every decision a program makes. Under the hood Python checks whether a relationship holds between two values and returns the boolean result, so comparisons are just expressions that can be stored in variables or chained. Because \`=\` already means "assign," Python uses \`==\` for "has the same value," and this deliberate distinction protects you from accidentally overwriting a variable inside an \`if\`. The classic pitfall is mixing the two up: writing \`if x = 5\` instead of \`if x == 5\`, which either errors or assigns when you meant to test.
+A comparison operator is a *question* that always resolves to \`True\` or \`False\`, the building blocks of every program decision; Python uses \`==\` for \"has the same value\" precisely because \`=\` already means \"assign.\" The classic pitfall is mixing them up - writing \`if x = 5\` instead of \`if x == 5\`, which either errors or assigns when you meant to test.
 
 ## The Operators
 

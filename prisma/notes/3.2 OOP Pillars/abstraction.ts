@@ -3,9 +3,7 @@ export const abstractionLesson = {
   slug: "abstraction",
   content: `# Abstraction: Abstract Classes & Methods
 
-## The Theory — Building the Logic
-
-Abstraction is fundamentally about defining a **contract**—a promise of *what* an object can do—while hiding the *how*. Python has no compiler-enforced interface keyword, so the \`abc\` module simulates one: marking a method abstract tells Python "this must be defined by a subclass before the class may be used." Python enforces this at instantiation time, refusing to build an object from an incomplete class, which shifts a whole class of silent bugs (forgetting to implement a method) from deep runtime failure to the moment you create the object. A common pitfall is expecting abstraction to hide data or reduce code; its real job is to guarantee a consistent shape, and a class built only from concrete methods behaves exactly like any ordinary class.
+Abstraction defines a *contract* — a promise of *what* an object can do while hiding the *how* — and Python's \`abc\` module enforces it at instantiation time, refusing to build an object until every abstract method is implemented by a subclass. The pitfall is expecting abstraction to hide data or reduce code; its real job is to guarantee a consistent shape, and a class built only from concrete methods behaves exactly like any ordinary class.
 
 ## What is Abstraction?
 

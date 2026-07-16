@@ -3,9 +3,7 @@ export const stringConcatenationRepetitionLesson = {
   slug: "string-concatenation-repetition",
   content: `# String Concatenation & Repetition
 
-## The Theory — Building the Logic
-
-Concatenation and repetition are really just operators that build a brand-new string by copying characters from their inputs; they never grow or shrink an existing string. Because strings are immutable, each \`+\` must allocate fresh memory and copy both sides into it, while \`*\` is shorthand for repeated concatenation. Thinking of them as copy-and-assemble operations helps explain why order and types matter. The common pitfall is trying to add a string directly to a number, which raises a TypeError because Python will not guess how to convert the number; and building a large string by repeating \`+=\` in a loop is slow since every step makes another full copy, so join() is preferred for many pieces.
+Concatenation and repetition are operators that build a brand-new string by copying characters from their inputs; they never grow or shrink an existing string because strings are immutable, so each + must allocate fresh memory while * is shorthand for repeated concatenation. The pitfall is trying to add a string directly to a number (a TypeError), and building a large string with += in a loop is slow since every step makes another full copy — join() is preferred for many pieces.
 
 ## String Concatenation
 

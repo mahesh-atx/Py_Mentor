@@ -33,13 +33,6 @@ import { errorHandlingModule as jsErrorHandlingModule } from "./notes/js/20-erro
 import { advancedModule as jsAdvancedModule } from "./notes/js/21-advanced";
 
 // ============================================================
-// CLI: `npx tsx prisma/seed.ts --force` to reset & re-seed.
-// Without --force the script only upserts (safe for re-runs).
-// ============================================================
-const FORCE = process.argv.includes("--force");
-const SEED_LANG = (process.env.SEED_LANG || "python").toLowerCase();
-
-// ============================================================
 // PHASE DEFINITIONS — Grouping modules into progressive roadmaps
 // ============================================================
 const pythonPhases = [
@@ -125,9 +118,6 @@ const javascriptPhases = [
   },
 ];
 
-// Select phases based on SEED_LANG
-const phases = SEED_LANG === "javascript" ? javascriptPhases : pythonPhases;
-
 // ============================================================
 // ACHIEVEMENT DEFINITIONS
 // ============================================================
@@ -175,9 +165,12 @@ const achievements = [
 ];
 
 // ============================================================
-// MAIN
+// EXPORTED SEED FUNCTION
 // ============================================================
-async function main() {
+export async function seedCurriculum(lang: "python" | "javascript" = "python", force: boolean = false) {
+  const SEED_LANG = lang.toLowerCase();
+  const FORCE = force;
+  const phases = SEED_LANG === "javascript" ? javascriptPhases : pythonPhases;
   
 
   // ── Force-reset path (opt-in via --force) ──────────────────────────
@@ -346,11 +339,16 @@ async function main() {
   
 }
 
-main()
-  .catch((e) => {
-    console.error(e);
-    process.exit(1);
-  })
-  .finally(async () => {
-    await prisma.$disconnect();
-  });
+// Allow running from CLI directly
+if (require.main === module) {
+  const cliForce = process.argv.includes("--force");
+  const cliLang = (process.env.SEED_LANG || "python").toLowerCase() as "python" | "javascript";
+  seedCurriculum(cliLang, cliForce)
+    .catch((e) => {
+      console.error(e);
+      process.exit(1);
+    })
+    .finally(async () => {
+      await prisma.$disconnect();
+    });
+}
