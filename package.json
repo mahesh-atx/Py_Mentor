@@ -1,6 +1,6 @@
 {
   "name": "pymentor",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
@@ -105,7 +105,8 @@
     "test:sqlite": "vitest run __tests__/sqlite-schema.test.ts __tests__/json-helper.test.ts __tests__/db-provider.test.ts __tests__/schema-sync.test.ts",
     "prepublishOnly": "npm run build:npm && npm test",
     "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
-    "build:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate --schema=prisma/schema.sqlite.prisma && next build && node scripts/prepare-dist.js && electron-builder build --win"
+    "build:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate --schema=prisma/schema.sqlite.prisma && next build && node scripts/prepare-dist.js && electron-builder build --win",
+    "publish:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate --schema=prisma/schema.sqlite.prisma && next build && node scripts/prepare-dist.js && electron-builder build --win -p always"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

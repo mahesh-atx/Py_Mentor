@@ -20,15 +20,22 @@ npm run db:push
 npm run db:seed
 ```
 
-### 2. Build the Executable Installer
-Once the database is successfully populated, you can generate the `.exe` installer. This single command handles building the Next.js production server, copying the database and static assets, and packaging the Electron application.
+### 2. Build and Publish the Executable
+Once the database is populated, you must build the Next.js production server, package the Electron application, and upload it to GitHub so the **In-App Auto Updater** can distribute it to your users.
+
+**Prerequisites:**
+You need a GitHub Personal Access Token (classic) with `repo` permissions to allow the builder to upload files to your repository's Releases tab.
+
+Run this command in PowerShell, replacing the placeholder with your actual token:
 
 ```powershell
-npm run build:electron
+$env:GH_TOKEN="ghp_your_token_here"; npm run publish:electron
 ```
+*(If you are using Command Prompt, use `set GH_TOKEN=ghp_your_token && npm run publish:electron` instead)*
 
-When the process finishes, your installer will be located in the `release/` directory (e.g., `release/PyMentor Setup 1.0.10.exe`).
-
+When the process finishes:
+1. The local installer will be saved in the `release/` directory (e.g., `release/PyMentor Setup 1.0.11.exe`).
+2. The installer and update maps will be **automatically uploaded to GitHub**, triggering auto-updates for all existing users!
 ---
 
 ## ☁️ Publishing to NPM

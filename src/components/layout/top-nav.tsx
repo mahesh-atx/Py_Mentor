@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 import { usePlatform } from "@/components/platform-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
@@ -99,10 +100,21 @@ export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }
   } else {
     // Basic dynamic breadcrumb generation
     const segments = pathname.split('/').filter(Boolean);
-    const currentPathName = segments.length > 0 ? segments[segments.length - 1] : "Dashboard";
-    const titleCasePath = currentPathName.charAt(0).toUpperCase() + currentPathName.slice(1);
-    if (currentPathName !== "Dashboard") {
-      breadcrumbs = [{ title: titleCasePath }];
+    if (segments.length > 0 && segments[0] !== "dashboard") {
+      breadcrumbs = segments
+        .filter(seg => seg !== 'module') // Skip filler segments
+        .map((seg, index, arr) => {
+          let title = seg;
+          // Capitalize first segment (e.g., 'practice' -> 'Practice')
+          if (index === 0) {
+            title = seg.charAt(0).toUpperCase() + seg.slice(1);
+          }
+          
+          return {
+            title: title,
+            href: index < arr.length - 1 ? `/${segments.slice(0, segments.indexOf(seg) + 1).join('/')}` : undefined
+          };
+        });
     }
   }
 
@@ -160,35 +172,12 @@ export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }
 
           <ThemeToggle />
           
-          <DropdownMenu>
-            <DropdownMenuTrigger render={<button className="rounded-full outline-none" />}>
-              <Avatar className="h-8 w-8 cursor-pointer border hover:opacity-80 transition-opacity">
-                <AvatarImage src={user?.image || "https://github.com/shadcn.png"} alt={user?.name || "@user"} />
-                <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem className="text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Link href="/profile">
+            <Avatar className="h-8 w-8 cursor-pointer border hover:opacity-80 transition-opacity">
+              <AvatarImage src={user?.image || "https://github.com/shadcn.png"} alt={user?.name || "@user"} />
+              <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       </header>
       

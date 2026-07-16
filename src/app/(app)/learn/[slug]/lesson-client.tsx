@@ -603,17 +603,19 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
               <ResizableHandle withHandle className="w-1.5 bg-border hover:bg-primary/50 transition-colors" />
 
               {/* Right Panel: Editor & Console */}
-              <ResizablePanel defaultSize={50} minSize={25}>
-                {/* @ts-expect-error - shadcn type issue */}
-                <ResizablePanelGroup direction="vertical">
-                  <ResizablePanel defaultSize={70} minSize={30} className="bg-[#1E1E1E] relative">
-                    {renderEditor()}
-                  </ResizablePanel>
-                  <ResizableHandle withHandle className="h-1.5 bg-[#404040] hover:bg-primary/50 transition-colors" />
-                  <ResizablePanel defaultSize={30} minSize={15} className="bg-[#1E1E1E] flex flex-col">
-                    {renderConsole()}
-                  </ResizablePanel>
-                </ResizablePanelGroup>
+              <ResizablePanel defaultSize={50} minSize={25} className="p-3 pl-2 pb-4">
+                <div className="w-full h-full rounded-xl border border-[#404040]/50 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col relative">
+                  {/* @ts-expect-error - shadcn type issue */}
+                  <ResizablePanelGroup direction="vertical">
+                    <ResizablePanel defaultSize={70} minSize={30} className="bg-[#1E1E1E] relative">
+                      {renderEditor()}
+                    </ResizablePanel>
+                    <ResizableHandle withHandle className="h-1 bg-[#2D2D2D] hover:bg-primary/50 transition-colors" />
+                    <ResizablePanel defaultSize={30} minSize={15} className="bg-[#1E1E1E] flex flex-col">
+                      {renderConsole()}
+                    </ResizablePanel>
+                  </ResizablePanelGroup>
+                </div>
               </ResizablePanel>
             </>
           )}

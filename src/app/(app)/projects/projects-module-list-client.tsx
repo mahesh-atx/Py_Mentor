@@ -1,12 +1,60 @@
 "use client";
 
 import Link from "next/link";
-import { FolderDot, ArrowRight, CheckCircle2 } from "lucide-react";
+import { FolderDot, ArrowRight, CheckCircle2, Play } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 export function ProjectsModuleListClient({ roadmaps, completedProjectSlugs = [] }: { roadmaps: any[], completedProjectSlugs?: string[] }) {
+  // Find first unsolved project
+  let firstUnsolved: any = null;
+  for (const roadmap of roadmaps) {
+    if (firstUnsolved) break;
+    for (const mod of roadmap.modules || []) {
+      if (firstUnsolved) break;
+      for (const topic of mod.topics || []) {
+        if (firstUnsolved) break;
+        for (const proj of topic.projects || []) {
+          if (!completedProjectSlugs.includes(proj.id) && !completedProjectSlugs.includes(proj.slug)) {
+            firstUnsolved = proj;
+            break;
+          }
+        }
+      }
+    }
+  }
+
   return (
       <div className="space-y-6">
+      
+      {firstUnsolved && (
+        <motion.div 
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="relative overflow-hidden flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 p-6 rounded-3xl border border-primary/30 bg-gradient-to-r from-primary/10 via-background to-background shadow-xl shadow-primary/5"
+        >
+          {/* Subtle animated background glow */}
+          <div className="absolute -left-20 -top-20 h-40 w-40 rounded-full bg-primary/20 blur-[50px] animate-pulse" />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="flex h-2 w-2 rounded-full bg-primary animate-pulse" />
+              <h3 className="font-bold text-lg text-foreground tracking-tight">Pick up where you left off</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              Continue working on <span className="font-semibold text-primary">{firstUnsolved.title}</span>
+            </p>
+          </div>
+          
+          <Link href={`/projects/${firstUnsolved.slug}`} className="relative z-10 w-full sm:w-auto shrink-0">
+            <Button className="w-full sm:w-auto gap-2 rounded-xl group shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all duration-300 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-5">
+              <Play className="h-4 w-4 fill-current group-hover:translate-x-1 transition-transform" />
+              Resume Project
+            </Button>
+          </Link>
+        </motion.div>
+      )}
+
       {roadmaps.map((roadmap, index) => {
         let totalProjects = 0;
         let completed = 0;

@@ -227,7 +227,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-background/60 backdrop-blur-sm" 
-        onClick={() => { setAutoNavCountdown(null); router.push('/practice'); }}
+        onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.slug ? `/learn/${exercise.topic.slug}` : '/practice'); }}
       />
       
       {/* Centered Window */}
@@ -236,7 +236,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Header */}
       <div className="h-14 border-b bg-muted/30 flex items-center justify-between px-4 lg:px-6 shrink-0">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => { setAutoNavCountdown(null); router.push('/practice'); }} className="text-muted-foreground">
+          <Button variant="ghost" size="icon" onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.slug ? `/learn/${exercise.topic.slug}` : '/practice'); }} className="text-muted-foreground">
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <div className="font-semibold hidden md:block">Practice: {exercise.title}</div>
@@ -615,9 +615,14 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
                   );
                 } else {
                   return (
-                    <Button className="w-full sm:w-auto" onClick={() => { setAutoNavCountdown(null); setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
-                      Return to Lesson {autoNavCountdown !== null && `(${autoNavCountdown}s)`}
-                    </Button>
+                    <div className="flex flex-col sm:flex-row gap-2 w-full">
+                      <Button variant="outline" className="w-full sm:w-auto flex-1" onClick={() => { setAutoNavCountdown(null); setShowResults(false); router.push(`/practice`); }}>
+                        Back to Practice
+                      </Button>
+                      <Button className="w-full sm:w-auto flex-1" onClick={() => { setAutoNavCountdown(null); setShowResults(false); router.push(`/learn/${exercise.topic?.slug || ''}`); }}>
+                        Return to Lesson {autoNavCountdown !== null && `(${autoNavCountdown}s)`}
+                      </Button>
+                    </div>
                   );
                 }
               })()

@@ -40,19 +40,23 @@ import {
   CheckCircle2
 } from "lucide-react";
 
-const navItems = [
+const overviewItems = [
   { title: "Dashboard", url: "/", icon: LayoutDashboard, colorClass: "text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" },
+];
+
+const learnItems = [
   { title: "Roadmaps", url: "/roadmaps", icon: Map, colorClass: "text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.6)]" },
   { title: "Practice", url: "/practice", icon: Dumbbell, colorClass: "text-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.6)]" },
   { title: "Projects", url: "/projects", icon: FolderDot, colorClass: "text-pink-400 drop-shadow-[0_0_8px_rgba(244,114,182,0.6)]" },
 ];
 
-const secondaryItems = [
+const progressItems = [
   { title: "Progress", url: "/progress", icon: Award, colorClass: "text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.6)]" },
   { title: "Daily Challenge", url: "/daily-challenge", icon: Calendar, colorClass: "text-rose-400 drop-shadow-[0_0_8px_rgba(251,113,133,0.6)]" },
+  { title: "Bookmarks", url: "/bookmarks", icon: Bookmark, colorClass: "text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.6)]" },
 ];
 
-const bottomItems = [
+const accountItems = [
   { title: "Profile", url: "/profile", icon: User, colorClass: "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
   { title: "Settings", url: "/settings", icon: Settings, colorClass: "text-sidebar-foreground/70 hover:text-sidebar-foreground hover:drop-shadow-[0_0_8px_rgba(255,255,255,0.6)] transition-all" },
 ];
@@ -153,8 +157,8 @@ function RoadmapAccordionItem({ roadmap, pathname, completedLessonSlugs }: { roa
   );
 }
 
-function LearnAccordion({ roadmaps, pathname, completedLessonSlugs }: { roadmaps?: any[]; pathname: string; completedLessonSlugs: string[] }) {
-  const isLearnActive = pathname.startsWith("/learn") || pathname.startsWith("/practice") || pathname.startsWith("/projects");
+function CurriculumAccordion({ roadmaps, pathname, completedLessonSlugs }: { roadmaps?: any[]; pathname: string; completedLessonSlugs: string[] }) {
+  const isLearnActive = pathname.startsWith("/learn");
   const [isOpen, setIsOpen] = useState(isLearnActive);
   const { state } = useSidebar();
 
@@ -172,7 +176,7 @@ function LearnAccordion({ roadmaps, pathname, completedLessonSlugs }: { roadmaps
       >
         <div className="flex items-center gap-2">
           <BookOpen className="h-4 w-4 shrink-0 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-          <span className="group-data-[collapsible=icon]:hidden">Learn</span>
+          <span className="group-data-[collapsible=icon]:hidden">Curriculum</span>
         </div>
         <ChevronDown className={`h-4 w-4 shrink-0 transition-transform group-data-[collapsible=icon]:hidden ${isOpen ? "rotate-180" : ""}`} />
       </SidebarMenuButton>
@@ -195,7 +199,7 @@ export function AppSidebar({ roadmaps, completedLessonSlugs = [], ...props }: { 
   const config = usePlatform();
 
   return (
-    <Sidebar collapsible="icon" className="!border-r border-border/50 !bg-background/60 backdrop-blur-xl shadow-2xl" style={{ borderRight: '1px solid hsl(var(--border) / 0.5)' }} {...props}>
+    <Sidebar collapsible="icon" className="!border-r-0 !bg-background/60 backdrop-blur-xl shadow-2xl" {...props}>
       <SidebarHeader className="p-4 border-b border-sidebar-border flex flex-col gap-2">
         <div className="font-bold text-xl text-primary flex items-center justify-between gap-2">
           <div className="flex items-center gap-2 overflow-hidden">
@@ -206,21 +210,36 @@ export function AppSidebar({ roadmaps, completedLessonSlugs = [], ...props }: { 
         </div>
       </SidebarHeader>
       <SidebarContent>
+        {/* Overview Group */}
         <SidebarGroup>
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.16em] text-sidebar-foreground/40 mb-1">Overview</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton isActive={pathname === "/"} className="group" render={
-                  <Link href="/" className="flex items-center gap-2">
-                    <LayoutDashboard className="h-4 w-4 shrink-0 text-cyan-400 drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]" />
-                    <span>Dashboard</span>
-                  </Link>
-                } />
-              </SidebarMenuItem>
+              {overviewItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
+                    isActive={pathname === item.url}
+                    className="group"
+                    render={
+                      <Link href={item.url} className="flex items-center gap-2">
+                        <item.icon className={cn("h-4 w-4 shrink-0", item.colorClass)} />
+                        <span>{item.title}</span>
+                      </Link>
+                    }
+                  />
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
 
-              <LearnAccordion roadmaps={roadmaps} pathname={pathname} completedLessonSlugs={completedLessonSlugs} />
-
-              {navItems.filter(i => i.title !== "Dashboard").map((item) => (
+        {/* Learn Group */}
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.16em] text-sidebar-foreground/40 mb-1">Learn</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              <CurriculumAccordion roadmaps={roadmaps} pathname={pathname} completedLessonSlugs={completedLessonSlugs} />
+              {learnItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.url)}
@@ -237,11 +256,13 @@ export function AppSidebar({ roadmaps, completedLessonSlugs = [], ...props }: { 
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Your Progress Group */}
         <SidebarGroup>
-          <SidebarGroupLabel>Your Learning</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.16em] text-sidebar-foreground/40 mb-1">Your Progress</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {secondaryItems.map((item) => (
+              {progressItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
                     isActive={pathname.startsWith(item.url)}
@@ -261,11 +282,13 @@ export function AppSidebar({ roadmaps, completedLessonSlugs = [], ...props }: { 
       </SidebarContent>
       <SidebarFooter>
         <SidebarGroup>
+          <SidebarGroupLabel className="text-[10px] uppercase tracking-[0.16em] text-sidebar-foreground/40 mb-1">Account</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {bottomItems.map((item) => (
+              {accountItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton
+                    isActive={pathname.startsWith(item.url)}
                     className="group"
                     render={
                       <Link href={item.url} className="flex items-center gap-2">
