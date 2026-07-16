@@ -16,6 +16,7 @@
   "build": {
     "appId": "com.pymentor.app",
     "productName": "PyMentor",
+    "artifactName": "${name}-Setup-${version}.${ext}",
     "publish": [
       {
         "provider": "github",

@@ -80,7 +80,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       if (nextExercise) {
         router.push(`/practice/${nextExercise.slug}`);
       } else {
-        router.push(`/learn/${exercise.topic?.slug || ''}`);
+        router.push(exercise?.topic?.module?.slug ? `/practice/module/${exercise.topic.module.slug}` : '/practice');
       }
     }
   }, [autoNavCountdown, exercise, router]);
@@ -227,7 +227,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Backdrop */}
       <div 
         className="absolute inset-0 bg-background/60 backdrop-blur-sm" 
-        onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.slug ? `/learn/${exercise.topic.slug}` : '/practice'); }}
+        onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.module?.slug ? `/practice/module/${exercise.topic.module.slug}` : '/practice'); }}
       />
       
       {/* Centered Window */}
@@ -236,7 +236,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
       {/* Header */}
       <div className="h-14 border-b bg-muted/30 flex items-center justify-between px-4 lg:px-6 shrink-0">
         <div className="flex items-center gap-4">
-          <Button variant="ghost" size="icon" onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.slug ? `/learn/${exercise.topic.slug}` : '/practice'); }} className="text-muted-foreground">
+          <Button variant="ghost" size="icon" onClick={() => { setAutoNavCountdown(null); router.push(exercise?.topic?.module?.slug ? `/practice/module/${exercise.topic.module.slug}` : '/practice'); }} className="text-muted-foreground">
             <ChevronLeft className="h-5 w-5" />
           </Button>
           <div className="font-semibold hidden md:block">Practice: {exercise.title}</div>
