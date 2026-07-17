@@ -15,6 +15,9 @@ Scikit-Learn provides:
 - **Pipeline**: Chain preprocessing and modeling steps
 - **Metrics**: Accuracy, precision, recall, F1, ROC, etc.
 
+> [!NOTE]
+> **Why this matters:** Scikit-Learn is the gateway drug to machine learning in Python. Its genius is a *consistent API* — almost every model follows the same three steps: \`fit()\` to learn from training data, \`predict()\` to make guesses on new data, and \`score()\` / a metric function to measure quality. Learn that loop once and you can drive dozens of algorithms. The hardest part of ML is rarely the model — it's **splitting, scaling, and evaluating** data correctly.
+
 ## Installation
 
 \`\`\`bash
@@ -79,6 +82,9 @@ y_pred = model.predict(X_test)
 print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
 print(classification_report(y_test, y_pred, target_names=iris.target_names))
 \`\`\`
+
+> [!WARNING]
+> **Never train and test on the same data.** If you skip \`train_test_split\` and call \`model.score(X, y)\` on the data you trained on, you'll get an inflated, dishonest accuracy — the model has already "seen" those answers. Always hold out a test set it has never encountered. This is the single most common beginner mistake in ML.
 
 ### Decision Trees
 
@@ -366,6 +372,38 @@ grid_search.fit(X_train, y_train)
 print(f"Best parameters: {grid_search.best_params_}")
 print(f"Best score: {grid_search.best_score_:.2f}")
 \`\`\`
+
+## Real-World Example: Predicting House Prices (Regression)
+
+A tiny dataset of house sizes and prices. We split, train a linear model, and evaluate.
+
+\`\`\`python
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_absolute_error
+import numpy as np
+
+# size_sqft -> price ($1000s)
+X = np.array([[800], [1200], [1500], [2000], [2400], [3000], [3500]])
+y = np.array([150, 220, 280, 360, 430, 540, 620])
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+y_pred = model.predict(X_test)
+print(f"MAE: \${mean_absolute_error(y_test, y_pred)*1000:,.0f}")  # avg $ off per prediction
+print(f"Price per sqft ≈ \${model.coef_[0]*1000:,.0f}")
+\`\`\`
+
+The \`coef_\` tells you the model's inferred price-per-square-foot — a human-readable takeaway you can sanity-check against the real world.
+
+## Your Turn!
+
+1. Swap \`LinearRegression\` for \`DecisionTreeRegressor()\` on the house data — does test error go up or down with \`max_depth\`?
+2. Run \`cross_val_score\` on the iris logistic model instead of a single split — are the 5 folds consistent?
+3. Scale the house \`X\` with \`StandardScaler\` before fitting — does it change the linear regression result? (Hint: for plain linear regression, no — but it matters for distance-based models like SVM.)
 
 > [!TIP]
 > Start with simple models (linear regression, logistic regression) before trying complex ones. Always use cross-validation for reliable evaluation, and tune hyperparameters with GridSearchCV or RandomizedSearchCV.`,

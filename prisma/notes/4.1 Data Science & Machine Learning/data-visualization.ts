@@ -5,6 +5,9 @@ export const dataVisualizationLesson = {
 
 Data visualization is the graphical representation of data and information. It helps you understand patterns, trends, and outliers in data, and communicate findings effectively.
 
+> [!NOTE]
+> **Why this matters:** Your model or summary table might say "accuracy = 0.94", but a single plot often reveals what the number hides — a skewed distribution, a suspicious cluster, a relationship between two variables. Visualization is how you *explore* data and how you *convince* others. The three libraries form a ladder: **Matplotlib** (fine control), **Seaborn** (statistical shortcuts on top of Matplotlib), and **Plotly** (interactive, web-ready).
+
 ## Matplotlib - The Foundation
 
 Matplotlib is Python's most widely used plotting library. It provides fine-grained control over every element of a plot.
@@ -59,6 +62,9 @@ plt.title('Sales by Product (Horizontal)')
 plt.xlabel('Sales ($)')
 plt.show()
 \`\`\`
+
+> [!WARNING]
+> **You must call \`plt.show()\` (or \`%matplotlib inline\` in a notebook).** Until you do, Matplotlib is *accumulating* draw commands on the current figure. Reuse the same \`plt\` calls across cells without clearing and you'll stack plots on top of each other. Use \`plt.clf()\` / \`plt.close()\` between figures, or prefer the object-oriented \`fig, ax = plt.subplots()\` style where each plot owns its own \`Axes\`. (Note the typo \`color='steblue'\` above would raise a ValueError — the correct name is \`'steelblue'\`.)
 
 ### Scatter Plots
 
@@ -320,6 +326,40 @@ fig = px.choropleth(df, locations='iso_alpha', color='lifeExp',
                     title='World Life Expectancy 2007')
 fig.show()
 \`\`\`
+
+## Real-World Example: Choosing the Right Chart
+
+You surveyed 200 people on their favorite language and want to (a) show popularity and (b) explore whether age relates to hours coded per week.
+
+\`\`\`python
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.DataFrame({
+    'language': ['Python', 'JS', 'Python', 'Java', 'Python', 'JS'],
+    'age':      [24, 31, 28, 45, 22, 35],
+    'hours':    [12, 6, 15, 3, 20, 8],
+})
+
+# (a) Popularity -> count plot (categorical)
+sns.countplot(x='language', data=df, palette='deep')
+plt.title('Favorite Language')
+plt.show()
+
+# (b) Relationship -> scatter (two numeric variables)
+sns.scatterplot(x='age', y='hours', hue='language', data=df)
+plt.title('Age vs Hours Coded/Week')
+plt.show()
+\`\`\`
+
+Rule of thumb: **one categorical + counts → bar/count plot; two numeric → scatter/histogram; distribution → histogram/KDE; correlation matrix → heatmap.**
+
+## Your Turn!
+
+1. Take the \`df\` above and make a histogram of \`hours\` with \`sns.histplot(df['hours'], kde=True)\`.
+2. Build a correlation heatmap from a numeric DataFrame with \`sns.heatmap(df.corr(), annot=True)\`.
+3. Try \`px.scatter(px.data.iris(), x='sepal_width', y='sepal_length', color='species')\` in Plotly and hover the points — notice the interactivity Matplotlib can't give you.
 
 > [!TIP]
 > Use Matplotlib for publication-quality static plots, Seaborn for quick statistical visualizations, and Plotly for interactive dashboards and web applications.`,

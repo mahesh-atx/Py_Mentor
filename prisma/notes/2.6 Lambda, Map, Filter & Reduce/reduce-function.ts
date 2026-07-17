@@ -177,7 +177,7 @@ from functools import reduce
 rates = [0.05, 0.03, 0.04, 0.02]  # Annual rates over 4 years
 principal = 1000
 final_amount = reduce(lambda acc, rate: acc * (1 + rate), rates, principal)
-print(f"Final amount: ${final_amount:.2f}")   # $1147.21
+print(f"Final amount: \${final_amount:.2f}")   # $1147.21
 
 # Example: Build a nested dictionary from a key path
 keys = ["user", "profile", "name"]

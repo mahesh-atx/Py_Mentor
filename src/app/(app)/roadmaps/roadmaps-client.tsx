@@ -77,7 +77,7 @@ export function RoadmapClient({ roadmaps }: RoadmapClientProps) {
                   
                   <div className="flex justify-between items-start mb-4 relative z-10">
                     <div>
-                      <div className="text-sm font-bold text-primary mb-1 uppercase tracking-wider">Phase {index + 1}</div>
+                      <div className="text-sm font-bold text-primary mb-1 uppercase tracking-wider">{roadmap.title}</div>
                       <h3 className={`text-2xl font-bold ${!isLocked && 'group-hover:text-primary transition-colors'}`}>{roadmap.title}</h3>
                     </div>
                     {isLocked && <div className="h-10 w-10 rounded-xl flex items-center justify-center bg-muted border"><Lock className="h-5 w-5 text-muted-foreground" /></div>}

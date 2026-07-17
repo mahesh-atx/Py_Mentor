@@ -12,6 +12,9 @@ Real-world data is messy. Data cleaning — also called data preparation or data
 - **Completeness**: Missing values can break algorithms
 - **Validity**: Outliers and errors skew results
 
+> [!NOTE]
+> **Why this matters:** A famous study estimated data scientists spend **60–80% of their time** on data preparation, not modeling. A single unhandled \`NaN\` or mis-encoded category can crash a training run or, worse, produce a confidently wrong model. Cleaning isn't glamorous, but it's where most real projects succeed or fail.
+
 ## Handling Null Values
 
 \`\`\`python
@@ -56,6 +59,9 @@ df['salary'] = df.groupby('dept')['salary'].transform(
     lambda x: x.fillna(x.mean())
 )
 \`\`\`
+
+> [!WARNING]
+> **\`inplace=True\` is a trap.** It mutates the DataFrame and returns \`None\`, so \`df = df.fillna(0, inplace=True)\` sets \`df\` to \`None\`. Prefer the copy-returning style \`df['col'] = df['col'].fillna(0)\` — it's explicit, chainable, and far easier to debug. Also: filling with the *mean* hides missingness; only do it when the missing values are plausibly random, not structural.
 
 ## Removing Duplicates
 
@@ -150,6 +156,9 @@ df['phone_formatted'] = df['phone_clean'].apply(
 # Standardize categories (strip whitespace, lowercase)
 df['category_clean'] = df['category'].str.strip().str.lower().str.title()
 \`\`\`
+
+> [!TIP]
+> **Clean strings *before* you dedupe or map.** \`'  Electronics  '\` and \`'electronics'\` look identical to a human but are different strings to Pandas — so \`drop_duplicates()\` won't catch them. Standardize case and whitespace first, then remove duplicates, and your counts will finally make sense.
 
 ## Data Type Conversion
 
@@ -246,6 +255,45 @@ def fuzzy_match(value, choices, cutoff=0.8):
 standard_names = ['United States', 'United Kingdom', 'France']
 df['country_fuzzy'] = df['country'].apply(lambda x: fuzzy_match(x, standard_names))
 \`\`\`
+
+## Real-World Example: Cleaning a Messy Survey Export
+
+A CSV export has names in mixed case, salaries as \`"$1,234"\` strings, and some missing ages. Here's a focused cleaning pass:
+
+\`\`\`python
+import pandas as pd
+import numpy as np
+
+df = pd.DataFrame({
+    'name':   ['  alice ', 'BOB', 'Charlie', None],
+    'salary': ['$50,000', '$60,000', 'N/A', '$55,000'],
+    'age':    [25, np.nan, 35, 28],
+})
+
+# 1. Strip + title-case names (None stays None)
+df['name'] = df['name'].str.strip().str.title()
+
+# 2. Strip $, commas, convert to number; 'N/A' -> NaN
+df['salary'] = (
+    df['salary']
+      .str.replace(r'[^\\d.]', '', regex=True)
+      .replace('', np.nan)
+      .astype(float)
+)
+
+# 3. Fill missing age with median
+df['age'] = df['age'].fillna(df['age'].median())
+
+print(df)
+\`\`\`
+
+Notice the \`.replace('', np.nan)\` step — after stripping currency symbols, \`'N/A'\` became \`''\` (empty string), which \`astype(float)\` would reject. Cleaning is full of these small traps.
+
+## Your Turn!
+
+1. Take a DataFrame with a \`'price'\` column like \`'$1,234.56'\` and convert it to a float.
+2. Given \`df\` with duplicate \`'email'\` rows, keep only the first occurrence.
+3. Use the IQR method from above to find outliers in \`[10, 12, 11, 13, 100, 11, 12, 9]\` and cap them with \`clip()\`.
 
 ## Complete Cleaning Pipeline
 

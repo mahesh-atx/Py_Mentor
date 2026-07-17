@@ -89,14 +89,14 @@ total_with_tax = reduce(
     lambda acc, x: acc + x,
     map(lambda p: p * 1.08, prices)
 )
-print(f"Total: ${total_with_tax:.2f}")   # Total: $78.37
+print(f"Total: \${total_with_tax:.2f}")   # Total: $78.37
 
 # Find the most expensive item after discount
 max_price = reduce(
     lambda a, b: a if a > b else b,
     map(lambda p: p * 0.9, prices)  # 10% discount
 )
-print(f"Max after discount: ${max_price:.2f}")   # Max after discount: $22.49
+print(f"Max after discount: \${max_price:.2f}")   # Max after discount: $22.49
 \`\`\`
 
 ### Full Pipeline: Filter → Map → Reduce
@@ -141,13 +141,13 @@ sales = [
 us_sales = filter(lambda s: s["region"] == "US", sales)
 revenues = map(lambda s: s["price"] * s["quantity"], us_sales)
 total_revenue = reduce(lambda acc, x: acc + x, revenues, 0)
-print(f"US Revenue: ${total_revenue:.2f}")   # US Revenue: $3849.92
+print(f"US Revenue: \${total_revenue:.2f}")   # US Revenue: $3849.92
 
 # Average price of products with quantity > 5
 high_qty = filter(lambda s: s["quantity"] > 5, sales)
 prices = list(map(lambda s: s["price"], high_qty))
 avg_price = reduce(lambda acc, x: acc + x, prices, 0) / len(prices) if prices else 0
-print(f"Avg price (qty > 5): ${avg_price:.2f}")   # Avg price (qty > 5): $19.99
+print(f"Avg price (qty > 5): \${avg_price:.2f}")   # Avg price (qty > 5): $19.99
 \`\`\`
 
 ### Text Processing Pipeline

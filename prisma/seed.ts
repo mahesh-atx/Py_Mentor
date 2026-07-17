@@ -30,51 +30,61 @@ import { seedProjects } from "./seed-projects";
 const pythonPhases = [
   {
     slug: "phase-1",
-    title: "Phase 1: Python Fundamentals",
+    title: "📌 PHASE 1: FOUNDATION",
     description:
-      "Learn to think in Python. Set up your environment, understand syntax, variables, operators, and control flow.",
+      "Set up your environment, understand syntax, variables, operators, and control flow — the bedrock of Python.",
     order: 1,
     modules: [
       gettingStartedModule,
       variablesDataTypesModule,
       operatorsModule,
       controlFlowModule,
-      loopsModule,
     ],
   },
   {
     slug: "phase-2",
-    title: "Phase 2: Working with Data",
+    title: "📌 PHASE 2: CORE PYTHON",
     description:
-      "Master Python's core data types and built-in tools — strings, lists, tuples, sets, dictionaries, and essential built-in functions.",
+      "Master Python's core data types and built-in tools — strings, lists, tuples, sets, and dictionaries.",
     order: 2,
     modules: [
+      stringsCompleteModule,
       listsModule,
       tuplesSetsModule,
-      stringsCompleteModule,
       dictionariesModule,
-      functionsModule,
-      functionalToolsModule,
-      modulesPackagesModule,
-      stringManipulationModule,
-      fileHandlingModule,
-      errorHandlingModule,
     ],
   },
   {
     slug: "phase-3",
-    title: "Phase 3: Object-Oriented Programming",
+    title: "📌 PHASE 3: FUNCTIONS & OOP",
     description:
-      "Design and architect with classes, objects, inheritance, polymorphism, abstraction, and magic methods.",
+      "Build reusable code with functions and functional tools, then design with classes, objects, and OOP principles.",
     order: 3,
-    modules: [oopFundamentalsModule, oopPillarsModule],
+    modules: [
+      functionsModule,
+      functionalToolsModule,
+      oopFundamentalsModule,
+      oopPillarsModule,
+    ],
   },
   {
     slug: "phase-4",
-    title: "Phase 4: Data Science & Machine Learning",
+    title: "📌 PHASE 4: INTERMEDIATE PYTHON",
+    description:
+      "Write robust programs with error handling, file I/O, and reusable modules and packages.",
+    order: 4,
+    modules: [
+      errorHandlingModule,
+      fileHandlingModule,
+      modulesPackagesModule,
+    ],
+  },
+  {
+    slug: "phase-5",
+    title: "📌 PHASE 5: DATA SCIENCE & MACHINE LEARNING",
     description:
       "Master data analysis, visualization, and machine learning — from NumPy arrays to deep learning neural networks.",
-    order: 4,
+    order: 5,
     modules: [dataScienceModule],
   },
 ];

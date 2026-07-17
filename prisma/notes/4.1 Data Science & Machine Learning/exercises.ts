@@ -225,7 +225,7 @@ export const exercises: Record<string, any[]> = {
   "deep-learning": [
     {
       "title": "Neural Network Concept",
-      "prompt": "Create a simple function `neuron(inputs, weights, bias)` that computes the weighted sum and applies ReLU activation (max(0, x)). Test with inputs=[1, 2], weights=[0.5, 0.5], bias=-1. Print the output.",
+      "prompt": "Create a simple function \`neuron(inputs, weights, bias)\` that computes the weighted sum and applies ReLU activation (max(0, x)). Test with inputs=[1, 2], weights=[0.5, 0.5], bias=-1. Print the output.",
       "starterCode": "import numpy as np\n# Create a simple neuron function\n",
       "solutionCode": "import numpy as np\ndef neuron(inputs, weights, bias):\n    z = np.dot(inputs, weights) + bias\n    return max(0, z)\n\ninputs = np.array([1, 2])\nweights = np.array([0.5, 0.5])\nbias = -1\noutput = neuron(inputs, weights, bias)\nprint(output)",
       "testCases": [{ "input": "", "expectedOutput": "0.5\n" }],
@@ -243,7 +243,7 @@ export const exercises: Record<string, any[]> = {
     },
     {
       "title": "Module Integration: Build a Simple Network",
-      "prompt": "Create a function `forward_pass(inputs, weights1, bias1, weights2, bias2)` that implements a 2-layer neural network with ReLU activation in the hidden layer and sigmoid in the output layer. Test with inputs=[1, 2], weights1=[[0.1, 0.2], [0.3, 0.4]], bias1=[0.1, 0.2], weights2=[0.5, 0.6], bias2=0.1. Print the output.",
+      "prompt": "Create a function \`forward_pass(inputs, weights1, bias1, weights2, bias2)\` that implements a 2-layer neural network with ReLU activation in the hidden layer and sigmoid in the output layer. Test with inputs=[1, 2], weights1=[[0.1, 0.2], [0.3, 0.4]], bias1=[0.1, 0.2], weights2=[0.5, 0.6], bias2=0.1. Print the output.",
       "starterCode": "import numpy as np\n# Build a 2-layer neural network\n",
       "solutionCode": "import numpy as np\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\ndef forward_pass(inputs, weights1, bias1, weights2, bias2):\n    # Hidden layer with ReLU\n    hidden = np.dot(inputs, weights1) + bias1\n    hidden = np.maximum(0, hidden)\n    # Output layer with sigmoid\n    output = sigmoid(np.dot(hidden, weights2) + bias2)\n    return output\n\ninputs = np.array([1, 2])\nweights1 = np.array([[0.1, 0.2], [0.3, 0.4]])\nbias1 = np.array([0.1, 0.2])\nweights2 = np.array([0.5, 0.6])\nbias2 = 0.1\noutput = forward_pass(inputs, weights1, bias1, weights2, bias2)\nprint(f'{output:.4f}')",
       "testCases": [{ "input": "", "expectedOutput": "0.6682\n" }],
@@ -254,7 +254,7 @@ export const exercises: Record<string, any[]> = {
   "jupyter-notebook": [
     {
       "title": "Magic Commands",
-      "prompt": "Use the `%timeit` magic command to time the execution of `sum(range(1000))`. Print the result (the magic command itself will output timing info).",
+      "prompt": "Use the \`%timeit\` magic command to time the execution of \`sum(range(1000))\`. Print the result (the magic command itself will output timing info).",
       "starterCode": "# Use %timeit magic command\n",
       "solutionCode": "%timeit sum(range(1000))",
       "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
@@ -263,7 +263,7 @@ export const exercises: Record<string, any[]> = {
     },
     {
       "title": "List Variables",
-      "prompt": "Create variables x = 10, y = 20, z = 30. Then use the `%who` magic command to list all variables.",
+      "prompt": "Create variables x = 10, y = 20, z = 30. Then use the \`%who\` magic command to list all variables.",
       "starterCode": "# Create variables and list them\n",
       "solutionCode": "x = 10\ny = 20\nz = 30\n%who",
       "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
@@ -272,7 +272,7 @@ export const exercises: Record<string, any[]> = {
     },
     {
       "title": "Module Integration: Notebook Analysis",
-      "prompt": "In a Jupyter notebook cell: (1) import pandas and numpy, (2) create a DataFrame with 5 rows of random data, (3) use `%timeit` to time calculating the mean of a column, (4) print the DataFrame head. (This exercise tests multiple notebook concepts.)",
+      "prompt": "In a Jupyter notebook cell: (1) import pandas and numpy, (2) create a DataFrame with 5 rows of random data, (3) use \`%timeit\` to time calculating the mean of a column, (4) print the DataFrame head. (This exercise tests multiple notebook concepts.)",
       "starterCode": "# Jupyter notebook analysis cell\n",
       "solutionCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\ndf = pd.DataFrame({'A': np.random.randn(5), 'B': np.random.randn(5)})\nprint(df.head())\n%timeit df['A'].mean()",
       "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],

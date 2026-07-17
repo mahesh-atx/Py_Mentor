@@ -76,16 +76,16 @@ response = requests.post("https://httpbin.org/post", json=data)
 
 | Package | Purpose | Install Command |
 |---------|---------|-----------------|
-| **requests** | HTTP requests | `pip install requests` |
-| **numpy** | Numerical computing | `pip install numpy` |
-| **pandas** | Data analysis | `pip install pandas` |
-| **matplotlib** | Plotting | `pip install matplotlib` |
-| **flask** | Web framework | `pip install flask` |
-| **django** | Web framework | `pip install django` |
-| **pytest** | Testing | `pip install pytest` |
-| **black** | Code formatting | `pip install black` |
-| **pillow** | Image processing | `pip install pillow` |
-| **pyyaml** | YAML parsing | `pip install pyyaml` |
+| **requests** | HTTP requests | \`pip install requests\` |
+| **numpy** | Numerical computing | \`pip install numpy\` |
+| **pandas** | Data analysis | \`pip install pandas\` |
+| **matplotlib** | Plotting | \`pip install matplotlib\` |
+| **flask** | Web framework | \`pip install flask\` |
+| **django** | Web framework | \`pip install django\` |
+| **pytest** | Testing | \`pip install pytest\` |
+| **black** | Code formatting | \`pip install black\` |
+| **pillow** | Image processing | \`pip install pillow\` |
+| **pyyaml** | YAML parsing | \`pip install pyyaml\` |
 
 ## Package Versions and SemVer
 

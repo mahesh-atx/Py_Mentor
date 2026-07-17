@@ -128,7 +128,7 @@ function RoadmapAccordionItem({ roadmap, pathname, completedLessonSlugs }: { roa
   ) || false;
   
   const [isOpen, setIsOpen] = useState(isRoadmapActive);
-  const cleanRoadmapTitle = roadmap.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '');
+  const cleanRoadmapTitle = roadmap.title;
   
   return (
     <SidebarMenuSubItem>

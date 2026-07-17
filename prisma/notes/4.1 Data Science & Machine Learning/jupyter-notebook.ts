@@ -14,6 +14,9 @@ Jupyter provides:
 - **Kernel support**: Python, R, Julia, and 100+ languages
 - **Shareable notebooks**: Export as .ipynb, HTML, PDF, slides
 
+> [!NOTE]
+> **Why this matters:** In a normal Python script, you run everything top-to-bottom. In a notebook, you run *cell by cell*, and the variables you create in one cell persist in the kernel for the next. That's liberating for exploration — tweak one step, re-run just that cell — but it's also a trap: the order you *ran* cells in can differ from the order they *appear* in, so a notebook can work for you but fail for someone who runs it top-to-bottom. Understanding the kernel is the key to using notebooks well.
+
 ## Installation
 
 \`\`\`bash
@@ -156,6 +159,9 @@ df.dtypes           # Data types
 df.isnull().sum()   # Missing values per column
 \`\`\`
 
+> [!WARNING]
+> **"Restart & Run All" is your truth test.** Because cells share a kernel, you can end up relying on a variable defined three cells ago in a run you've since forgotten. Before sharing or committing a notebook, hit *Kernel → Restart & Run All*. If it doesn't reproduce from scratch, neither will anyone else's. Notebooks also store *output* inside the \`.ipynb\` file, which makes Git diffs noisy — tools like \`nbstripout\` or Jupytext fix that.
+
 ## Inline Visualizations
 
 \`\`\`python
@@ -261,6 +267,36 @@ jupytext.write(notebook, 'script.py')
 jupytext --to notebook script.py      # .py → .ipynb
 jupytext --to py script.ipynb         # .ipynb → .py
 \`\`\`
+
+## Real-World Example: A Reproducible Analysis Notebook
+
+A clean analysis notebook follows a predictable cell order so anyone can re-run it:
+
+\`\`\`python
+# Cell 1 — imports (always first)
+import pandas as pd
+import seaborn as sns
+%matplotlib inline
+
+# Cell 2 — load (never hardcode results)
+df = pd.read_csv('survey.csv')
+
+# Cell 3 — explore
+print(df.shape)
+print(df.isnull().sum())
+
+# Cell 4 — visualize
+sns.histplot(df['age'])
+plt.show()
+\`\`\`
+
+Each cell does *one* job, imports come first, and nothing depends on a cell you ran by hand earlier. That discipline is what separates a shareable notebook from a personal scratchpad.
+
+## Your Turn!
+
+1. Open JupyterLab, create a notebook, and use \`%timeit\` on \`sum(range(10_000_000))\` to see how fast it is.
+2. Write a Markdown cell explaining what your analysis does — future-you will thank you.
+3. Run *Restart & Run All* and confirm your notebook still works from a clean kernel.
 
 > [!TIP]
 > Use Jupyter for exploration, visualization, and sharing results. Use a full IDE for production code, large projects, and debugging. Many data scientists use both — Jupyter for analysis, IDE for building packages and pipelines.`,

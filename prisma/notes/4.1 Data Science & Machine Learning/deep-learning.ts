@@ -14,6 +14,9 @@ Deep learning uses:
 - **Optimizers**: Algorithms to minimize loss (SGD, Adam)
 - **GPUs**: Hardware acceleration for training large models
 
+> [!NOTE]
+> **Why this matters:** Traditional ML makes you *engineer features* by hand ("combine columns X and Y into a ratio"). Deep learning flips that: you feed in raw data and the network *learns its own features* through layered transformations. That's why it dominates images, audio, and text — domains where hand-crafting features is impractical. The cost is data hunger, compute, and a loss of interpretability. You're trading explainability for raw capability.
+
 ## Neural Networks - The Basics
 
 A neural network consists of:
@@ -38,6 +41,9 @@ bias = -0.7
 output = neuron(inputs, weights, bias)
 print(f"AND(1,1) = {output}")  # Should be close to 1
 \`\`\`
+
+> [!TIP]
+> **The whole network is just this, repeated.** A neuron = weighted sum + activation. Stack thousands of them in layers, adjust the weights via backpropagation so the output gets closer to the truth, and you have deep learning. \`ReLU\` (\`max(0, z)\`) is the most common activation because it's cheap and avoids the "vanishing gradient" problem that plagued older \`sigmoid\` networks.
 
 ## TensorFlow
 
@@ -352,6 +358,39 @@ model.compile(optimizer='adam',
 | Complex patterns | Simple patterns |
 | GPU available | CPU sufficient |
 | Time to train | Quick results needed |
+
+## Real-World Example: Building a Spam Classifier with Keras
+
+Binary classification is the most common DL task. Here's the minimal shape of a text spam filter.
+
+\`\`\`python
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras import layers
+
+# Toy data: 1 = spam, 0 = ham (in practice you'd vectorize text first)
+X = np.random.rand(500, 20)          # 500 emails, 20 features each
+y = np.random.randint(0, 2, 500)
+
+model = tf.keras.Sequential([
+    layers.Dense(32, activation='relu', input_shape=(20,)),
+    layers.Dropout(0.3),              # fight overfitting
+    layers.Dense(1, activation='sigmoid')  # sigmoid -> probability of spam
+])
+
+model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+model.fit(X, y, epochs=10, batch_size=32, validation_split=0.2, verbose=0)
+
+print(f"Trained on {len(X)} samples; ready to predict spam probability.")
+\`\`\`
+
+The architecture pattern — \`Dense → Dropout → Dense(sigmoid)\` — is the workhorse for tabular/binary problems. Swap \`sigmoid\` for \`softmax\` and you have multi-class.
+
+## Your Turn!
+
+1. Change the \`AND\` neuron's weights/bias and predict \`AND(0,1)\` — confirm it's near 0.
+2. In the Keras spam model, remove the \`Dropout\` layer and watch whether validation accuracy gets *worse* — that's overfitting in action.
+3. Convert the spam model to multi-class by using \`softmax\` in the last layer and \`sparse_categorical_crossentropy\` loss.
 
 > [!TIP]
 > Start with TensorFlow/Keras for its simpler API. Use PyTorch if you need more flexibility or are doing research. Always try traditional ML methods first — deep learning isn't always the answer.`,

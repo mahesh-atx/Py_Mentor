@@ -14,6 +14,9 @@ NumPy provides:
 - **Mathematical functions**: Linear algebra, statistics, Fourier transforms
 - **C/C++ integration**: Bridge to low-level code
 
+> [!NOTE]
+> **Why this matters:** A Python list stores each number as a separate object, so doing math on a million numbers means a million Python-level operations. NumPy stores data in one contiguous block of memory and runs the math in compiled C — so the same operation is often **10–100× faster** and uses far less RAM. Almost every other data-science library (Pandas, Scikit-Learn, PyTorch) is built on top of NumPy arrays, so learning them well pays off everywhere.
+
 ## Installation
 
 \`\`\`bash
@@ -52,6 +55,9 @@ randn = np.random.randn(3, 3)     # Standard normal
 randint = np.random.randint(1, 10, (3, 3))  # Random integers
 \`\`\`
 
+> [!TIP]
+> **arange vs linspace** — use arange when you know the *step* (like Python's range), and linspace when you know the *number of points* you want between two ends. linspace(0, 1, 5) is guaranteed to include both 0 and 1.
+
 ## Array Attributes
 
 \`\`\`python
@@ -62,8 +68,11 @@ print(arr.ndim)     # 2 — number of dimensions
 print(arr.size)     # 6 — total elements
 print(arr.dtype)    # int64 — data type
 print(arr.itemsize) # 8 — bytes per element
-print(arr.nbytes)   # 48 — total bytes
+print(arr.nbytes) # 48 — total bytes
 \`\`\`
+
+> [!TIP]
+> **\`shape\` is your best friend.** When an operation "doesn't work", the answer is almost always a shape mismatch. Print \`arr.shape\` whenever you're confused — it tells you the exact dimensions you're working with.
 
 ## Indexing & Slicing
 
@@ -98,6 +107,16 @@ indices = [0, 2, 4]
 print(arr[indices])      # [10 30 50]
 \`\`\`
 
+> [!WARNING]
+> **Slices return a *view*, not a copy.** Modifying a slice changes the original array:
+> \`\`\`python
+> arr = np.array([1, 2, 3, 4])
+> view = arr[1:3]
+> view[0] = 99
+> print(arr)   # [1 99 3 4]  ← original changed!
+> \`\`\`
+> If you need an independent copy, use \`arr.copy()\`.
+
 ## Broadcasting
 
 Broadcasting lets you perform operations on arrays of different shapes without creating copies.
@@ -122,6 +141,9 @@ print(a + b)
 # [[11 12 13]
 #  [24 25 26]]
 \`\`\`
+
+> [!NOTE]
+> **How broadcasting decides shapes:** NumPy aligns dimensions from the *right*. A \`(2, 1)\` vector is "stretched" to match a \`(2, 3)\` matrix because the trailing dimension \`1\` can broadcast to \`3\`. When shapes are incompatible (e.g. \`(2, 3)\` + \`(2, 4)\`), you get a \`ValueError\`. Broadcasting is why you rarely need loops when working with arrays.
 
 ## Vectorization
 
@@ -190,6 +212,38 @@ print(np.sum(arr, axis=0))  # [5 7 9] (sum along rows)
 print(np.sum(arr, axis=1))  # [6 15] (sum along columns)
 print(np.mean(arr, axis=0)) # [2.5 3.5 4.5]
 \`\`\`
+
+## Real-World Example: Normalizing Sensor Readings
+
+Imagine you collect temperature readings from 3 sensors over 4 days, and you want each sensor's values on a 0–1 scale for fair comparison.
+
+\`\`\`python
+import numpy as np
+
+# Rows = days, columns = sensor A, B, C
+readings = np.array([
+    [22.1, 18.5, 30.2],
+    [21.8, 19.0, 31.0],
+    [23.0, 17.9, 29.5],
+    [22.4, 18.8, 30.8],
+])
+
+# Min-max normalize each sensor (column) independently
+col_min = readings.min(axis=0)
+col_max = readings.max(axis=0)
+normalized = (readings - col_min) / (col_max - col_min)
+
+print(normalized)
+# Every column now ranges from 0.0 to 1.0
+\`\`\`
+
+Notice how a single vectorized expression \`(readings - col_min) / (col_max - col_min)\` replaces what would otherwise be nested loops — and \`axis=0\` tells NumPy to compute the min/max *per column* rather than over the whole array.
+
+## Your Turn!
+
+1. Create a 3×3 identity matrix with \`np.eye(3)\` and multiply it by a vector — confirm the vector is unchanged.
+2. Generate 1,000,000 random numbers with \`np.random.randn\` and compute the mean and standard deviation. How do they compare to \`0\` and \`1\`?
+3. Take \`arr = np.array([5, 2, 9, 1, 7])\` and use boolean indexing to keep only values greater than the median.
 
 ## Linear Algebra
 
