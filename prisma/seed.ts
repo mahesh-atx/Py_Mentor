@@ -20,6 +20,7 @@ import { oopFundamentalsModule } from "./notes/3.1 OOP Fundamentals";
 import { oopPillarsModule } from "./notes/3.2 OOP Pillars";
 import { fileHandlingModule } from "./notes/2.4 File Handling";
 import { errorHandlingModule } from "./notes/2.5 Error Handling";
+import { dataScienceModule } from "./notes/4.1 Data Science & Machine Learning";
 import { seedProjects } from "./seed-projects";
 
 
@@ -67,6 +68,14 @@ const pythonPhases = [
       "Design and architect with classes, objects, inheritance, polymorphism, abstraction, and magic methods.",
     order: 3,
     modules: [oopFundamentalsModule, oopPillarsModule],
+  },
+  {
+    slug: "phase-4",
+    title: "Phase 4: Data Science & Machine Learning",
+    description:
+      "Master data analysis, visualization, and machine learning — from NumPy arrays to deep learning neural networks.",
+    order: 4,
+    modules: [dataScienceModule],
   },
 ];
 
