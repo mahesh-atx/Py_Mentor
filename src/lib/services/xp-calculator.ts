@@ -14,6 +14,10 @@ export interface XpBreakdown {
   lessonXp: number;
   /** XP earned from unique passed exercise submissions (sum of their scores) */
   exerciseXp: number;
+  /** XP earned from quiz submissions (proportional to score / total) */
+  quizXp: number;
+  /** XP earned from unlocked achievements (sum of their xpReward) */
+  achievementXp: number;
   /** Derived level: floor(totalXp / XP_PER_LEVEL) + 1 (levels start at 1) */
   level: number;
   /** Progress within the current level (0 … XP_PER_LEVEL-1) */
@@ -23,11 +27,18 @@ export interface XpBreakdown {
 /**
  * Compute the full XP breakdown from raw aggregates.
  *
- * @param lessonXp   Sum of `xpReward` for every completed lesson.
- * @param exerciseXp Sum of `score` for unique passed exercise submissions.
+ * @param lessonXp      Sum of `xpReward` for every completed lesson.
+ * @param exerciseXp    Sum of `score` for unique passed exercise submissions.
+ * @param quizXp        Sum of per-quiz XP (floor of xpReward × score/total).
+ * @param achievementXp Sum of `xpReward` for unlocked achievements.
  */
-export function computeXp(lessonXp: number, exerciseXp: number): XpBreakdown {
-  const totalXp = lessonXp + exerciseXp;
+export function computeXp(
+  lessonXp: number,
+  exerciseXp: number,
+  quizXp: number = 0,
+  achievementXp: number = 0
+): XpBreakdown {
+  const totalXp = lessonXp + exerciseXp + quizXp + achievementXp;
   const level = Math.floor(totalXp / XP_PER_LEVEL) + 1;
   const xpInCurrentLevel = totalXp % XP_PER_LEVEL;
 
@@ -35,6 +46,8 @@ export function computeXp(lessonXp: number, exerciseXp: number): XpBreakdown {
     totalXp,
     lessonXp,
     exerciseXp,
+    quizXp,
+    achievementXp,
     level,
     xpInCurrentLevel,
   };
@@ -47,11 +60,18 @@ export function computeXp(lessonXp: number, exerciseXp: number): XpBreakdown {
  * @param exerciseScores        Array of { exerciseId, score } for passed
  *                              submissions. Duplicate exerciseId entries are
  *                              de-duplicated (only the first score is counted).
+ * @param quizResults           Array of { quizId, score, total } — one row per
+ *                              quiz (the table upserts), each counted once.
+ * @param quizXpMap             Map of quiz slug → xpReward.
+ * @param achievementXpValues   xpReward values of the user's unlocked achievements.
  */
 export function computeXpFromRaw(
   completedLessonSlugs: string[],
   exerciseScores: { exerciseId: string; score: number }[],
   lessonXpMap: Map<string, number>, // slug → xpReward
+  quizResults: { quizId: string; score: number; total: number }[] = [],
+  quizXpMap: Map<string, number> = new Map(), // quiz slug → xpReward
+  achievementXpValues: number[] = []
 ): XpBreakdown {
   // Lesson XP: sum the xpReward for every completed lesson.
   let lessonXp = 0;
@@ -69,5 +89,17 @@ export function computeXpFromRaw(
     }
   }
 
-  return computeXp(lessonXp, exerciseXp);
+  // Quiz XP: proportional to the stored score (mirrors saveQuizSubmission).
+  let quizXp = 0;
+  for (const { quizId, score, total } of quizResults) {
+    if (total > 0) {
+      const reward = quizXpMap.get(quizId) ?? 100; // fallback matches saveQuizSubmission
+      quizXp += Math.floor(reward * (score / total));
+    }
+  }
+
+  // Achievement XP: sum the xpReward of every unlocked achievement.
+  const achievementXp = achievementXpValues.reduce((sum, xp) => sum + xp, 0);
+
+  return computeXp(lessonXp, exerciseXp, quizXp, achievementXp);
 }

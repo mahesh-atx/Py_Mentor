@@ -31,7 +31,7 @@ export const UserService = {
   async getUserStats() {
     const user = await this.getLocalUser();
 
-    const [completedProgress, passedSubmissions] = await Promise.all([
+    const [completedProgress, passedSubmissions, quizSubmissions, quizzes, unlockedAchievements] = await Promise.all([
       db.progress.findMany({
         where: { userId: user.id, status: "completed" },
         select: { lessonId: true },
@@ -39,6 +39,18 @@ export const UserService = {
       db.submission.findMany({
         where: { userId: user.id, status: "passed", exerciseId: { not: null } },
         select: { exerciseId: true, score: true },
+      }),
+      db.quizSubmission.findMany({
+        where: { userId: user.id },
+        select: { quizId: true, score: true, total: true },
+      }),
+      db.quiz.findMany({
+        where: { isPublished: true },
+        select: { slug: true, xpReward: true },
+      }),
+      db.userAchievement.findMany({
+        where: { userId: user.id },
+        include: { achievement: { select: { xpReward: true } } },
       }),
     ]);
 
@@ -56,6 +68,13 @@ export const UserService = {
       }
     }
 
+    const quizXpMap = new Map<string, number>(
+      quizzes.map((q: { slug: string; xpReward: number }) => [q.slug, q.xpReward])
+    );
+    const achievementXpValues = unlockedAchievements.map(
+      (ua: { achievement: { xpReward: number } }) => ua.achievement.xpReward
+    );
+
     const xp = computeXpFromRaw(
       completedLessonSlugs,
       passedSubmissions.map((s: { exerciseId: string | null; score: number | null }) => ({
@@ -63,6 +82,9 @@ export const UserService = {
         score: s.score ?? 0,
       })),
       lessonXpMap,
+      quizSubmissions,
+      quizXpMap,
+      achievementXpValues
     );
 
     // Count unique exercises completed

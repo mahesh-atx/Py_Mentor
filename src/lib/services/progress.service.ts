@@ -1,5 +1,6 @@
 import { db } from "../db/prisma";
 import { XP_PER_LEVEL, computeXpFromRaw, type XpBreakdown } from "./xp-calculator";
+import { computeCurrentStreak } from "../streak";
 
 export const ProgressService = {
   /** Get the IDs of all lessons the user has completed */
@@ -13,7 +14,7 @@ export const ProgressService = {
 
   /** Get overall progress stats for a user */
   async getStats(userId: string) {
-    const [completedProgress, submissions, streaks, allProgress] = await Promise.all([
+    const [completedProgress, submissions, streaks, allProgress, quizSubmissions, quizzes, unlockedAchievements] = await Promise.all([
       db.progress.findMany({ where: { userId, status: "completed" }, select: { lessonId: true } }),
       db.submission.findMany({
         where: { userId, status: "passed", exerciseId: { not: null } },
@@ -21,6 +22,18 @@ export const ProgressService = {
       }),
       db.streak.findMany({ where: { userId }, orderBy: { date: "desc" }, take: 30 }),
       db.progress.findMany({ where: { userId }, select: { timeSpent: true, updatedAt: true } }),
+      db.quizSubmission.findMany({
+        where: { userId },
+        select: { quizId: true, score: true, total: true },
+      }),
+      db.quiz.findMany({
+        where: { isPublished: true },
+        select: { slug: true, xpReward: true },
+      }),
+      db.userAchievement.findMany({
+        where: { userId },
+        include: { achievement: { select: { xpReward: true } } },
+      }),
     ]);
 
     // ── Centralised XP calculation ─────────────────────────────────────────
@@ -44,27 +57,27 @@ export const ProgressService = {
       }
     }
 
+    // Quiz XP map (quizId stores the quiz slug)
+    const quizXpMap = new Map<string, number>(
+      quizzes.map((q: { slug: string; xpReward: number }) => [q.slug, q.xpReward])
+    );
+    const achievementXpValues = unlockedAchievements.map(
+      (ua: { achievement: { xpReward: number } }) => ua.achievement.xpReward
+    );
+
     const xp = computeXpFromRaw(
       completedLessonSlugs,
       submissions.map((s: { exerciseId: string | null; score: number | null }) => ({ exerciseId: s.exerciseId!, score: s.score ?? 0 })),
       lessonXpMap,
+      quizSubmissions,
+      quizXpMap,
+      achievementXpValues
     );
 
-    // ── Streak ──────────────────────────────────────────────────────────────
-    let currentStreak = 0;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    for (let i = 0; i < streaks.length; i++) {
-      const streakDate = new Date(streaks[i].date);
-      streakDate.setHours(0, 0, 0, 0);
-      const expected = new Date(today);
-      expected.setDate(expected.getDate() - i);
-      if (streakDate.getTime() === expected.getTime()) {
-        currentStreak++;
-      } else {
-        break;
-      }
-    }
+    // ── Streak (alive when last activity was today OR yesterday) ───────────
+    const currentStreak = computeCurrentStreak(
+      streaks.map((s: { date: Date }) => s.date)
+    );
 
     // ── Activity / coding time ─────────────────────────────────────────────
     const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -119,6 +132,10 @@ export const ProgressService = {
       totalSubmissions: allSubmissions.length,
       exercisesCompleted,
       totalXp: xp.totalXp,
+      lessonXp: xp.lessonXp,
+      exerciseXp: xp.exerciseXp,
+      quizXp: xp.quizXp,
+      achievementXp: xp.achievementXp,
       level: xp.level,
       xpInCurrentLevel: xp.xpInCurrentLevel,
       xpForNextLevel: XP_PER_LEVEL,
@@ -169,7 +186,9 @@ export const ProgressService = {
       let title = r.title.split(": ")[1] || r.title;
       if (r.slug.includes("phase-1")) title = "Fundamentals";
       else if (r.slug.includes("phase-2")) title = "Data Structures";
-      else if (r.slug.includes("phase-3")) title = "OOP";
+      else if (r.slug.includes("phase-3")) title = "Functions & OOP";
+      else if (r.slug.includes("phase-4")) title = "Intermediate";
+      else if (r.slug.includes("phase-5")) title = "Data Science & ML";
       else if (title.includes("Advanced")) title = "Advanced";
 
       let totalLessons = 0;
