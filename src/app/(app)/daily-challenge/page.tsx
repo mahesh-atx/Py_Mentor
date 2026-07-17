@@ -13,14 +13,17 @@ export default async function DailyChallengePage() {
     }
   });
   
-  const passedExerciseSlugs = new Set(userSubmissions.map((s: { exerciseId: string | null }) => s.exerciseId));
+  // Submissions store exercise IDs — compare IDs to IDs (comparing slugs
+  // against this set never matches, which made completed exercises
+  // eligible for the daily challenge again).
+  const passedExerciseIds = new Set(userSubmissions.map((s: { exerciseId: string | null }) => s.exerciseId));
   
   const allExercises = await db.exercise.findMany({
     where: { isPublished: true },
-    select: { slug: true }
+    select: { id: true, slug: true }
   });
 
-  const uncompletedExercises = allExercises.filter((e: { slug: string }) => !passedExerciseSlugs.has(e.slug));
+  const uncompletedExercises = allExercises.filter((e: { id: string; slug: string }) => !passedExerciseIds.has(e.id));
 
   if (uncompletedExercises.length === 0) {
     if (allExercises.length === 0) {

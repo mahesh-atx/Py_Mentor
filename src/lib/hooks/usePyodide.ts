@@ -133,7 +133,19 @@ export function usePyodide(enabled: boolean = true) {
             outputLines.push(val);
             return val + "\n";
           }
-          const result = window.prompt("Python input:");
+          // Electron does not support window.prompt() — it throws
+          // "prompt() is and will not be supported". Translate that into
+          // something actionable instead of leaking the cryptic message.
+          let result: string | null = null;
+          try {
+            result = window.prompt("Python input:");
+          } catch {
+            throw new Error(
+              "Interactive input() is not available in the desktop app. " +
+              "Press Submit — your program's input is supplied automatically " +
+              "from the exercise's test case."
+            );
+          }
           if (result === null) {
             // User clicked cancel
             throw new Error("KeyboardInterrupt");

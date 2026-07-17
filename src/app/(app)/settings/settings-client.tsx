@@ -12,7 +12,7 @@ import { toast } from "sonner";
 export function SettingsClient() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [version, setVersion] = useState("1.0.10");
+  const [version, setVersion] = useState("…");
   const [isChecking, setIsChecking] = useState(false);
   const config = usePlatform();
 
@@ -20,6 +20,13 @@ export function SettingsClient() {
     setMounted(true);
     if (typeof window !== 'undefined' && window.electron) {
       window.electron.getVersion().then(v => setVersion(v));
+    } else {
+      // Web/CLI mode: ask the server for the real app version instead of
+      // showing a hardcoded (and quickly stale) fallback.
+      fetch("/api/version")
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => { if (data?.currentVersion) setVersion(data.currentVersion); })
+        .catch(() => setVersion("unknown"));
     }
   }, []);
 

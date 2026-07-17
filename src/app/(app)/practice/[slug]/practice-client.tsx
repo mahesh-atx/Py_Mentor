@@ -126,7 +126,10 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
     setOutput("Executing...\n");
     
     try {
-      const result = await runPython(code);
+      // Feed the exercise's test-case input so programs using input()
+      // also work via the Run button (interactive prompts are not
+      // available everywhere — e.g. the Electron desktop app).
+      const result = await runPython(code, testCases[0]?.input || "");
       
       if (result.error) {
         setOutput(`Error: ${result.error}`);

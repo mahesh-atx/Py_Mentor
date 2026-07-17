@@ -31,6 +31,15 @@ function isNonEmptyString(value: unknown, maxLen: number): value is string {
   );
 }
 
+function isHttpUrl(raw: string): boolean {
+  try {
+    const u = new URL(raw);
+    return u.protocol === "http:" || u.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
+
 function parseStatus(raw: unknown): "passed" | "failed" | "error" | null {
   if (typeof raw !== "string") return null;
   const s = raw.trim().toLowerCase();
@@ -152,6 +161,9 @@ export async function submitProjectAction(projectId: string, repoUrl: string) {
   }
   if (!isNonEmptyString(repoUrl, MAX_URL_LENGTH)) {
     return { success: false, error: "Repository URL is required." };
+  }
+  if (!isHttpUrl(repoUrl.trim())) {
+    return { success: false, error: "Please enter a valid http(s) repository URL." };
   }
 
   try {
