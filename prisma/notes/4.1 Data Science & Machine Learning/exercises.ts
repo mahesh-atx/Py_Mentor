@@ -75,6 +75,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Min-Max Normalize",
+      "prompt": "Given v = np.array([10, 20, 30]), normalize it to the 0-1 range with (v - v.min()) / (v.max() - v.min()). Print the result with .tolist().",
+      "starterCode": "import numpy as np\n# Normalize to [0, 1]\n",
+      "solutionCode": "import numpy as np\nv = np.array([10, 20, 30])\nn = (v - v.min()) / (v.max() - v.min())\nprint(n.tolist())",
+      "testCases": [{ "input": "", "expectedOutput": "[0.0, 0.5, 1.0]\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "pandas": [
     {
@@ -143,6 +153,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Top Scorer",
+      "prompt": "Given df = pd.DataFrame({'name': ['Ann', 'Bob', 'Cy'], 'score': [70, 95, 80]}), print the name of the top scorer (use df['score'].idxmax() with .loc).",
+      "starterCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Ann', 'Bob', 'Cy'], 'score': [70, 95, 80]})\n# Print the top scorer's name\n",
+      "solutionCode": "import pandas as pd\ndf = pd.DataFrame({'name': ['Ann', 'Bob', 'Cy'], 'score': [70, 95, 80]})\nprint(df.loc[df['score'].idxmax(), 'name'])",
+      "testCases": [{ "input": "", "expectedOutput": "Bob\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "data-cleaning": [
     {
@@ -193,6 +213,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Fill Zeros Sum",
+      "prompt": "Given df = pd.DataFrame({'a': [1, np.nan, 3]}), fill missing values with 0 and print the sum of column 'a'.",
+      "starterCode": "import pandas as pd\nimport numpy as np\n# fillna + sum\n",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'a': [1, np.nan, 3]})\nprint(df['a'].fillna(0).sum())",
+      "testCases": [{ "input": "", "expectedOutput": "4.0\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "data-visualization": [
     {
@@ -230,6 +260,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
       "difficulty": "expert",
       "xpReward": 65
+    }
+  ,
+    {
+      "title": "Build: Titled Line Plot",
+      "prompt": "Create a line plot of y = [1, 4, 9] against x = [1, 2, 3], set the title to 'Squares' with plt.title(), and call plt.show().",
+      "starterCode": "import matplotlib.pyplot as plt\n# Plot squares with a title\n",
+      "solutionCode": "import matplotlib.pyplot as plt\nplt.plot([1, 2, 3], [1, 4, 9])\nplt.title('Squares')\nplt.show()",
+      "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "scikit-learn": [
@@ -279,6 +319,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Build: Split Count",
+      "prompt": "Use sklearn.model_selection.train_test_split on X = [[1], [2], [3], [4], [5]] with test_size=0.4 and random_state=42. Print the train and test sizes on one line separated by a space.",
+      "starterCode": "from sklearn.model_selection import train_test_split\n# Split and print sizes\n",
+      "solutionCode": "from sklearn.model_selection import train_test_split\nX = [[1], [2], [3], [4], [5]]\nX_train, X_test = train_test_split(X, test_size=0.4, random_state=42)\nprint(len(X_train), len(X_test))",
+      "testCases": [{ "input": "", "expectedOutput": "3 2\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
+    }
   ],
   "deep-learning": [
     {
@@ -307,6 +357,25 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "0.7721\n" }],
       "difficulty": "expert",
       "xpReward": 80
+    }
+  ,
+    {
+      "title": "Build: Step Activation",
+      "prompt": "Define step(x) that returns 1 when x > 0 and 0 otherwise (the simplest activation function). Compute the weighted sum 0.5 * 3 + (-1) and print step() of it.",
+      "starterCode": "# Step function\n",
+      "solutionCode": "def step(x):\n    return 1 if x > 0 else 0\n\nweighted_sum = 0.5 * 3 + (-1)\nprint(step(weighted_sum))",
+      "testCases": [{ "input": "", "expectedOutput": "1\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    },
+    {
+      "title": "Build: Sigmoid at Zero",
+      "prompt": "The sigmoid function is 1 / (1 + e^-x). Using numpy, print sigmoid(0) rounded to 4 decimal places.",
+      "starterCode": "import numpy as np\n# sigmoid(0)\n",
+      "solutionCode": "import numpy as np\nprint(round(1 / (1 + np.exp(0)), 4))",
+      "testCases": [{ "input": "", "expectedOutput": "0.5\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "jupyter-notebook": [

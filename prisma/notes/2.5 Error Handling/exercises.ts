@@ -108,6 +108,25 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Count Valid Ints",
+      "prompt": "Read three lines. Count how many of them are valid integers (use int() inside try/except ValueError). Print the count.",
+      "starterCode": "# try/except in a loop\n",
+      "solutionCode": "count = 0\nfor _ in range(3):\n    line = input()\n    try:\n        int(line)\n        count += 1\n    except ValueError:\n        pass\nprint(count)",
+      "testCases": [{ "input": "5\nabc\n7\n", "expectedOutput": "2\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    },
+    {
+      "title": "Build: Always Done",
+      "prompt": "Write a try/except/finally: try to compute 1 / 0, catch ZeroDivisionError and print Oops, and in finally print Done (it always runs!).",
+      "starterCode": "# finally always executes\n",
+      "solutionCode": "try:\n    print(1 / 0)\nexcept ZeroDivisionError:\n    print('Oops')\nfinally:\n    print('Done')",
+      "testCases": [{ "input": "", "expectedOutput": "Oops\nDone\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "common-exceptions": [
     {
@@ -190,6 +209,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Safe Dict Lookup",
+      "prompt": "Given d = {'a': 1}, try to print d['b']. Catch the KeyError and print Missing key.",
+      "starterCode": "# KeyError handling\n",
+      "solutionCode": "d = {'a': 1}\ntry:\n    print(d['b'])\nexcept KeyError:\n    print('Missing key')",
+      "testCases": [{ "input": "", "expectedOutput": "Missing key\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "raising-exceptions": [
     {
@@ -241,6 +270,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# raise ValueError\n",
       "solutionCode": "def check(age):\n    if age < 0:\n        raise ValueError('Invalid age')\n\nage = int(input())\ntry:\n    check(age)\n    print('OK')\nexcept ValueError as e:\n    print(e)",
       "testCases": [{ "input": "-3\n", "expectedOutput": "Invalid age\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: No Negatives",
+      "prompt": "Read an integer n. If n is negative, raise ValueError('Negative not allowed') and catch it, printing the message. Otherwise print Accepted.",
+      "starterCode": "# raise and catch\n",
+      "solutionCode": "n = int(input())\ntry:\n    if n < 0:\n        raise ValueError('Negative not allowed')\n    print('Accepted')\nexcept ValueError as e:\n    print(e)",
+      "testCases": [{ "input": "-5\n", "expectedOutput": "Negative not allowed\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

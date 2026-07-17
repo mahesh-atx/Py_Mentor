@@ -190,6 +190,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Word Reverser",
+      "prompt": "Read a word and print it reversed using slicing with a negative step.",
+      "starterCode": "# s[::-1]\n",
+      "solutionCode": "word = input()\nprint(word[::-1])",
+      "testCases": [{ "input": "Python\n", "expectedOutput": "nohtyP\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "string-methods-case-strip": [
     {
@@ -382,6 +392,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Count Double-S",
+      "prompt": "Given s = 'mississippi', print how many times 'ss' appears using .count().",
+      "starterCode": "# .count() a substring\n",
+      "solutionCode": "s = 'mississippi'\nprint(s.count('ss'))",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "string-methods-modify": [
     {
@@ -475,6 +495,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# '_'.join(...)\n",
       "solutionCode": "print('_'.join('python'))",
       "testCases": [{ "input": "", "expectedOutput": "p_y_t_h_o_n\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Snake Case",
+      "prompt": "Read a phrase, convert it to lowercase and replace every space with an underscore. Print the result.",
+      "starterCode": "# lower + replace\n",
+      "solutionCode": "phrase = input()\nprint(phrase.lower().replace(' ', '_'))",
+      "testCases": [{ "input": "Hello World\n", "expectedOutput": "hello_world\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -573,6 +603,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "12345\n", "expectedOutput": "True\n" }],
       "difficulty": "beginner",
       "xpReward": 15
+    }
+  ,
+    {
+      "title": "Build: Username Check",
+      "prompt": "Read a username. Print Valid if it is alphanumeric (use .isalnum()) AND at least 4 characters long; otherwise print Invalid.",
+      "starterCode": "# Validation chain\n",
+      "solutionCode": "name = input()\nif name.isalnum() and len(name) >= 4:\n    print('Valid')\nelse:\n    print('Invalid')",
+      "testCases": [{ "input": "user1\n", "expectedOutput": "Valid\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "string-concatenation-repetition": [
@@ -1041,6 +1081,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# f-string formatting\n",
       "solutionCode": "price = 9.5\nprint(f'Price: ${price:.2f}')",
       "testCases": [{ "input": "", "expectedOutput": "Price: $9.50\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Score Line",
+      "prompt": "Read a name and an integer score. Print one formatted line: name left-aligned in 10 chars, a pipe |, then the score right-aligned in 5 chars. Example: 'Alice     |   95'",
+      "starterCode": "# f-string alignment\n",
+      "solutionCode": "name = input()\nscore = int(input())\nprint(f'{name:<10}|{score:>5}')",
+      "testCases": [{ "input": "Alice\n95\n", "expectedOutput": "Alice     |   95\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

@@ -80,6 +80,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Shopping Total",
+      "prompt": "Read three item prices as integers (one per line). Store each in a variable and print the total cost.",
+      "starterCode": "# Read 3 prices, print the total\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nc = int(input())\nprint(a + b + c)",
+      "testCases": [{ "input": "10\n25\n5\n", "expectedOutput": "40\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "data-types": [
     {
@@ -161,6 +171,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "str\n" }],
       "difficulty": "beginner",
       "xpReward": 15
+    }
+  ,
+    {
+      "title": "Build: Type Report",
+      "prompt": "Print the type name of each of these values, one per line: 42, 3.14, 'hi', True.",
+      "starterCode": "# Four type names\n",
+      "solutionCode": "print(type(42).__name__)\nprint(type(3.14).__name__)\nprint(type('hi').__name__)\nprint(type(True).__name__)",
+      "testCases": [{ "input": "", "expectedOutput": "int\nfloat\nstr\nbool\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "type-and-id-functions": [
@@ -284,6 +304,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 15
     }
+  ,
+    {
+      "title": "Build: Age Next Year",
+      "prompt": "Read an age (as a string from input), convert it to an int, and print: Next year: <age + 1>",
+      "starterCode": "# Cast, add, print\n",
+      "solutionCode": "age = int(input())\nprint(f'Next year: {age + 1}')",
+      "testCases": [{ "input": "20\n", "expectedOutput": "Next year: 21\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "user-input": [
     {
@@ -349,6 +379,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read a name and greet it\n",
       "solutionCode": "name = input()\nprint(f'Hello, {name}!')",
       "testCases": [{ "input": "Sam\n", "expectedOutput": "Hello, Sam!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Story Maker",
+      "prompt": "Read a name and a city (one per line). Print the sentence: <name> lives in <city>.",
+      "starterCode": "# Two inputs, one sentence\n",
+      "solutionCode": "name = input()\ncity = input()\nprint(f'{name} lives in {city}.')",
+      "testCases": [{ "input": "Ravi\nNagpur\n", "expectedOutput": "Ravi lives in Nagpur.\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -499,6 +539,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read name and age, print a formatted bio\n",
       "solutionCode": "name = input()\nage = input()\nprint(f'{name} is {age} years old.')",
       "testCases": [{ "input": "Ana\n25\n", "expectedOutput": "Ana is 25 years old.\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Bill Splitter",
+      "prompt": "Read a bill total (float) and a number of people (int). Print the per-person share with 2 decimals: Each pays: $X.XX",
+      "starterCode": "# Split the bill\n",
+      "solutionCode": "total = float(input())\npeople = int(input())\nprint(f'Each pays: ${total / people:.2f}')",
+      "testCases": [{ "input": "100\n4\n", "expectedOutput": "Each pays: $25.00\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

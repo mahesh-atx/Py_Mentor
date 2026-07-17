@@ -130,6 +130,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: To Fahrenheit",
+      "prompt": "Use map() with a lambda to convert [0, 100] Celsius to Fahrenheit (F = C * 9/5 + 32). Print the result as a list.",
+      "starterCode": "# map conversion\n",
+      "solutionCode": "print(list(map(lambda c: c * 9 / 5 + 32, [0, 100])))",
+      "testCases": [{ "input": "", "expectedOutput": "[32.0, 212.0]\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "filter-function": [
     {
@@ -186,6 +196,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# filter + lambda\n",
       "solutionCode": "print(list(filter(lambda x: x % 2 == 0, range(10))))",
       "testCases": [{ "input": "", "expectedOutput": "[0, 2, 4, 6, 8]\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Adults Only",
+      "prompt": "Given ages = [12, 18, 25, 15, 30], use filter() to keep only ages 18 and above. Print the result as a list.",
+      "starterCode": "# filter adults\n",
+      "solutionCode": "ages = [12, 18, 25, 15, 30]\nprint(list(filter(lambda a: a >= 18, ages)))",
+      "testCases": [{ "input": "", "expectedOutput": "[18, 25, 30]\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -256,6 +276,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "from functools import reduce\n# reduce to a product\n",
       "solutionCode": "from functools import reduce\nprint(reduce(lambda acc, x: acc * x, [1, 2, 3, 4, 5], 1))",
       "testCases": [{ "input": "", "expectedOutput": "120\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Join With Dash",
+      "prompt": "Use functools.reduce to join ['a', 'b', 'c'] with dashes, producing a-b-c. Print the result.",
+      "starterCode": "from functools import reduce\n# reduce to a single string\n",
+      "solutionCode": "from functools import reduce\nprint(reduce(lambda a, b: a + '-' + b, ['a', 'b', 'c']))",
+      "testCases": [{ "input": "", "expectedOutput": "a-b-c\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -427,6 +457,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Sort Pairs by Second",
+      "prompt": "Given pairs = [(1, 3), (2, 1), (3, 2)], sort them by the second element of each pair (ascending) and print the result.",
+      "starterCode": "# sorted with a key function\n",
+      "solutionCode": "pairs = [(1, 3), (2, 1), (3, 2)]\nprint(sorted(pairs, key=lambda p: p[1]))",
+      "testCases": [{ "input": "", "expectedOutput": "[(2, 1), (3, 2), (1, 3)]\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "any-all-functions": [
     {
@@ -518,6 +558,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "Total revenue: $3045\n" }],
       "difficulty": "expert",
       "xpReward": 75
+    }
+  ,
+    {
+      "title": "Build: Big Spender Names",
+      "prompt": "Given people = [{'name': 'A', 'spent': 50}, {'name': 'B', 'spent': 150}, {'name': 'C', 'spent': 200}], print the names of those who spent more than 100, ordered by amount descending, one per line. Use filter, sorted with a key, and map.",
+      "starterCode": "# filter + sorted + map pipeline\n",
+      "solutionCode": "people = [{'name': 'A', 'spent': 50}, {'name': 'B', 'spent': 150}, {'name': 'C', 'spent': 200}]\nbig = filter(lambda p: p['spent'] > 100, people)\nordered = sorted(big, key=lambda p: p['spent'], reverse=True)\nfor name in map(lambda p: p['name'], ordered):\n    print(name)",
+      "testCases": [{ "input": "", "expectedOutput": "C\nB\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
     }
   ]
 };

@@ -108,6 +108,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Work Reports",
+      "prompt": "Define Employee with a work() method returning 'Working'. Define Manager(Employee) overriding work() to return 'Managing'. Print Employee().work() then Manager().work().",
+      "starterCode": "# Override in a subclass\n",
+      "solutionCode": "class Employee:\n    def work(self):\n        return 'Working'\n\nclass Manager(Employee):\n    def work(self):\n        return 'Managing'\n\nprint(Employee().work())\nprint(Manager().work())",
+      "testCases": [{ "input": "", "expectedOutput": "Working\nManaging\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "polymorphism": [
     {
@@ -190,6 +200,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Notify All",
+      "prompt": "Define Email and SMS classes, each with a send() method returning 'Email sent' and 'SMS sent'. Loop over a list containing one of each and call send() on them, printing the results.",
+      "starterCode": "# One interface, many implementations\n",
+      "solutionCode": "class Email:\n    def send(self):\n        return 'Email sent'\n\nclass SMS:\n    def send(self):\n        return 'SMS sent'\n\nfor notifier in [Email(), SMS()]:\n    print(notifier.send())",
+      "testCases": [{ "input": "", "expectedOutput": "Email sent\nSMS sent\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "abstraction": [
     {
@@ -241,6 +261,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "from abc import ABC, abstractmethod\n# Abstract base class\n",
       "solutionCode": "from abc import ABC, abstractmethod\n\nclass Vehicle(ABC):\n    @abstractmethod\n    def wheels(self):\n        pass\n\nclass Bike(Vehicle):\n    def wheels(self):\n        return 2\n\nprint(Bike().wheels())",
       "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Abstract Payment",
+      "prompt": "Define an abstract class Payment (abc.ABC) with an abstract method pay(). Define Cash(Payment) implementing pay() to return 'Paid with cash'. Print Cash().pay().",
+      "starterCode": "from abc import ABC, abstractmethod\n# Enforce an interface\n",
+      "solutionCode": "from abc import ABC, abstractmethod\n\nclass Payment(ABC):\n    @abstractmethod\n    def pay(self):\n        pass\n\nclass Cash(Payment):\n    def pay(self):\n        return 'Paid with cash'\n\nprint(Cash().pay())",
+      "testCases": [{ "input": "", "expectedOutput": "Paid with cash\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -428,6 +458,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# __len__\n",
       "solutionCode": "class Cart:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\n\nprint(len(Cart(['a', 'b', 'c'])))",
       "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Playlist Contains",
+      "prompt": "Define a class Playlist storing a list of songs, with __contains__ so that 'X' in playlist works. Print 'Imagine' in Playlist(['Imagine', 'Hey']).",
+      "starterCode": "# __contains__\n",
+      "solutionCode": "class Playlist:\n    def __init__(self, songs):\n        self.songs = songs\n    def __contains__(self, song):\n        return song in self.songs\n\nprint('Imagine' in Playlist(['Imagine', 'Hey']))",
+      "testCases": [{ "input": "", "expectedOutput": "True\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

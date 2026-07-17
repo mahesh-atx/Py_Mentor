@@ -117,6 +117,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Rock Paper Scissors",
+      "prompt": "Read two moves (each rock, paper, or scissors, one per line). Print Player 1 wins, Player 2 wins, or Tie.",
+      "starterCode": "# Judge the round\n",
+      "solutionCode": "p1 = input().strip()\np2 = input().strip()\nif p1 == p2:\n    print('Tie')\nelif (p1 == 'rock' and p2 == 'scissors') or (p1 == 'scissors' and p2 == 'paper') or (p1 == 'paper' and p2 == 'rock'):\n    print('Player 1 wins')\nelse:\n    print('Player 2 wins')",
+      "testCases": [{ "input": "rock\nscissors\n", "expectedOutput": "Player 1 wins\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
+    }
   ],
   "if-elif-else": [
     {
@@ -241,6 +251,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: Shipping Tiers",
+      "prompt": "Read a weight in kg (int). Print the shipping cost: under 1 kg -> 5, 1-5 kg -> 10, 6-20 kg -> 20, over 20 kg -> 50. Print just the number.",
+      "starterCode": "# Tiered pricing\n",
+      "solutionCode": "kg = int(input())\nif kg < 1:\n    print(5)\nelif kg <= 5:\n    print(10)\nelif kg <= 20:\n    print(20)\nelse:\n    print(50)",
+      "testCases": [{ "input": "3\n", "expectedOutput": "10\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "nested-if": [
     {
@@ -334,6 +354,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Nested conditionals\n",
       "solutionCode": "n = int(input())\nif n > 0:\n    if n % 2 == 0:\n        print('Positive Even')\n    else:\n        print('Positive Odd')\nelse:\n    print('Not positive')",
       "testCases": [{ "input": "14\n", "expectedOutput": "Positive Even\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Max of Three",
+      "prompt": "Read three integers (one per line). Using nested if statements, print the largest.",
+      "starterCode": "# Nested comparisons\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nc = int(input())\nif a >= b:\n    if a >= c:\n        print(a)\n    else:\n        print(c)\nelse:\n    if b >= c:\n        print(b)\n    else:\n        print(c)",
+      "testCases": [{ "input": "4\n9\n2\n", "expectedOutput": "9\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -554,6 +584,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# match/case day classifier\n",
       "solutionCode": "day = int(input())\nmatch day:\n    case 1 | 2 | 3 | 4 | 5:\n        print('Weekday')\n    case 6 | 7:\n        print('Weekend')",
       "testCases": [{ "input": "6\n", "expectedOutput": "Weekend\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Status Decoder",
+      "prompt": "Read an HTTP status code (int). Use match/case to print: 200 -> OK, 404 -> Not Found, 500 -> Server Error, anything else -> Unknown.",
+      "starterCode": "# match/case decoder\n",
+      "solutionCode": "code = int(input())\nmatch code:\n    case 200:\n        print('OK')\n    case 404:\n        print('Not Found')\n    case 500:\n        print('Server Error')\n    case _:\n        print('Unknown')",
+      "testCases": [{ "input": "404\n", "expectedOutput": "Not Found\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

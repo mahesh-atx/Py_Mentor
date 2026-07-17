@@ -46,6 +46,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 15
     }
+  ,
+    {
+      "title": "Build: Circle Area",
+      "prompt": "Import the math module. For radius r = 3, print the area of the circle (pi * r^2) rounded to 2 decimal places.",
+      "starterCode": "# math.pi\n",
+      "solutionCode": "import math\nr = 3\nprint(round(math.pi * r ** 2, 2))",
+      "testCases": [{ "input": "", "expectedOutput": "28.27\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "import-statements": [
     {
@@ -100,6 +110,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# import ... as ...\n",
       "solutionCode": "import math as m\nprint(m.sqrt(144))",
       "testCases": [{ "input": "", "expectedOutput": "12.0\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
+  ,
+    {
+      "title": "Build: Factorial Direct",
+      "prompt": "Use a from-import to bring factorial straight out of the math module, then print factorial(6).",
+      "starterCode": "# from math import ...\n",
+      "solutionCode": "from math import factorial\nprint(factorial(6))",
+      "testCases": [{ "input": "", "expectedOutput": "720\n" }],
       "difficulty": "beginner",
       "xpReward": 15
     }
@@ -273,6 +293,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Weekday Finder",
+      "prompt": "Use the datetime module to print the weekday name of January 1st, 2024 (use .strftime('%A')).",
+      "starterCode": "# datetime.date(...).strftime\n",
+      "solutionCode": "import datetime\nprint(datetime.date(2024, 1, 1).strftime('%A'))",
+      "testCases": [{ "input": "", "expectedOutput": "Monday\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "packages-init-py": [
     {
@@ -360,6 +390,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 55
     }
+  ,
+    {
+      "title": "Build: Version Gate",
+      "prompt": "Use sys.version_info to print whether the running Python is at least version 3.8 (compare with the tuple (3, 8)).",
+      "starterCode": "# Tuple comparison\n",
+      "solutionCode": "import sys\nprint(sys.version_info >= (3, 8))",
+      "testCases": [{ "input": "", "expectedOutput": "True\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "requirements-txt": [
     {
@@ -390,6 +430,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 60
+    }
+  ,
+    {
+      "title": "Build: Write Requirements",
+      "prompt": "Write the two lines 'requests==2.31.0' and 'numpy' to a file requirements.txt, then read it back and print how many lines it has.",
+      "starterCode": "# Write then count lines\n",
+      "solutionCode": "with open('requirements.txt', 'w') as f:\n    f.write('requests==2.31.0\\nnumpy\\n')\n\nwith open('requirements.txt', 'r') as f:\n    print(sum(1 for _ in f))",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ]
 };

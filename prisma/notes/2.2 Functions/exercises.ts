@@ -94,6 +94,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Full Name",
+      "prompt": "Define full_name(first, last) that returns 'first last'. Read two lines (first name, last name) and print the full name.",
+      "starterCode": "# Define and call full_name\n",
+      "solutionCode": "def full_name(first, last):\n    return f'{first} {last}'\n\nfirst = input()\nlast = input()\nprint(full_name(first, last))",
+      "testCases": [{ "input": "Ada\nLovelace\n", "expectedOutput": "Ada Lovelace\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "parameters-and-arguments": [
     {
@@ -232,6 +242,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Greet with Default",
+      "prompt": "Define greet(name, greeting='Hello') returning '<greeting>, <name>!'. Print greet('Sam') on the first line and greet('Sam', 'Hi') on the second.",
+      "starterCode": "# Default parameter\n",
+      "solutionCode": "def greet(name, greeting='Hello'):\n    return f'{greeting}, {name}!'\n\nprint(greet('Sam'))\nprint(greet('Sam', 'Hi'))",
+      "testCases": [{ "input": "", "expectedOutput": "Hello, Sam!\nHi, Sam!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "return-statement": [
     {
@@ -339,6 +359,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Boolean-returning function\n",
       "solutionCode": "def is_even(n):\n    return n % 2 == 0\n\nn = int(input())\nprint('Even' if is_even(n) else 'Odd')",
       "testCases": [{ "input": "11\n", "expectedOutput": "Odd\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Bigger One",
+      "prompt": "Define bigger(a, b) that returns the larger of the two. Read two integers and print the bigger one using your function.",
+      "starterCode": "# return the max\n",
+      "solutionCode": "def bigger(a, b):\n    return a if a > b else b\n\na = int(input())\nb = int(input())\nprint(bigger(a, b))",
+      "testCases": [{ "input": "12\n7\n", "expectedOutput": "12\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -573,6 +603,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "55\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Tribonacci",
+      "prompt": "Define trib(n) recursively: trib(0)=0, trib(1)=1, trib(2)=1, and trib(n)=trib(n-1)+trib(n-2)+trib(n-3). Print trib(7).",
+      "starterCode": "# Triple recursion\n",
+      "solutionCode": "def trib(n):\n    if n == 0:\n        return 0\n    if n == 1 or n == 2:\n        return 1\n    return trib(n - 1) + trib(n - 2) + trib(n - 3)\n\nprint(trib(7))",
+      "testCases": [{ "input": "", "expectedOutput": "24\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
     }
   ],
   "nested-functions": [
@@ -875,6 +915,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "16\n" }],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "Build: Do Operation",
+      "prompt": "Define operate(x, y, fn) that returns fn(x, y). Then create add = lambda a, b: a + b and print operate(6, 7, add).",
+      "starterCode": "# Pass a function as an argument\n",
+      "solutionCode": "def operate(x, y, fn):\n    return fn(x, y)\n\nadd = lambda a, b: a + b\nprint(operate(6, 7, add))",
+      "testCases": [{ "input": "", "expectedOutput": "13\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

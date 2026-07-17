@@ -66,6 +66,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Word Count File",
+      "prompt": "A file words.txt is created below. Read it and print how many words it contains (split on whitespace).",
+      "starterCode": "with open('words.txt', 'w') as f: f.write('the quick brown fox')\n\n# Count the words\n",
+      "solutionCode": "with open('words.txt', 'w') as f: f.write('the quick brown fox')\n\nwith open('words.txt', 'r') as f:\n    print(len(f.read().split()))",
+      "testCases": [{ "input": "", "expectedOutput": "4\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "writing-appending-files": [
     {
@@ -145,6 +155,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Write, then read back\n",
       "solutionCode": "with open('out.txt', 'w') as f:\n    f.write('one\\ntwo\\nthree')\n\nwith open('out.txt', 'r') as f:\n    print(f.read())",
       "testCases": [{ "input": "", "expectedOutput": "one\ntwo\nthree\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Two-Line Diary",
+      "prompt": "Write 'Day 1' to diary.txt, then APPEND 'Day 2' on a new line. Finally read the whole file and print it.",
+      "starterCode": "# write, append, read\n",
+      "solutionCode": "with open('diary.txt', 'w') as f:\n    f.write('Day 1\\n')\nwith open('diary.txt', 'a') as f:\n    f.write('Day 2')\n\nwith open('diary.txt', 'r') as f:\n    print(f.read())",
+      "testCases": [{ "input": "", "expectedOutput": "Day 1\nDay 2\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -312,6 +332,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Build: High Scorers",
+      "prompt": "A file scores.csv is created below (name,score). Use the csv module to print the names of everyone scoring more than 50, one per line.",
+      "starterCode": "with open('scores.csv', 'w') as f: f.write('name,score\\nA,40\\nB,70\\nC,90')\n\n# Print names with score > 50\n",
+      "solutionCode": "import csv\n\nwith open('scores.csv', 'w') as f: f.write('name,score\\nA,40\\nB,70\\nC,90')\n\nwith open('scores.csv', 'r') as f:\n    for row in csv.DictReader(f):\n        if int(row['score']) > 50:\n            print(row['name'])",
+      "testCases": [{ "input": "", "expectedOutput": "B\nC\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "working-with-json": [
     {
@@ -391,6 +421,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "import json\nwith open('data.json', 'w') as f: json.dump({'a': 1, 'b': [2, 3]}, f)\n\n# Load and print b's second item\n",
       "solutionCode": "import json\n\nwith open('data.json', 'w') as f: json.dump({'a': 1, 'b': [2, 3]}, f)\n\nwith open('data.json', 'r') as f:\n    data = json.load(f)\nprint(data['b'][1])",
       "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Merge Configs",
+      "prompt": "Two JSON files are created below: base.json {'a': 1, 'b': 2} and override.json {'b': 3}. Load both, merge them (override wins), and print the result with json.dumps(..., sort_keys=True).",
+      "starterCode": "import json\nwith open('base.json', 'w') as f: json.dump({'a': 1, 'b': 2}, f)\nwith open('override.json', 'w') as f: json.dump({'b': 3}, f)\n\n# Merge and print\n",
+      "solutionCode": "import json\n\nwith open('base.json', 'w') as f: json.dump({'a': 1, 'b': 2}, f)\nwith open('override.json', 'w') as f: json.dump({'b': 3}, f)\n\nwith open('base.json', 'r') as f: base = json.load(f)\nwith open('override.json', 'r') as f: over = json.load(f)\nbase.update(over)\nprint(json.dumps(base, sort_keys=True))",
+      "testCases": [{ "input": "", "expectedOutput": "{\"a\": 1, \"b\": 3}\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

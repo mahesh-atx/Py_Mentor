@@ -66,6 +66,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Pet Registry",
+      "prompt": "Define an empty class Pet (use pass). Create two pets, give each a name attribute ('Rex' and 'Tom'), and print how many pets you created (just the number 2).",
+      "starterCode": "# Class + instances\n",
+      "solutionCode": "class Pet:\n    pass\n\np1 = Pet()\np1.name = 'Rex'\np2 = Pet()\np2.name = 'Tom'\nprint(2)",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "classes-and-objects": [
     {
@@ -202,6 +212,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Rectangle Class",
+      "prompt": "Define a class Rectangle whose __init__ takes width and height. Add an area() method. Print Rectangle(4, 5).area().",
+      "starterCode": "# __init__ + method\n",
+      "solutionCode": "class Rectangle:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\n\nprint(Rectangle(4, 5).area())",
+      "testCases": [{ "input": "", "expectedOutput": "20\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "instance-vs-class-variables": [
     {
@@ -324,6 +344,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Click Counter",
+      "prompt": "Define a class Counter with value starting at 0, methods inc() (+1), dec() (-1), and get() returning the value. Call inc() three times and dec() once, then print get().",
+      "starterCode": "# Stateful object\n",
+      "solutionCode": "class Counter:\n    def __init__(self):\n        self.value = 0\n    def inc(self):\n        self.value += 1\n    def dec(self):\n        self.value -= 1\n    def get(self):\n        return self.value\n\nc = Counter()\nc.inc()\nc.inc()\nc.inc()\nc.dec()\nprint(c.get())",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "str-and-repr": [
     {
@@ -375,6 +405,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# __str__\n",
       "solutionCode": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nprint(Point(3, 4))",
       "testCases": [{ "input": "", "expectedOutput": "(3, 4)\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Book Repr",
+      "prompt": "Define a class Book storing title and author, with __repr__ returning Book('TITLE', 'AUTHOR') — for example repr(Book('Dune', 'Herbert')) gives Book('Dune', 'Herbert'). Print repr(Book('Dune', 'Herbert')).",
+      "starterCode": "# __repr__\n",
+      "solutionCode": "class Book:\n    def __init__(self, title, author):\n        self.title = title\n        self.author = author\n    def __repr__(self):\n        return f\"Book('{self.title}', '{self.author}')\"\n\nprint(repr(Book('Dune', 'Herbert')))",
+      "testCases": [{ "input": "", "expectedOutput": "Book('Dune', 'Herbert')\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

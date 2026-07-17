@@ -122,6 +122,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Digit Sum",
+      "prompt": "Read a positive integer. Use a while loop to sum its digits and print the result. (Hint: n % 10 gets the last digit, n //= 10 removes it.)",
+      "starterCode": "# Sum the digits\n",
+      "solutionCode": "n = int(input())\ntotal = 0\nwhile n > 0:\n    total += n % 10\n    n //= 10\nprint(total)",
+      "testCases": [{ "input": "1234\n", "expectedOutput": "10\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "for-loop": [
     {
@@ -243,6 +253,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "nums = [4, 8, 15, 16, 23, 42]\n# Sum with a for loop\n",
       "solutionCode": "nums = [4, 8, 15, 16, 23, 42]\ntotal = 0\nfor n in nums:\n    total += n\nprint(total)",
       "testCases": [{ "input": "", "expectedOutput": "108\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Vowel Counter",
+      "prompt": "Read a word and use a for loop to count how many vowels (aeiou) it contains. Print the count.",
+      "starterCode": "# Count vowels\n",
+      "solutionCode": "word = input()\ncount = 0\nfor ch in word:\n    if ch in 'aeiou':\n        count += 1\nprint(count)",
+      "testCases": [{ "input": "programming\n", "expectedOutput": "3\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -370,6 +390,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Even Ladder",
+      "prompt": "Use range() with a step to print the even numbers from 2 to 20 inclusive, one per line.",
+      "starterCode": "# range(start, stop, step)\n",
+      "solutionCode": "for n in range(2, 21, 2):\n    print(n)",
+      "testCases": [{ "input": "", "expectedOutput": "2\n4\n6\n8\n10\n12\n14\n16\n18\n20\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "loop-control-statements": [
     {
@@ -472,6 +502,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# break when n*n > 200\n",
       "solutionCode": "n = 1\nwhile True:\n    if n * n > 200:\n        print(n)\n        break\n    n += 1",
       "testCases": [{ "input": "", "expectedOutput": "15\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Stop at quit",
+      "prompt": "Read lines until the line 'quit' appears. Print how many lines were read BEFORE 'quit' (not counting it).",
+      "starterCode": "# break on sentinel\n",
+      "solutionCode": "count = 0\nwhile True:\n    line = input()\n    if line == 'quit':\n        break\n    count += 1\nprint(count)",
+      "testCases": [{ "input": "a\nb\nquit\n", "expectedOutput": "2\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -692,6 +732,16 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Nested loop pattern\n",
       "solutionCode": "for i in range(1, 5):\n    print(str(i) * i)",
       "testCases": [{ "input": "", "expectedOutput": "1\n22\n333\n4444\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Number Pyramid",
+      "prompt": "Print a running-number pyramid with 3 rows (use nested loops and a counter):\n1\n2 3\n4 5 6",
+      "starterCode": "# Nested loops + counter\n",
+      "solutionCode": "num = 1\nfor row in range(1, 4):\n    line = []\n    for _ in range(row):\n        line.append(str(num))\n        num += 1\n    print(' '.join(line))",
+      "testCases": [{ "input": "", "expectedOutput": "1\n2 3\n4 5 6\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }

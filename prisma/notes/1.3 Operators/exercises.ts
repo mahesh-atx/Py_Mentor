@@ -80,6 +80,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Average of Three",
+      "prompt": "Read three integers (one per line) and print their average as a float.",
+      "starterCode": "# Average of 3 numbers\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nc = int(input())\nprint((a + b + c) / 3)",
+      "testCases": [{ "input": "10\n20\n30\n", "expectedOutput": "20.0\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "assignment-operators": [
     {
@@ -216,6 +226,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Build: Equality Gate",
+      "prompt": "Read two strings (one per line). Print Same if they are equal, otherwise Different.",
+      "starterCode": "# Compare two inputs\n",
+      "solutionCode": "a = input()\nb = input()\nif a == b:\n    print('Same')\nelse:\n    print('Different')",
+      "testCases": [{ "input": "abc\nabc\n", "expectedOutput": "Same\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "logical-operators": [
     {
@@ -297,6 +317,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "30\n", "expectedOutput": "True\n" }],
       "difficulty": "beginner",
       "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: Login Check",
+      "prompt": "Read a username and a password (one per line). Print Access granted only if username is 'admin' AND password is '1234'; otherwise print Access denied.",
+      "starterCode": "# and-operator login\n",
+      "solutionCode": "user = input()\npw = input()\nif user == 'admin' and pw == '1234':\n    print('Access granted')\nelse:\n    print('Access denied')",
+      "testCases": [{ "input": "admin\n1234\n", "expectedOutput": "Access granted\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "identity-operators": [
@@ -461,6 +491,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "True\n" }],
       "difficulty": "beginner",
       "xpReward": 15
+    }
+  ,
+    {
+      "title": "Build: Vowel Detector",
+      "prompt": "Read a single letter. Print Vowel if it is in 'aeiou', otherwise Consonant.",
+      "starterCode": "# in-operator\n",
+      "solutionCode": "letter = input()\nif letter in 'aeiou':\n    print('Vowel')\nelse:\n    print('Consonant')",
+      "testCases": [{ "input": "e\n", "expectedOutput": "Vowel\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "bitwise-operators": [
@@ -653,6 +693,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "50\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Build: Make It 20",
+      "prompt": "The starter computes result = 2 + 3 * 4 (which is 14). Add parentheses so the result is 20, then print result.",
+      "starterCode": "result = 2 + 3 * 4\n# Fix it with parentheses to make 20\nprint(result)",
+      "solutionCode": "result = (2 + 3) * 4\nprint(result)",
+      "testCases": [{ "input": "", "expectedOutput": "20\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ]
 };
