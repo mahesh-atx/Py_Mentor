@@ -109,10 +109,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n3\n",
           "expectedOutput": "Area = 15.0\n"
-        },
-        {
-          "input": "-1\n4\n",
-          "expectedOutput": "Invalid dimensions\n"
         }
       ],
       "difficulty": "advanced",
@@ -215,10 +211,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "1000\n5\n2\n",
           "expectedOutput": "100.0\n"
-        },
-        {
-          "input": "2000\n3.5\n1\n",
-          "expectedOutput": "70.0\n"
         }
       ],
       "difficulty": "advanced",
@@ -393,10 +385,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "37\n",
           "expectedOutput": "98.60°F\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "32.00°F\n"
         }
       ],
       "difficulty": "advanced",

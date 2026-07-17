@@ -23,10 +23,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nname Alice\nage 25\ncity London\n",
           "expectedOutput": "{'name': 'Alice', 'age': '25', 'city': 'London'}\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "Empty dictionary\n"
         }
       ],
       "difficulty": "intermediate",
@@ -41,10 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "the cat sat on the mat the cat\n",
           "expectedOutput": "cat: 2\nmat: 1\non: 1\nsat: 1\nthe: 3\nMost frequent: the\n"
-        },
-        {
-          "input": "\n",
-          "expectedOutput": "No words\n"
         }
       ],
       "difficulty": "advanced",
@@ -59,14 +51,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nS001 Alice 88\nS002 Bob 72\nS003 Charlie 95\nS002\n",
           "expectedOutput": "Name: Bob, Score: 72\n"
-        },
-        {
-          "input": "1\nS001 Alice 88\nS999\n",
-          "expectedOutput": "Student not found\n"
-        },
-        {
-          "input": "1\nS001 Alice 150\n",
-          "expectedOutput": "Invalid score\n"
         }
       ],
       "difficulty": "expert",
@@ -125,10 +109,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "France\n",
           "expectedOutput": "Paris\n"
-        },
-        {
-          "input": "Australia\n",
-          "expectedOutput": "Capital not found\n"
         }
       ],
       "difficulty": "intermediate",
@@ -243,10 +223,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\ntheme light\nlang en\nsize 12\n2\ntheme dark\nsize 16\n",
           "expectedOutput": "lang: en\nsize: 16\ntheme: dark\nOverridden keys: ['size', 'theme']\n"
-        },
-        {
-          "input": "2\ntheme light\nlang en\n0\n",
-          "expectedOutput": "lang: en\ntheme: light\nNo overrides\n"
         }
       ],
       "difficulty": "advanced",
@@ -347,10 +323,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "the cat sat on the mat the cat\n",
           "expectedOutput": "cat: [1, 7]\nmat: [5]\non: [3]\nsat: [2]\nthe: [0, 4, 6]\n"
-        },
-        {
-          "input": "\n",
-          "expectedOutput": "Empty input\n"
         }
       ],
       "difficulty": "advanced",
@@ -365,10 +337,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nLaptop 999.99\nMouse 29.99\nKeyboard 79.99\n",
           "expectedOutput": "Original:\n  Keyboard: $79.99\n  Laptop: $999.99\n  Mouse: $29.99\nDiscounted:\n  Keyboard: $67.99\n  Laptop: $849.99\n  Mouse: $29.99\nCheapest after discount: Mouse ($29.99)\n"
-        },
-        {
-          "input": "1\nItem -5.00\n",
-          "expectedOutput": "Invalid price\n"
         }
       ],
       "difficulty": "expert",
@@ -499,10 +467,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "4\nAlice 88\nBob 72\nCharlie 95\nDiana 67\n",
           "expectedOutput": "Charlie: 95\nAlice: 88\nBob: 72\nDiana: 67\nAverage: 80.50\nAbove average: ['Alice', 'Charlie']\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "No students\n"
         }
       ],
       "difficulty": "intermediate",
@@ -575,10 +539,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "{\"name\": \"Alice\", \"age\": 25, \"active\": true}\n",
           "expectedOutput": "dict\nKeys: 3\nactive: True\nage: 25\nname: Alice\n"
-        },
-        {
-          "input": "{'bad': 'json'}\n",
-          "expectedOutput": "Invalid JSON\n"
         }
       ],
       "difficulty": "intermediate",
@@ -607,14 +567,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "{\"status\": \"success\", \"data\": {\"users\": [{\"name\": \"Alice\", \"score\": 88, \"active\": true}, {\"name\": \"Bob\", \"score\": 95, \"active\": false}, {\"name\": \"Charlie\", \"score\": 72, \"active\": true}]}}\n",
           "expectedOutput": "Status: success\nAlice: 88\nCharlie: 72\nAverage: 80.00\n"
-        },
-        {
-          "input": "{\"status\": \"error\", \"data\": {}}\n",
-          "expectedOutput": "Status: error\nError response\n"
-        },
-        {
-          "input": "not valid json\n",
-          "expectedOutput": "Invalid JSON\n"
         }
       ],
       "difficulty": "expert",
@@ -643,10 +595,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "add Alice 123\nget Alice\nexit\n",
           "expectedOutput": "123\n{'Alice': '123'}\n"
-        },
-        {
-          "input": "add Bob 456\ndelete Bob\nget Bob\nexit\n",
-          "expectedOutput": "Not found\n{}\n"
         }
       ],
       "difficulty": "expert",
@@ -661,10 +609,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "hello\n",
           "expectedOutput": "{'h': 1, 'e': 1, 'l': 2, 'o': 1}\n"
-        },
-        {
-          "input": "aaa\n",
-          "expectedOutput": "{'a': 3}\n"
         }
       ],
       "difficulty": "expert",

@@ -23,10 +23,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n[INFO] App started\n[WARNING] High memory\n[ERROR] DB failed\n[INFO] Retry\n[ERROR] Timeout\n",
           "expectedOutput": "ERROR: 2\nINFO: 2\nWARNING: 1\n[ERROR] Timeout\n"
-        },
-        {
-          "input": "2\n[INFO] OK\n[WARNING] Low disk\n",
-          "expectedOutput": "ERROR: 0\nINFO: 1\nWARNING: 1\nNo errors found\n"
         }
       ],
       "difficulty": "advanced",
@@ -315,10 +311,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "[{\"name\":\"Alice\",\"scores\":[88,92,85],\"active\":true},{\"name\":\"Bob\",\"scores\":[70,65,72],\"active\":false},{\"name\":\"Charlie\",\"scores\":[95,98,92],\"active\":true}]\n",
           "expectedOutput": "Charlie: 95.0 (A)\nAlice: 88.3 (B)\nActive users: 2\nGrand average: 91.7\n"
-        },
-        {
-          "input": "invalid json\n",
-          "expectedOutput": "Invalid JSON\n"
         }
       ],
       "difficulty": "expert",

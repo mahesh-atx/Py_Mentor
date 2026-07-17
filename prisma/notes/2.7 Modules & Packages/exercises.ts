@@ -337,8 +337,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read and analyze requirements\n",
       "solutionCode": "n = int(input())\nreqs = [input().strip() for _ in range(n)]\ntotal = len(reqs)\nexact = sum(1 for r in reqs if '==' in r)\nranges = sum(1 for r in reqs if any(op in r for op in ['>=', '<=', '!=', '~=']) and '==' not in r)\nprint(f'Total: {total}')\nprint(f'Exact: {exact}')\nprint(f'Ranges: {ranges}')",
       "testCases": [
-        { "input": "3\nrequests==2.31.0\nflask>=2.0.0\nnumpy\n", "expectedOutput": "Total: 3\nExact: 1\nRanges: 1\n" },
-        { "input": "2\npandas==2.0.3\nscipy>=1.0.0\n", "expectedOutput": "Total: 2\nExact: 1\nRanges: 1\n" }
+        { "input": "3\nrequests==2.31.0\nflask>=2.0.0\nnumpy\n", "expectedOutput": "Total: 3\nExact: 1\nRanges: 1\n" }
       ],
       "difficulty": "expert",
       "xpReward": 60

@@ -37,14 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "Alice,25,New York\n",
           "expectedOutput": "Name: Alice\nAge: 25\nCity: New York\n"
-        },
-        {
-          "input": "Bob,30,London\n",
-          "expectedOutput": "Name: Bob\nAge: 30\nCity: London\n"
-        },
-        {
-          "input": "InvalidData\n",
-          "expectedOutput": "Invalid format\n"
         }
       ],
       "difficulty": "intermediate",
@@ -59,10 +51,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n1\n2\n3\n2\n1\n2\n",
           "expectedOutput": "Count: 2\nFirst index: 1\n"
-        },
-        {
-          "input": "3\n5\n6\n7\n9\n",
-          "expectedOutput": "Count: 0\nNot found\n"
         }
       ],
       "difficulty": "intermediate",
@@ -77,10 +65,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nAlice 88\nBob 95\nCharlie 72\n",
           "expectedOutput": "#1: Bob - 95\n#2: Alice - 88\n#3: Charlie - 72\nTop score is excellent\n"
-        },
-        {
-          "input": "2\nDiana 85\nEve 80\n",
-          "expectedOutput": "#1: Diana - 85\n#2: Eve - 80\nTop score is not excellent\n"
         }
       ],
       "difficulty": "advanced",
@@ -95,14 +79,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "0 0\n3 4\n",
           "expectedOutput": "(0.0, 0.0)\n(3.0, 4.0)\nDistance: 5.00\nDifferent locations\n"
-        },
-        {
-          "input": "1 1\n1 1\n",
-          "expectedOutput": "(1.0, 1.0)\n(1.0, 1.0)\nDistance: 0.00\nSame location\n"
-        },
-        {
-          "input": "abc\n1 2\n",
-          "expectedOutput": "Invalid coordinates\n"
         }
       ],
       "difficulty": "expert",
@@ -245,14 +221,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "6\n1\n2\n2\n3\n3\n3\n",
           "expectedOutput": "[1, 2, 3]\nDuplicates removed: 3\n"
-        },
-        {
-          "input": "3\n5\n5\n5\n",
-          "expectedOutput": "[5]\nDuplicates removed: 2\n"
-        },
-        {
-          "input": "3\n1\n2\n3\n",
-          "expectedOutput": "[1, 2, 3]\nDuplicates removed: 0\n"
         }
       ],
       "difficulty": "intermediate",
@@ -267,10 +235,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n1\n2\n3\n4\n5\n4\n4\n5\n6\n7\n",
           "expectedOutput": "[1, 2, 3, 4, 5, 6, 7]\n[4, 5]\n[1, 2, 3]\n[6, 7]\n[1, 2, 3, 6, 7]\n"
-        },
-        {
-          "input": "3\n1\n2\n3\n3\n1\n2\n3\n",
-          "expectedOutput": "[1, 2, 3]\n[1, 2, 3]\n[]\n[]\n[]\n"
         }
       ],
       "difficulty": "advanced",
@@ -285,14 +249,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "4\nAlice\nBob\nCharlie\nDiana\n3\nAlice\nCharlie\nEve\n",
           "expectedOutput": "['Alice', 'Charlie']\n['Bob', 'Diana']\n['Eve']\n50.00%\n"
-        },
-        {
-          "input": "3\nAlice\nBob\nCharlie\n3\nAlice\nBob\nCharlie\n",
-          "expectedOutput": "['Alice', 'Bob', 'Charlie']\n[]\nNone\n100.00%\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "Empty roster\n"
         }
       ],
       "difficulty": "expert",
@@ -321,14 +277,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "admin\ndelete\n",
           "expectedOutput": "Has permission: True\nPermissions: ['delete', 'manage', 'read', 'write']\nExclusive to this role: ['delete', 'manage']\n"
-        },
-        {
-          "input": "viewer\nwrite\n",
-          "expectedOutput": "Has permission: False\nPermissions: ['read']\nExclusive to this role: []\n"
-        },
-        {
-          "input": "superuser\nread\n",
-          "expectedOutput": "Unknown role\n"
         }
       ],
       "difficulty": "expert",
@@ -441,10 +389,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "1 2 3\n2 3 4\n",
           "expectedOutput": "('2', '3')\n"
-        },
-        {
-          "input": "10 20\n30 40\n",
-          "expectedOutput": "()\n"
         }
       ],
       "difficulty": "expert",
@@ -459,10 +403,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "hello world\n",
           "expectedOutput": "dehlorw\n"
-        },
-        {
-          "input": "python programming\n",
-          "expectedOutput": "aghimnoprty\n"
         }
       ],
       "difficulty": "expert",

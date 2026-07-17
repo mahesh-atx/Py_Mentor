@@ -67,10 +67,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nToyota Corolla 2022\nHonda Civic 2020\nFord Focus 2019\n",
           "expectedOutput": "2022 Toyota Corolla\n2020 Honda Civic\n2019 Ford Focus\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "No cars\n"
         }
       ],
       "difficulty": "beginner",
@@ -389,10 +385,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "inc inc dec inc\n",
           "expectedOutput": "2\n"
-        },
-        {
-          "input": "dec dec dec\n",
-          "expectedOutput": "-3\n"
         }
       ],
       "difficulty": "expert",

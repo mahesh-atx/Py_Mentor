@@ -1,6 +1,7 @@
 import { CurriculumService } from "@/lib/services/curriculum.service";
 import { UserService } from "@/lib/services/user.service";
 import { ProgressService } from "@/lib/services/progress.service";
+import { pickContinueIndex } from "@/lib/continue-topic";
 import { DashboardClient } from "./dashboard-client";
 
 export default async function DashboardPage() {
@@ -24,12 +25,31 @@ export default async function DashboardPage() {
   const user = await UserService.getLocalUser();
   const stats = await ProgressService.getStats(user.id);
 
-  // Default to the first topic as "continue learning"
-  // For a real app, we would look up the last uncompleted topic, but we'll stick to basic logic for now.
-  const continueTopic = allTopics.length > 0 ? allTopics[0] : null;
-  
-  // Pick next 2 topics as recommendations
-  const recommendedTopics = allTopics.length > 1 ? allTopics.slice(1, 3) : [];
+  // Pick the first topic that still has an incomplete lesson as
+  // "continue learning". When every lesson is complete, continueTopic is
+  // null and the dashboard shows the "all caught up" state instead.
+  const completedLessonIds = new Set(
+    await ProgressService.getCompletedLessonIds(user.id)
+  );
+  const continueIndex = pickContinueIndex(allTopics, completedLessonIds);
+
+  // Strip the heavy relations before sending topics to the client —
+  // the dashboard only needs the scalar fields + module info.
+  const toClientTopic = (topic: any) => {
+    if (!topic) return null;
+    const { lessons, exercises, quizzes, projects, module, ...rest } = topic;
+    const { topics: _moduleTopics, ...mod } = module ?? {};
+    return { ...rest, module: mod };
+  };
+
+  const continueTopic =
+    continueIndex >= 0 ? toClientTopic(allTopics[continueIndex]) : null;
+
+  // Recommend the next 2 topics after the current one (none when finished)
+  const recommendedTopics =
+    continueIndex >= 0
+      ? allTopics.slice(continueIndex + 1, continueIndex + 3).map(toClientTopic)
+      : [];
   
   const recentActivity = await ProgressService.getRecentActivity(user.id);
 

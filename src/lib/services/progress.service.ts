@@ -2,6 +2,15 @@ import { db } from "../db/prisma";
 import { XP_PER_LEVEL, computeXpFromRaw, type XpBreakdown } from "./xp-calculator";
 
 export const ProgressService = {
+  /** Get the IDs of all lessons the user has completed */
+  async getCompletedLessonIds(userId: string): Promise<string[]> {
+    const rows = await db.progress.findMany({
+      where: { userId, status: "completed" },
+      select: { lessonId: true },
+    });
+    return rows.map((r: { lessonId: string }) => r.lessonId);
+  },
+
   /** Get overall progress stats for a user */
   async getStats(userId: string) {
     const [completedProgress, submissions, streaks, allProgress] = await Promise.all([

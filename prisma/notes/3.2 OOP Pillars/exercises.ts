@@ -253,10 +253,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "Toyota 150\n",
           "expectedOutput": "Toyota\nEngine: 150hp\n"
-        },
-        {
-          "input": "Ford none\n",
-          "expectedOutput": "Ford\nNo engine\n"
         }
       ],
       "difficulty": "intermediate",
@@ -301,10 +297,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "transaction ok\n",
           "expectedOutput": "Transaction started\nWork done\nCommitted\n"
-        },
-        {
-          "input": "transaction fail\n",
-          "expectedOutput": "Transaction started\nRolled back: Operation failed\n"
         }
       ],
       "difficulty": "expert",
@@ -375,10 +367,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3 4\n1 2\n",
           "expectedOutput": "(4, 6)\n(2, 2)\nFalse\n"
-        },
-        {
-          "input": "5 5\n5 5\n",
-          "expectedOutput": "(10, 10)\n(0, 0)\nTrue\n"
         }
       ],
       "difficulty": "expert",

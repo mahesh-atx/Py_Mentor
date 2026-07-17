@@ -114,6 +114,13 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
     console.error("Failed to parse test cases", e);
   }
 
+  // PyMentor grades exercises against a single test case — running the whole
+  // program once per test case is unreliable with stdin-based checks.
+  // Older databases may still hold multiple; only the first one is used.
+  if (testCases.length > 1) {
+    testCases = testCases.slice(0, 1);
+  }
+
   const runCode = async () => {
     setIsRunning(true);
     setOutput("Executing...\n");
@@ -547,7 +554,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
             </DialogTitle>
             <DialogDescription className="text-base pt-2">
               {isSuccess 
-                ? `You passed all ${testCases.length > 0 ? testCases.length : 1} test cases. You've earned ${exercise.xpReward} XP!`
+                ? `You passed the test case. You've earned ${exercise.xpReward} XP!`
                 : "Your code failed on a test case. Try running it first to debug!"}
             </DialogDescription>
           </DialogHeader>

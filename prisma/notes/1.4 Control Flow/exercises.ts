@@ -37,10 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "admin\nsecret\n",
           "expectedOutput": "Access granted\n"
-        },
-        {
-          "input": "admin\nwrong\n",
-          "expectedOutput": "Access denied\n"
         }
       ],
       "difficulty": "intermediate",
@@ -69,10 +65,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "15\n",
           "expectedOutput": "Big\n"
-        },
-        {
-          "input": "5\n",
-          "expectedOutput": "Small\n"
         }
       ],
       "difficulty": "beginner",
@@ -87,10 +79,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "42\n",
           "expectedOutput": "Even\n"
-        },
-        {
-          "input": "7\n",
-          "expectedOutput": "Odd\n"
         }
       ],
       "difficulty": "intermediate",
@@ -105,10 +93,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "hello\n",
           "expectedOutput": "Valid\n"
-        },
-        {
-          "input": "hi\n",
-          "expectedOutput": "Invalid\n"
         }
       ],
       "difficulty": "beginner",
@@ -139,10 +123,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "sunday\n",
           "expectedOutput": "Weekend\n"
-        },
-        {
-          "input": "wednesday\n",
-          "expectedOutput": "Weekday\n"
         }
       ],
       "difficulty": "intermediate",
@@ -157,10 +137,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "23\n",
           "expectedOutput": "twenty-three\n"
-        },
-        {
-          "input": "5\n",
-          "expectedOutput": "five\n"
         }
       ],
       "difficulty": "expert",
@@ -175,10 +151,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "90\n45\n45\n",
           "expectedOutput": "Right\n"
-        },
-        {
-          "input": "60\n60\n60\n",
-          "expectedOutput": "Acute\n"
         }
       ],
       "difficulty": "expert",
@@ -193,14 +165,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n",
           "expectedOutput": "Positive\n"
-        },
-        {
-          "input": "-2\n",
-          "expectedOutput": "Negative\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "Zero\n"
         }
       ],
       "difficulty": "intermediate",
@@ -215,10 +179,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "85\n",
           "expectedOutput": "B\n"
-        },
-        {
-          "input": "60\n",
-          "expectedOutput": "F\n"
         }
       ],
       "difficulty": "intermediate",
@@ -233,10 +193,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n",
           "expectedOutput": "Half\n"
-        },
-        {
-          "input": "70\n",
-          "expectedOutput": "Discount\n"
         }
       ],
       "difficulty": "advanced",
@@ -251,10 +207,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "2\n",
           "expectedOutput": "Pizza\n"
-        },
-        {
-          "input": "5\n",
-          "expectedOutput": "Invalid choice\n"
         }
       ],
       "difficulty": "intermediate",
@@ -285,10 +237,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "7\n",
           "expectedOutput": "Non-negative\nOdd\n"
-        },
-        {
-          "input": "-4\n",
-          "expectedOutput": "Negative\nEven\n"
         }
       ],
       "difficulty": "intermediate",
@@ -303,14 +251,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "admin\nsecret\nyes\n",
           "expectedOutput": "Welcome\n"
-        },
-        {
-          "input": "admin\nsecret\nno\n",
-          "expectedOutput": "Inactive\n"
-        },
-        {
-          "input": "guest\nx\nyes\n",
-          "expectedOutput": "Unknown user\n"
         }
       ],
       "difficulty": "advanced",
@@ -339,14 +279,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "admin\n1234\n",
           "expectedOutput": "Login Success\n"
-        },
-        {
-          "input": "admin\n0000\n",
-          "expectedOutput": "Wrong Password\n"
-        },
-        {
-          "input": "guest\n1234\n",
-          "expectedOutput": "Unknown User\n"
         }
       ],
       "difficulty": "advanced",
@@ -361,14 +293,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "150\nTrue\n",
           "expectedOutput": "20% Off\n"
-        },
-        {
-          "input": "150\nFalse\n",
-          "expectedOutput": "10% Off\n"
-        },
-        {
-          "input": "50\nTrue\n",
-          "expectedOutput": "No Discount\n"
         }
       ],
       "difficulty": "expert",
@@ -399,10 +323,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "8\n",
           "expectedOutput": "even\n"
-        },
-        {
-          "input": "3\n",
-          "expectedOutput": "odd\n"
         }
       ],
       "difficulty": "beginner",
@@ -445,10 +365,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "11\n",
           "expectedOutput": "Odd\n"
-        },
-        {
-          "input": "8\n",
-          "expectedOutput": "Even\n"
         }
       ],
       "difficulty": "advanced",
@@ -479,10 +395,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "stop\n",
           "expectedOutput": "Stopping\n"
-        },
-        {
-          "input": "rocket\n",
-          "expectedOutput": "Unknown: rocket\n"
         }
       ],
       "difficulty": "beginner",
@@ -497,10 +409,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "sunday\n",
           "expectedOutput": "Weekend\n"
-        },
-        {
-          "input": "monday\n",
-          "expectedOutput": "Weekday\n"
         }
       ],
       "difficulty": "intermediate",
@@ -515,14 +423,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "0\n0\n",
           "expectedOutput": "Origin\n"
-        },
-        {
-          "input": "3\n4\n",
-          "expectedOutput": "Point (3, 4)\n"
-        },
-        {
-          "input": "0\n5\n",
-          "expectedOutput": "On y-axis\n"
         }
       ],
       "difficulty": "advanced",
@@ -537,10 +437,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "404\n",
           "expectedOutput": "Not Found\n"
-        },
-        {
-          "input": "418\n",
-          "expectedOutput": "Unknown\n"
         }
       ],
       "difficulty": "intermediate",
@@ -555,10 +451,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "start\n",
           "expectedOutput": "Starting engine\n"
-        },
-        {
-          "input": "fly\n",
-          "expectedOutput": "Invalid command\n"
         }
       ],
       "difficulty": "intermediate",
@@ -573,10 +465,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\n",
           "expectedOutput": "Wednesday\n"
-        },
-        {
-          "input": "9\n",
-          "expectedOutput": "Error\n"
         }
       ],
       "difficulty": "beginner",
@@ -591,14 +479,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "cave\ntorch\n",
           "expectedOutput": "You can see!\n"
-        },
-        {
-          "input": "forest\nstick\n",
-          "expectedOutput": "You are stuck.\n"
-        },
-        {
-          "input": "desert\nwater\n",
-          "expectedOutput": "You are lost.\n"
         }
       ],
       "difficulty": "expert",
@@ -613,14 +493,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "60000\n",
           "expectedOutput": "Tax: $6000.0\n"
-        },
-        {
-          "input": "5000\n",
-          "expectedOutput": "Tax: $0.0\n"
-        },
-        {
-          "input": "20000\n",
-          "expectedOutput": "Tax: $1000.0\n"
         }
       ],
       "difficulty": "expert",

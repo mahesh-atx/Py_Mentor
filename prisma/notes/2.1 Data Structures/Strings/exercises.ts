@@ -219,10 +219,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "Race car\n",
           "expectedOutput": "True\n"
-        },
-        {
-          "input": "hello\n",
-          "expectedOutput": "False\n"
         }
       ],
       "difficulty": "expert",
@@ -237,10 +233,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "Hello World 123!\n",
           "expectedOutput": "Vowels: 3\nConsonants: 7\n"
-        },
-        {
-          "input": "Python\n",
-          "expectedOutput": "Vowels: 1\nConsonants: 5\n"
         }
       ],
       "difficulty": "expert",

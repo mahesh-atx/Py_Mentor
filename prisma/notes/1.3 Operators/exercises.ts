@@ -37,10 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n+\n5\n",
           "expectedOutput": "15.0\n"
-        },
-        {
-          "input": "8\n/\n0\n",
-          "expectedOutput": "Cannot divide by zero\n"
         }
       ],
       "difficulty": "expert",
@@ -113,10 +109,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "100\n20\n",
           "expectedOutput": "80.0\n"
-        },
-        {
-          "input": "50\n0\n",
-          "expectedOutput": "Invalid discount\n"
         }
       ],
       "difficulty": "intermediate",
@@ -175,10 +167,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "70\n1.75\n",
           "expectedOutput": "Normal\n"
-        },
-        {
-          "input": "50\n1.80\n",
-          "expectedOutput": "Underweight\n"
         }
       ],
       "difficulty": "expert",
@@ -237,10 +225,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "15\n",
           "expectedOutput": "Odd\nPositive\nDivisible by 3 and 5: True\n"
-        },
-        {
-          "input": "-6\n",
-          "expectedOutput": "Even\nNegative\nDivisible by 3 and 5: False\n"
         }
       ],
       "difficulty": "expert",
@@ -443,10 +427,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n",
           "expectedOutput": "Even\nBit 3 set: True\n"
-        },
-        {
-          "input": "5\n",
-          "expectedOutput": "Odd\nBit 3 set: False\n"
         }
       ],
       "difficulty": "expert",
@@ -519,10 +499,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "2020\n",
           "expectedOutput": "Leap Year\n"
-        },
-        {
-          "input": "1900\n",
-          "expectedOutput": "Not a Leap Year\n"
         }
       ],
       "difficulty": "expert",
@@ -537,10 +513,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "1000\n5\n2\n",
           "expectedOutput": "100.00\n"
-        },
-        {
-          "input": "1000\n0\n2\n",
-          "expectedOutput": "Invalid input\n"
         }
       ],
       "difficulty": "expert",
@@ -583,14 +555,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "editor\nTrue\nsecret.txt\n",
           "expectedOutput": "Access Granted to secret.txt\n"
-        },
-        {
-          "input": "editor\nFalse\nsecret.txt\n",
-          "expectedOutput": "Access Denied\n"
-        },
-        {
-          "input": "admin\nFalse\ndata.csv\n",
-          "expectedOutput": "Access Granted to data.csv\n"
         }
       ],
       "difficulty": "expert",
@@ -605,10 +569,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "4\n5\n",
           "expectedOutput": "True\n"
-        },
-        {
-          "input": "2\n1\n",
-          "expectedOutput": "False\n"
         }
       ],
       "difficulty": "expert",

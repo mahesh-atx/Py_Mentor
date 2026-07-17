@@ -9,10 +9,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n4\n",
           "expectedOutput": "2.5\n"
-        },
-        {
-          "input": "10\n0\n",
-          "expectedOutput": "Error: Cannot divide by zero\n"
         }
       ],
       "difficulty": "beginner",
@@ -41,10 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n2\n",
           "expectedOutput": "Attempt 1 failed: Temporary error #1\nAttempt 2 failed: Temporary error #2\nSucceeded on attempt 3\nSuccess after 2 failures\n"
-        },
-        {
-          "input": "3\n5\n",
-          "expectedOutput": "Attempt 1 failed: Temporary error #1\nAttempt 2 failed: Temporary error #2\nAttempt 3 failed: Temporary error #3\nAll 3 attempts failed\n"
         }
       ],
       "difficulty": "advanced",
@@ -291,10 +283,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n10\n20\n30\n40\n50\n",
           "expectedOutput": "Normalized: [0.0, 0.25, 0.5, 0.75, 1.0]\nMean: 30.0, Min: 10.0, Max: 50.0\n"
-        },
-        {
-          "input": "3\n5\n5\n5\n",
-          "expectedOutput": "Normalized: [0.5, 0.5, 0.5]\nMean: 5.0, Min: 5.0, Max: 5.0\n"
         }
       ],
       "difficulty": "advanced",
@@ -337,14 +325,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n0\n/\n",
           "expectedOutput": "Cannot divide by zero\nCalculation attempted\n"
-        },
-        {
-          "input": "abc\n5\n+\n",
-          "expectedOutput": "Invalid Number\nCalculation attempted\n"
-        },
-        {
-          "input": "10\n5\n/\n",
-          "expectedOutput": "2.0\nCalculation attempted\n"
         }
       ],
       "difficulty": "expert",

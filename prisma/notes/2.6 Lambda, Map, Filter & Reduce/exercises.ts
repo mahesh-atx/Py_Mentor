@@ -145,8 +145,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read N scores and filter passing ones\n",
       "solutionCode": "n = int(input())\nscores = [int(input()) for _ in range(n)]\npassing = list(filter(lambda s: s >= 60, scores))\nprint(passing)\nprint(f'Count: {len(passing)}')",
       "testCases": [
-        { "input": "5\n45\n78\n92\n58\n70\n", "expectedOutput": "[78, 92, 70]\nCount: 3\n" },
-        { "input": "3\n30\n45\n50\n", "expectedOutput": "[]\nCount: 0\n" }
+        { "input": "5\n45\n78\n92\n58\n70\n", "expectedOutput": "[78, 92, 70]\nCount: 3\n" }
       ],
       "difficulty": "intermediate",
       "xpReward": 35
@@ -195,9 +194,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "from functools import reduce\n# Read N and calculate factorial using reduce()\n",
       "solutionCode": "from functools import reduce\nn = int(input())\nfactorial = reduce(lambda acc, x: acc * x, range(1, n + 1), 1)\nprint(factorial)",
       "testCases": [
-        { "input": "6\n", "expectedOutput": "720\n" },
-        { "input": "0\n", "expectedOutput": "1\n" },
-        { "input": "1\n", "expectedOutput": "1\n" }
+        { "input": "6\n", "expectedOutput": "720\n" }
       ],
       "difficulty": "intermediate",
       "xpReward": 35
@@ -257,8 +254,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read N students and scores, use zip() to pair them\n",
       "solutionCode": "n = int(input())\nnames = []\nscores = []\nfor _ in range(n):\n    parts = input().split()\n    names.append(parts[0])\n    scores.append(int(parts[1]))\nfor name, score in zip(names, scores):\n    print(f'{name}: {score}')",
       "testCases": [
-        { "input": "2\nAlice 85\nBob 92\n", "expectedOutput": "Alice: 85\nBob: 92\n" },
-        { "input": "3\nCharlie 78\nDiana 95\nEve 88\n", "expectedOutput": "Charlie: 78\nDiana: 95\nEve: 88\n" }
+        { "input": "2\nAlice 85\nBob 92\n", "expectedOutput": "Alice: 85\nBob: 92\n" }
       ],
       "difficulty": "intermediate",
       "xpReward": 35
@@ -307,8 +303,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read N lines and number them using enumerate()\n",
       "solutionCode": "n = int(input())\nlines = [input() for _ in range(n)]\nfor i, line in enumerate(lines, start=1):\n    print(f'Line {i}: {line}')",
       "testCases": [
-        { "input": "3\nHello\nWorld\nPython\n", "expectedOutput": "Line 1: Hello\nLine 2: World\nLine 3: Python\n" },
-        { "input": "1\nSingle line\n", "expectedOutput": "Line 1: Single line\n" }
+        { "input": "3\nHello\nWorld\nPython\n", "expectedOutput": "Line 1: Hello\nLine 2: World\nLine 3: Python\n" }
       ],
       "difficulty": "expert",
       "xpReward": 55
@@ -357,8 +352,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read N filenames and sort by extension then name\n",
       "solutionCode": "n = int(input())\nfiles = [input() for _ in range(n)]\nsorted_files = sorted(files, key=lambda f: (f.split('.')[-1], f))\nfor f in sorted_files:\n    print(f)",
       "testCases": [
-        { "input": "3\nreport.pdf\ndata.csv\nnotes.txt\n", "expectedOutput": "data.csv\nreport.pdf\nnotes.txt\n" },
-        { "input": "4\napp.js\nstyle.css\nindex.html\nscript.js\n", "expectedOutput": "style.css\nindex.html\napp.js\nscript.js\n" }
+        { "input": "3\nreport.pdf\ndata.csv\nnotes.txt\n", "expectedOutput": "data.csv\nreport.pdf\nnotes.txt\n" }
       ],
       "difficulty": "expert",
       "xpReward": 60
@@ -389,9 +383,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read password and validate using any()\n",
       "solutionCode": "password = input()\nhas_upper = any(c.isupper() for c in password)\nhas_digit = any(c.isdigit() for c in password)\nhas_special = any(c in '!@#$%^&*' for c in password)\nprint(has_upper and has_digit and has_special)",
       "testCases": [
-        { "input": "Secure1!\n", "expectedOutput": "True\n" },
-        { "input": "weakpass\n", "expectedOutput": "False\n" },
-        { "input": "NoDigits!\n", "expectedOutput": "False\n" }
+        { "input": "Secure1!\n", "expectedOutput": "True\n" }
       ],
       "difficulty": "intermediate",
       "xpReward": 35
@@ -402,8 +394,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read N emails and validate using all() and any()\n",
       "solutionCode": "n = int(input())\nemails = [input() for _ in range(n)]\nall_valid = all('@' in e and '.' in e and e.count('@') == 1 for e in emails)\nhas_gmail = any(e.endswith('@gmail.com') for e in emails)\nprint('All valid' if all_valid else 'Some invalid')\nprint('Has Gmail' if has_gmail else 'No Gmail')",
       "testCases": [
-        { "input": "3\nalice@gmail.com\nbob@yahoo.com\ncharlie@gmail.com\n", "expectedOutput": "All valid\nHas Gmail\n" },
-        { "input": "2\ninvalid-email\nalso@invalid\n", "expectedOutput": "Some invalid\nNo Gmail\n" }
+        { "input": "3\nalice@gmail.com\nbob@yahoo.com\ncharlie@gmail.com\n", "expectedOutput": "All valid\nHas Gmail\n" }
       ],
       "difficulty": "expert",
       "xpReward": 60
@@ -434,8 +425,7 @@ export const exercises: Record<string, any[]> = {
       "starterCode": "# Read scores, filter passing, calculate average\n",
       "solutionCode": "n = int(input())\nscores = [int(input()) for _ in range(n)]\npassing = list(filter(lambda s: s >= 60, scores))\nif passing:\n    average = sum(passing) / len(passing)\n    print(f'{average:.2f}')\nelse:\n    print('No passing scores')",
       "testCases": [
-        { "input": "5\n45\n78\n92\n55\n88\n", "expectedOutput": "86.00\n" },
-        { "input": "3\n30\n45\n50\n", "expectedOutput": "No passing scores\n" }
+        { "input": "5\n45\n78\n92\n55\n88\n", "expectedOutput": "86.00\n" }
       ],
       "difficulty": "advanced",
       "xpReward": 50

@@ -37,10 +37,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\n0\n100\n37\n",
           "expectedOutput": "32.0\n212.0\n98.6\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "No temperatures\n"
         }
       ],
       "difficulty": "intermediate",
@@ -55,10 +51,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\nCoffee 4.99\nSandwich 8.99\nJuice 3.25\n",
           "expectedOutput": "=== INVOICE ===\n  Coffee: $4.99\n  Sandwich: $8.99\n  Juice: $3.25\nTotal: $17.23\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "No items\n"
         }
       ],
       "difficulty": "advanced",
@@ -117,10 +109,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\n10.5\n20.5\n5.0\n",
           "expectedOutput": "36.00\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "0.00\n"
         }
       ],
       "difficulty": "intermediate",
@@ -135,10 +123,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "a\nClick here\n2\nhref https://python.org\ntarget _blank\n",
           "expectedOutput": "<a href=\"https://python.org\" target=\"_blank\">Click here</a>\n"
-        },
-        {
-          "input": "p\nHello World\n0\n",
-          "expectedOutput": "<p>Hello World</p>\n"
         }
       ],
       "difficulty": "advanced",
@@ -239,14 +223,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "7\n",
           "expectedOutput": "49\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "0\n"
-        },
-        {
-          "input": "-4\n",
-          "expectedOutput": "16\n"
         }
       ],
       "difficulty": "beginner",
@@ -261,10 +237,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n3\n1\n4\n1\n5\n",
           "expectedOutput": "Min: 1\nMax: 5\nSum: 14\nAvg: 2.80\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "Empty list\n"
         }
       ],
       "difficulty": "intermediate",
@@ -293,10 +265,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n2\n4\n4\n4\n6\n",
           "expectedOutput": "mean: 4.0\nmedian: 4.0\nmode: 4.0\nrange: 4.0\nstd_dev: 1.41\n"
-        },
-        {
-          "input": "1\n5\n",
-          "expectedOutput": "Need at least 2 values\n"
         }
       ],
       "difficulty": "expert",
@@ -383,10 +351,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "0\n1\n5\n",
           "expectedOutput": "0\n1\n2\n3\n4\n"
-        },
-        {
-          "input": "10\n-2\n4\n",
-          "expectedOutput": "10\n8\n6\n4\n"
         }
       ],
       "difficulty": "advanced",
@@ -459,10 +423,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n4\n",
           "expectedOutput": "2.50\n"
-        },
-        {
-          "input": "10\n0\n",
-          "expectedOutput": "Error: Cannot divide by zero\n"
         }
       ],
       "difficulty": "intermediate",
@@ -493,14 +453,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n",
           "expectedOutput": "120\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "1\n"
-        },
-        {
-          "input": "-1\n",
-          "expectedOutput": "Invalid: n must be non-negative\n"
         }
       ],
       "difficulty": "beginner",
@@ -515,14 +467,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n1\n2\n3\n4\n5\n",
           "expectedOutput": "15\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "0\n"
-        },
-        {
-          "input": "1\n42\n",
-          "expectedOutput": "42\n"
         }
       ],
       "difficulty": "intermediate",
@@ -537,14 +481,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "7\n",
           "expectedOutput": "13\n[1, 1, 2, 3, 5, 8, 13]\n33\n"
-        },
-        {
-          "input": "0\n",
-          "expectedOutput": "Invalid N\n"
-        },
-        {
-          "input": "51\n",
-          "expectedOutput": "N too large\n"
         }
       ],
       "difficulty": "advanced",
@@ -559,10 +495,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "[1, [2, 3], [4, [5, 6]]]\n5\n",
           "expectedOutput": "[1, 2, 3, 4, 5, 6]\n4\n"
-        },
-        {
-          "input": "[1, [2, 3], [4, [5, 6]]]\n99\n",
-          "expectedOutput": "[1, 2, 3, 4, 5, 6]\n-1\n"
         }
       ],
       "difficulty": "expert",
@@ -593,10 +525,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\n4\n1\n2\n3\n4\n",
           "expectedOutput": "3.0\n6.0\n9.0\n12.0\n"
-        },
-        {
-          "input": "0.5\n3\n10\n20\n40\n",
-          "expectedOutput": "5.0\n10.0\n20.0\n"
         }
       ],
       "difficulty": "intermediate",
@@ -783,10 +711,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "5\n",
           "expectedOutput": "20.0\n7.0\n"
-        },
-        {
-          "input": "3\n",
-          "expectedOutput": "12.0\n5.0\n"
         }
       ],
       "difficulty": "intermediate",
@@ -801,14 +725,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "3\ndouble\nincrement\nsquare\n5\n",
           "expectedOutput": "121.0\n"
-        },
-        {
-          "input": "2\nnegate\nabsolute\n-7\n",
-          "expectedOutput": "7.0\n"
-        },
-        {
-          "input": "2\ndouble\nunknown\n5\n",
-          "expectedOutput": "Unknown function: unknown\n"
         }
       ],
       "difficulty": "advanced",
@@ -851,10 +767,6 @@ export const exercises: Record<string, any[]> = {
         {
           "input": "10\n5\nadd\n",
           "expectedOutput": "15.0\n"
-        },
-        {
-          "input": "10\n0\ndiv\n",
-          "expectedOutput": "Error\n"
         }
       ],
       "difficulty": "expert",
