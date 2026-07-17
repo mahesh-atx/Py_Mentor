@@ -18,10 +18,9 @@ pymentor
 
 **What happens on first run:**
 1. Creates `~/.pymentor/` data directory
-2. Initializes local SQLite database
-3. Seeds curriculum (lessons, exercises, quizzes, projects, achievements)
-4. Starts a local server on `localhost:3000`
-5. Opens the browser automatically
+2. Installs the pre-seeded curriculum database (lessons, exercises, quizzes, projects, achievements)
+3. Starts a local server on `localhost:3000`
+4. Opens the browser automatically
 
 **All your data persists** in `~/.pymentor/pymentor.db` — notes, progress, bookmarks, streaks, achievements. Everything works offline except the AI Mentor chat (which needs an API key).
 

@@ -232,6 +232,7 @@ async function main() {
       "prisma/",
       "public/",
       "src/",
+      "pymentor.db",
     ],
     scripts: {
       start: "node dist/server/server.js",

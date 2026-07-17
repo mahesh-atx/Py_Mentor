@@ -276,6 +276,11 @@ describe("CLI: doctor command", () => {
     expect(output).toContain("Database");
   });
 
+  it("doctor checks curriculum data", () => {
+    const output = runCLI("doctor");
+    expect(output).toContain("Curriculum data");
+  });
+
   it("doctor checks migration files", () => {
     const output = runCLI("doctor");
     expect(output).toContain("Migration files");
@@ -340,6 +345,36 @@ describe("CLI: Data Directory", () => {
     runCLI("config");
     const content = fs.readFileSync(CONFIG_PATH, "utf-8");
     expect(() => JSON.parse(content)).not.toThrow();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// CLI: First-Run Setup (seeded database installation)
+// ---------------------------------------------------------------------------
+
+describe("CLI: First-Run Setup", () => {
+  it("resolves the pre-seeded database (dist first, then package root)", () => {
+    const content = fs.readFileSync(BIN, "utf-8");
+    expect(content).toContain("SEEDED_DB_PATH");
+    expect(content).toContain('path.join(ROOT_DIR, "dist", "pymentor.db")');
+    expect(content).toContain('path.join(ROOT_DIR, "pymentor.db")');
+  });
+
+  it("copies the pre-seeded curriculum database on first run", () => {
+    const content = fs.readFileSync(BIN, "utf-8");
+    expect(content).toContain("copyFileSync(SEEDED_DB_PATH, DB_PATH)");
+  });
+
+  it("falls back to migration SQL when no seeded database exists", () => {
+    const content = fs.readFileSync(BIN, "utf-8");
+    expect(content).toContain("applyMigration");
+    expect(content).toContain("00000000000000_init");
+  });
+
+  it("doctor reports the curriculum data status", () => {
+    const output = runCLI("doctor");
+    // Either the seeded db is found (✅) or reported as missing (⚠️)
+    expect(output).toMatch(/Curriculum data/);
   });
 });
 

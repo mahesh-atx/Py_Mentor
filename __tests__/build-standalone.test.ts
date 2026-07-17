@@ -228,6 +228,28 @@ describe("Build Scripts", () => {
     expect(content).toContain("copyDir");
   });
 
+  it("prepare-dist ships the pre-seeded database in the npm package", () => {
+    const content = fs.readFileSync(
+      path.join(ROOT, "scripts", "prepare-dist.js"),
+      "utf-8"
+    );
+    // The seeded DB must be copied into dist/ AND listed in the published
+    // package's files — otherwise npm silently drops it from the tarball.
+    expect(content).toContain('path.join(DIST, "pymentor.db")');
+    expect(content).toContain('"pymentor.db"');
+  });
+
+  it("prepare-dist copies migrations and curriculum notes into dist", () => {
+    const content = fs.readFileSync(
+      path.join(ROOT, "scripts", "prepare-dist.js"),
+      "utf-8"
+    );
+    // bin/cli.js needs migrations for first-run fallback, and seed.ts
+    // imports the notes/ curriculum modules.
+    expect(content).toContain('path.join(DIST, "prisma", "migrations")');
+    expect(content).toContain('path.join(DIST, "prisma", "notes")');
+  });
+
   it("scripts/build.sh exists and is executable", () => {
     const scriptPath = path.join(ROOT, "scripts", "build.sh");
     expect(fs.existsSync(scriptPath)).toBe(true);

@@ -18,9 +18,10 @@
  *
  * On first run, it automatically:
  *   1. Creates ~/.pymentor/ data directory
- *   2. Initializes the SQLite database
- *   3. Seeds curriculum data (lessons, exercises, quizzes, etc.)
- *   4. Starts the server and opens the browser
+ *   2. Installs the pre-seeded curriculum database (lessons, exercises,
+ *      quizzes, projects, achievements) — or creates an empty one from
+ *      the migration SQL as a fallback
+ *   3. Starts the server and opens the browser
  */
 
 const path = require("path");
@@ -56,6 +57,15 @@ const PRISMA_DIR = fs.existsSync(path.join(ROOT_DIR, "dist", "prisma"))
   : path.join(ROOT_DIR, "prisma");
 
 const MIGRATION_DIR = path.join(PRISMA_DIR, "migrations");
+
+// Pre-seeded curriculum database shipped with the package (produced by
+// `npm run db:push` + `npm run db:seed` and copied by prepare-dist.js).
+// Resolution order mirrors SERVER_DIR/PRISMA_DIR above:
+//   1. dist/pymentor.db — development checkout after `npm run build:npm`
+//   2. ./pymentor.db    — installed npm package root (or dev checkout root)
+const SEEDED_DB_PATH = fs.existsSync(path.join(ROOT_DIR, "dist", "pymentor.db"))
+  ? path.join(ROOT_DIR, "dist", "pymentor.db")
+  : path.join(ROOT_DIR, "pymentor.db");
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -219,30 +229,66 @@ async function cmdSetup() {
 
   console.log(`\x1b[36m│\x1b[0m  \x1b[36mℹ Initializing PyMentor Database...\x1b[0m\n\x1b[36m│\x1b[0m`);
 
-  // Step 1: Create the SQLite database using migration SQL
+  // Step 1: Install the SQLite database
   if (!fs.existsSync(DB_PATH)) {
     console.log("\x1b[36m├─\x1b[0m Database");
 
-    const initMigration = path.join(
-      MIGRATION_DIR,
-      "00000000000000_init",
-      "migration.sql"
-    );
+    if (fs.existsSync(SEEDED_DB_PATH)) {
+      // ── Fast path (normal case) ──────────────────────────────────────
+      // Copy the pre-seeded curriculum database shipped with the package.
+      // Same first-run behavior as the Electron app (see electron/main.js).
+      // The shipped DB always matches the shipped code, so no migration is
+      // needed on install.
+      try {
+        fs.copyFileSync(SEEDED_DB_PATH, DB_PATH);
+        console.log(
+          "\x1b[36m│  └─\x1b[0m \x1b[32m✔ Installed curriculum database\x1b[0m\n\x1b[36m│\x1b[0m"
+        );
+      } catch (error) {
+        console.error(
+          "  ❌ Failed to copy the curriculum database:",
+          error.message
+        );
+        process.exit(1);
+      }
+    } else {
+      // ── Fallback (dev checkouts without a built database) ────────────
+      // Create an empty database from the migration SQL. The curriculum
+      // must be seeded separately afterwards.
+      const initMigration = path.join(
+        MIGRATION_DIR,
+        "00000000000000_init",
+        "migration.sql"
+      );
 
-    if (!fs.existsSync(initMigration)) {
-      console.error("  ❌ Migration SQL not found at:", initMigration);
-      console.error("     Make sure prisma/migrations/ exists.");
-      process.exit(1);
-    }
+      if (!fs.existsSync(initMigration)) {
+        console.error("  ❌ No curriculum database or migration SQL found.");
+        console.error("     Expected one of:");
+        console.error("       -", SEEDED_DB_PATH);
+        console.error("       -", initMigration);
+        process.exit(1);
+      }
 
-    try {
-      applyMigration(initMigration);
-      console.log("\x1b[36m│  └─\x1b[0m \x1b[32m✔ Created SQLite database\x1b[0m\n\x1b[36m│\x1b[0m");
-    } catch (error) {
-      console.error("  ❌ Failed to create database:", error.message);
-      console.error("     Try installing better-sqlite3: npm install better-sqlite3");
-      console.error("     Or install sqlite3 CLI: apt install sqlite3");
-      process.exit(1);
+      try {
+        applyMigration(initMigration);
+        console.log(
+          "\x1b[36m│  └─\x1b[0m \x1b[32m✔ Created empty SQLite database\x1b[0m\n\x1b[36m│\x1b[0m"
+        );
+        console.log(
+          "\x1b[36m│  \x1b[33m⚠ No pre-seeded curriculum found — the app will be empty.\x1b[0m"
+        );
+        console.log(
+          "\x1b[36m│\x1b[0m    From a git checkout, run: npm run db:push && npm run db:seed"
+        );
+        console.log(
+          "\x1b[36m│\x1b[0m    From an npm install, please reinstall or report this issue.\n\x1b[36m│\x1b[0m"
+        );
+      } catch (error) {
+        console.error("  ❌ Failed to create database:", error.message);
+        console.error("     Try installing better-sqlite3: npm install better-sqlite3");
+        console.error("     Or install sqlite3 CLI: apt install sqlite3");
+        process.exit(1);
+      }
     }
   }
 
@@ -613,7 +659,17 @@ function cmdDoctor() {
     detail: dbExists ? `${DB_PATH} (${getDBSizeMB()} MB)` : "Not created yet (run 'pymentor' to create)",
   });
 
-  // ── Check 6: Migration files ──────────────────────────────────────────
+  // ── Check 6: Curriculum database (pre-seeded, shipped with the app) ────
+  const seededDbExists = fs.existsSync(SEEDED_DB_PATH);
+  checks.push({
+    label: "Curriculum data",
+    status: seededDbExists ? "✅" : "⚠️ ",
+    detail: seededDbExists
+      ? "Pre-seeded database found"
+      : "Not found (first run will create an empty database)",
+  });
+
+  // ── Check 7: Migration files ──────────────────────────────────────────
   const migrationFile = path.join(MIGRATION_DIR, "00000000000000_init", "migration.sql");
   const migrationExists = fs.existsSync(migrationFile);
   checks.push({
@@ -622,7 +678,7 @@ function cmdDoctor() {
     detail: migrationExists ? "Found" : `Not found at ${MIGRATION_DIR}`,
   });
 
-  // ── Check 7: Server build ─────────────────────────────────────────────
+  // ── Check 8: Server build ─────────────────────────────────────────────
   const serverExists = fs.existsSync(SERVER_PATH);
   checks.push({
     label: "Server build",
@@ -630,7 +686,7 @@ function cmdDoctor() {
     detail: serverExists ? "Found" : `Not found (run 'npm run build:npm' first)`,
   });
 
-  // ── Check 8: SQLite driver ────────────────────────────────────────────
+  // ── Check 9: SQLite driver ────────────────────────────────────────────
   let sqliteDriver = "none";
   let sqliteStatus = "❌";
   try {
@@ -658,7 +714,7 @@ function cmdDoctor() {
     detail: sqliteDriver === "none" ? "Not found (install better-sqlite3, sql.js, or sqlite3 CLI)" : sqliteDriver,
   });
 
-  // ── Check 9: AI Provider ──────────────────────────────────────────────
+  // ── Check 10: AI Provider ──────────────────────────────────────────────
   loadEnv();
   const hasOpenRouter = !!process.env.OPENROUTER_API_KEY;
   const hasNvidia = !!process.env.NVIDIA_API_KEY;
@@ -673,7 +729,7 @@ function cmdDoctor() {
     detail: aiProvider || "Not configured (optional — run 'pymentor config --set-key OPENROUTER_API_KEY=...')",
   });
 
-  // ── Check 10: Env file ────────────────────────────────────────────────
+  // ── Check 11: Env file ────────────────────────────────────────────────
   const envExists = fs.existsSync(ENV_PATH);
   checks.push({
     label: "Env file",
@@ -681,7 +737,7 @@ function cmdDoctor() {
     detail: envExists ? ENV_PATH : "Not created yet",
   });
 
-  // ── Check 11: Backups directory ───────────────────────────────────────
+  // ── Check 12: Backups directory ───────────────────────────────────────
   const backupsExist = fs.existsSync(BACKUP_DIR);
   const backupCount = backupsExist
     ? fs.readdirSync(BACKUP_DIR).filter((f) => f.endsWith(".db")).length
