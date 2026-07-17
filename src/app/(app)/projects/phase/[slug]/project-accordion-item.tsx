@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { CheckCircle2, Bot, GitBranch, Clock, Calculator, Loader2, Gamepad2, Trophy, FolderDot, Receipt, HelpCircle, CreditCard, ChevronDown, ChevronUp } from "lucide-react";
 import { toast } from "sonner";
 import { submitProjectAction } from "@/app/actions";
+import { parseStringList, parseMilestones } from "@/lib/parse-project-fields";
 
 interface Milestone {
   title: string;
@@ -37,35 +38,10 @@ export function ProjectAccordionItem({
   const [isReviewed, setIsReviewed] = useState(isCompletedInitially);
   const [repoLink, setRepoLink] = useState("");
 
-  let parsedSkills: string[] = [];
-  try {
-    if (project.skills) parsedSkills = JSON.parse(project.skills);
-    else if (project.requirements) parsedSkills = project.requirements.split(',').map((s: string) => s.trim());
-  } catch(e) {}
-
-  const requirements = project.requirements && project.requirements.startsWith('[') ? JSON.parse(project.requirements) : parsedSkills;
-  let parsedMilestones: Milestone[] = [];
-  try {
-    if (project.milestones && project.milestones.startsWith('[')) {
-      parsedMilestones = JSON.parse(project.milestones);
-    } else if (project.milestones) {
-      parsedMilestones = project.milestones.split('\n').map((line: string) => {
-        const match = line.match(/^\d+\.\s+(.*)/);
-        return { title: match ? match[1] : line.trim(), description: "" };
-      });
-    }
-  } catch(e) {}
-  const milestones = parsedMilestones;
-
-  let parsedHints = [];
-  try {
-    if (project.hints && project.hints.startsWith('[')) {
-      parsedHints = JSON.parse(project.hints);
-    } else if (project.hints) {
-      parsedHints = project.hints.split('\n').map((s: string) => s.trim());
-    }
-  } catch(e) {}
-  const hints = parsedHints;
+  const parsedSkills: string[] = parseStringList(project.skills ?? project.requirements);
+  const requirements = parseStringList(project.requirements);
+  const milestones = parseMilestones(project.milestones);
+  const hints = parseStringList(project.hints);
 
   let ProjectIcon = HelpCircle;
   if (project.slug.includes("calculator")) ProjectIcon = Calculator;

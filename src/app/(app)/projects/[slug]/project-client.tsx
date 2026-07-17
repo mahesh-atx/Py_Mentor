@@ -9,6 +9,7 @@ import { CheckCircle2, ChevronLeft, Bot, GitBranch, Clock, Calculator, Loader2, 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { submitProjectAction } from "@/app/actions";
+import { parseStringList, parseMilestones } from "@/lib/parse-project-fields";
 
 interface Milestone {
   title: string;
@@ -32,9 +33,9 @@ export default function ProjectClient({ project }: ProjectClientProps) {
   const [isReviewed, setIsReviewed] = useState(false);
   const [repoLink, setRepoLink] = useState("");
 
-  const requirements = project.requirements ? JSON.parse(project.requirements) : [];
-  const milestones = project.milestones ? JSON.parse(project.milestones) : [];
-  const hints = project.hints ? JSON.parse(project.hints) : [];
+  const requirements = parseStringList(project.requirements);
+  const milestones = parseMilestones(project.milestones);
+  const hints = parseStringList(project.hints);
   
   const ProjectIcon = IconMap[project.icon] || Trophy;
 

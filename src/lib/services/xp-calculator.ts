@@ -59,7 +59,9 @@ export function computeXp(
  * @param completedLessonSlugs  Array of lesson slugs the user completed.
  * @param exerciseScores        Array of { exerciseId, score } for passed
  *                              submissions. Duplicate exerciseId entries are
- *                              de-duplicated (only the first score is counted).
+ *                              de-duplicated (the BEST score is counted —
+ *                              rows hold xpReward on the first pass and 0 on
+ *                              later passes, and query order isn't guaranteed).
  * @param quizResults           Array of { quizId, score, total } — one row per
  *                              quiz (the table upserts), each counted once.
  * @param quizXpMap             Map of quiz slug → xpReward.
@@ -79,15 +81,22 @@ export function computeXpFromRaw(
     lessonXp += lessonXpMap.get(slug) ?? 50; // fallback for legacy data
   }
 
-  // Exercise XP: only count each exercise once (first passing submission).
-  const seen = new Set<string>();
-  let exerciseXp = 0;
+  // Exercise XP: count each exercise once, using its best score. Submission
+  // rows store xpReward on the first pass and 0 on re-passes, and findMany()
+  // without orderBy doesn't guarantee which row comes first.
+  const bestByExercise = new Map<string, number>();
   for (const { exerciseId, score } of exerciseScores) {
-    if (exerciseId && !seen.has(exerciseId)) {
-      seen.add(exerciseId);
-      exerciseXp += score;
+    if (exerciseId) {
+      bestByExercise.set(
+        exerciseId,
+        Math.max(bestByExercise.get(exerciseId) ?? 0, score)
+      );
     }
   }
+  let exerciseXp = 0;
+  bestByExercise.forEach((score) => {
+    exerciseXp += score;
+  });
 
   // Quiz XP: proportional to the stored score (mirrors saveQuizSubmission).
   let quizXp = 0;

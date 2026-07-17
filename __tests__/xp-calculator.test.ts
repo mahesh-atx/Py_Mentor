@@ -44,13 +44,27 @@ describe("computeXpFromRaw", () => {
     expect(xp.lessonXp).toBe(50 + 50);
   });
 
-  it("de-duplicates exercise submissions (first score counts)", () => {
+  it("de-duplicates exercise submissions (best score counts)", () => {
     const xp = computeXpFromRaw(
       [],
       [
         { exerciseId: "ex-1", score: 20 },
         { exerciseId: "ex-1", score: 99 },
         { exerciseId: "ex-2", score: 30 },
+      ],
+      lessonXpMap
+    );
+    expect(xp.exerciseXp).toBe(129); // best of ex-1 (99) + ex-2 (30)
+  });
+
+  it("counts the first-pass XP even when a zero-score re-pass comes first", () => {
+    // Submission rows store xpReward on first pass, 0 on re-passes — and
+    // row order from findMany() isn't guaranteed. The 50 must win.
+    const xp = computeXpFromRaw(
+      [],
+      [
+        { exerciseId: "ex-1", score: 0 },
+        { exerciseId: "ex-1", score: 50 },
       ],
       lessonXpMap
     );
