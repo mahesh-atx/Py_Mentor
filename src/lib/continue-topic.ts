@@ -5,11 +5,16 @@
  * matching completed Progress row for the user. Topics without any published
  * lessons are treated as complete (there is nothing to resume in them).
  *
+ * IMPORTANT: Progress rows store lesson SLUGS in their `lessonId` column
+ * (the lesson client calls completeLessonAction with `lesson.slug`), so
+ * completion must be checked against `lesson.slug`. We also accept
+ * `lesson.id` defensively for any legacy rows written with raw UUIDs.
+ *
  * Pure function (no DB access) so it can be unit-tested directly.
  */
 
 export interface TopicWithLessons {
-  lessons?: { id: string }[] | null;
+  lessons?: { id: string; slug?: string }[] | null;
   [key: string]: unknown;
 }
 
@@ -22,6 +27,10 @@ export function pickContinueIndex(
   completedLessonIds: ReadonlySet<string>
 ): number {
   return topics.findIndex((topic) =>
-    (topic.lessons ?? []).some((lesson) => !completedLessonIds.has(lesson.id))
+    (topic.lessons ?? []).some(
+      (lesson) =>
+        !completedLessonIds.has(lesson.slug ?? "") &&
+        !completedLessonIds.has(lesson.id)
+    )
   );
 }

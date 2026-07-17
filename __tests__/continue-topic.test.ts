@@ -48,6 +48,26 @@ describe("pickContinueIndex", () => {
     const topics = [topic("l1")];
     expect(pickContinueIndex(topics, new Set(["other"]))).toBe(0);
   });
+
+  it("matches Progress rows that store lesson SLUGS (production shape)", () => {
+    // Regression: completeLessonAction is called with lesson.slug, so the
+    // completed set contains slugs while lessons carry UUID ids. Matching
+    // only on id made every topic look incomplete -> the dashboard always
+    // resumed at the first topic ("Introduction to Python").
+    const topics = [
+      { lessons: [{ id: "uuid-1", slug: "introduction-to-python" }] },
+      { lessons: [{ id: "uuid-2", slug: "python-setup" }] },
+      { lessons: [{ id: "uuid-3", slug: "hello-world" }] },
+    ];
+    const completed = new Set(["introduction-to-python", "python-setup"]);
+    expect(pickContinueIndex(topics, completed)).toBe(2);
+    expect(
+      pickContinueIndex(
+        topics,
+        new Set(["introduction-to-python", "python-setup", "hello-world"])
+      )
+    ).toBe(-1);
+  });
 });
 
 // ---------------------------------------------------------------------------

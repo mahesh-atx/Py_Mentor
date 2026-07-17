@@ -9,6 +9,7 @@ const isDev = !app.isPackaged;
 
 let mainWindow;
 let nextProcess;
+let serverUrl = null; // remembered so macOS re-activate can reload the app
 
 function isPortInUse(port) {
   return new Promise((resolve) => {
@@ -25,13 +26,17 @@ function isPortInUse(port) {
   });
 }
 
-function waitForServer(port) {
-  return new Promise((resolve) => {
+function waitForServer(port, timeoutMs = 60000) {
+  return new Promise((resolve, reject) => {
+    const startedAt = Date.now();
     const interval = setInterval(async () => {
       const ready = await isPortInUse(port);
       if (ready) {
         clearInterval(interval);
         resolve();
+      } else if (Date.now() - startedAt > timeoutMs) {
+        clearInterval(interval);
+        reject(new Error(`Server did not bind port ${port} within ${timeoutMs / 1000}s`));
       }
     }, 250);
   });
@@ -109,8 +114,11 @@ async function startNextServer() {
     return;
   }
 
-  // Use the standalone node.exe bundled with the app to avoid Electron ABI issues
-  const nodeExecutable = path.join(path.dirname(finalServerPath), 'node.exe');
+  // Use the standalone Node runtime bundled next to the server to avoid
+  // Electron ABI issues. The app currently ships Windows-only (NSIS), but
+  // resolve the binary name per-platform so macOS/Linux builds don't break.
+  const nodeBinary = process.platform === 'win32' ? 'node.exe' : 'node';
+  const nodeExecutable = path.join(path.dirname(finalServerPath), nodeBinary);
 
   if (!fs.existsSync(dbPath)) {
     try {
@@ -156,6 +164,11 @@ async function startNextServer() {
     console.log(`Next.js process exited with code ${code}`);
   });
 
+  // Version is useful in dev too (Settings page) — register unconditionally.
+  ipcMain.handle('get-version', () => {
+    return app.getVersion();
+  });
+
   // Auto Updater Setup
   if (!isDev) {
     autoUpdater.autoDownload = false;
@@ -193,19 +206,29 @@ async function startNextServer() {
       autoUpdater.quitAndInstall();
     });
     
-    ipcMain.handle('get-version', () => {
-      return app.getVersion();
-    });
-    
     autoUpdater.checkForUpdates();
   }
 
-  // Wait until the server actually binds the port
-  await waitForServer(port);
-  
+  // Wait until the server actually binds the port — with a timeout so a
+  // crashed server (e.g. corrupt DB) doesn't leave the loading screen up
+  // forever.
+  try {
+    await waitForServer(port);
+  } catch (err) {
+    console.error(err);
+    dialog.showErrorBox(
+      'Server Failed to Start',
+      `PyMentor's local server did not start in time.\n\n` +
+      `Please restart the app. If the problem persists, check the log at:\n${logPath}`
+    );
+    app.quit();
+    return;
+  }
+
   // Now load the real URL
+  serverUrl = `http://localhost:${port}`;
   if (mainWindow) {
-    mainWindow.loadURL(`http://localhost:${port}`);
+    mainWindow.loadURL(serverUrl);
   }
 }
 
@@ -221,7 +244,13 @@ app.whenReady().then(() => {
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
-      if (isDev) mainWindow.loadURL(`http://localhost:3000`);
+      if (isDev) {
+        mainWindow.loadURL(`http://localhost:3000`);
+      } else if (serverUrl) {
+        // Production: the server is still running — reload it instead of
+        // leaving the new window stuck on the loading screen.
+        mainWindow.loadURL(serverUrl);
+      }
     }
   });
 });

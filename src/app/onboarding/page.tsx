@@ -1,4 +1,3 @@
-import { CurriculumService } from "@/lib/services/curriculum.service";
 import OnboardingClient from "./onboarding-client";
 
 export default async function OnboardingPage() {
