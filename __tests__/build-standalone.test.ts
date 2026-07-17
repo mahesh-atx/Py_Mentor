@@ -17,11 +17,15 @@ const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 const STANDALONE = path.join(ROOT, ".next", "standalone");
 
+// Build-output tests only run after `npm run build:npm` — skip in fresh checkouts
+const hasStandalone = fs.existsSync(STANDALONE);
+const hasDist = fs.existsSync(DIST);
+
 // ---------------------------------------------------------------------------
 // Build Output Structure
 // ---------------------------------------------------------------------------
 
-describe("Next.js Standalone Build Output", () => {
+describe.skipIf(!hasStandalone)("Next.js Standalone Build Output", () => {
   it("produces a .next/standalone directory", () => {
     expect(fs.existsSync(STANDALONE)).toBe(true);
   });
@@ -47,7 +51,7 @@ describe("Next.js Standalone Build Output", () => {
 // Dist Directory Structure
 // ---------------------------------------------------------------------------
 
-describe("Dist Directory (npm package)", () => {
+describe.skipIf(!hasDist)("Dist Directory (npm package)", () => {
   // ── Core server files ─────────────────────────────────────────────────
 
   it("has dist/server/server.js", () => {
@@ -80,15 +84,15 @@ describe("Dist Directory (npm package)", () => {
 
   // ── Prisma files ──────────────────────────────────────────────────────
 
-  it("has dist/prisma/schema.sqlite.prisma", () => {
+  it("has dist/prisma/schema.prisma", () => {
     expect(
-      fs.existsSync(path.join(DIST, "prisma", "schema.sqlite.prisma"))
+      fs.existsSync(path.join(DIST, "prisma", "schema.prisma"))
     ).toBe(true);
   });
 
-  it("has dist/prisma/migrations.sqlite/", () => {
+  it("has dist/prisma/migrations/", () => {
     expect(
-      fs.existsSync(path.join(DIST, "prisma", "migrations.sqlite"))
+      fs.existsSync(path.join(DIST, "prisma", "migrations"))
     ).toBe(true);
   });
 
@@ -96,7 +100,7 @@ describe("Dist Directory (npm package)", () => {
     const migrationFile = path.join(
       DIST,
       "prisma",
-      "migrations.sqlite",
+      "migrations",
       "00000000000000_init",
       "migration.sql"
     );
@@ -112,12 +116,6 @@ describe("Dist Directory (npm package)", () => {
     // Check at least one module directory exists
     const notes = fs.readdirSync(path.join(DIST, "prisma", "notes"));
     expect(notes.length).toBeGreaterThan(0);
-  });
-
-  // ── Seed wrapper ──────────────────────────────────────────────────────
-
-  it("has dist/seed/seed.js", () => {
-    expect(fs.existsSync(path.join(DIST, "seed", "seed.js"))).toBe(true);
   });
 
   // ── CLI binary ────────────────────────────────────────────────────────
@@ -152,7 +150,7 @@ describe("Dist Directory (npm package)", () => {
 // File Integrity Checks
 // ---------------------------------------------------------------------------
 
-describe("File Integrity", () => {
+describe.skipIf(!hasDist)("File Integrity", () => {
   it("server.js is a valid JavaScript file", () => {
     const serverPath = path.join(DIST, "server", "server.js");
     const content = fs.readFileSync(serverPath, "utf-8");
@@ -162,11 +160,11 @@ describe("File Integrity", () => {
 
   it("SQLite schema in dist matches source", () => {
     const srcSchema = fs.readFileSync(
-      path.join(ROOT, "prisma", "schema.sqlite.prisma"),
+      path.join(ROOT, "prisma", "schema.prisma"),
       "utf-8"
     );
     const distSchema = fs.readFileSync(
-      path.join(DIST, "prisma", "schema.sqlite.prisma"),
+      path.join(DIST, "prisma", "schema.prisma"),
       "utf-8"
     );
     expect(distSchema).toBe(srcSchema);
@@ -174,11 +172,11 @@ describe("File Integrity", () => {
 
   it("migration SQL in dist matches source", () => {
     const srcMigration = fs.readFileSync(
-      path.join(ROOT, "prisma", "migrations.sqlite", "00000000000000_init", "migration.sql"),
+      path.join(ROOT, "prisma", "migrations", "00000000000000_init", "migration.sql"),
       "utf-8"
     );
     const distMigration = fs.readFileSync(
-      path.join(DIST, "prisma", "migrations.sqlite", "00000000000000_init", "migration.sql"),
+      path.join(DIST, "prisma", "migrations", "00000000000000_init", "migration.sql"),
       "utf-8"
     );
     expect(distMigration).toBe(srcMigration);
@@ -238,15 +236,15 @@ describe("Build Scripts", () => {
     expect(content.startsWith("#!/usr/bin/env bash")).toBe(true);
   });
 
-  it("build.sh references both npm and cloud modes", () => {
+  it("build.sh is the single-mode (SQLite/npm) pipeline", () => {
     const content = fs.readFileSync(
       path.join(ROOT, "scripts", "build.sh"),
       "utf-8"
     );
-    expect(content).toContain("--cloud");
     expect(content).toContain("SQLite");
-    expect(content).toContain("PostgreSQL");
     expect(content).toContain("prepare-dist");
+    expect(content).not.toContain("--cloud");
+    expect(content).not.toContain("PostgreSQL");
   });
 
   it("package.json has correct build scripts", () => {
@@ -255,7 +253,6 @@ describe("Build Scripts", () => {
     );
     expect(pkg.scripts.build).toBeDefined();
     expect(pkg.scripts["build:npm"]).toBeDefined();
-    expect(pkg.scripts["build:cloud"]).toBeDefined();
     expect(pkg.scripts["prepare-dist"]).toBeDefined();
     expect(pkg.scripts["start:dist"]).toBeDefined();
   });
@@ -271,7 +268,7 @@ describe("Build Scripts", () => {
 // Dist Size Checks
 // ---------------------------------------------------------------------------
 
-describe("Dist Size", () => {
+describe.skipIf(!hasDist)("Dist Size", () => {
   function getDirSizeMB(dir: string): number {
     if (!fs.existsSync(dir)) return 0;
     let totalSize = 0;

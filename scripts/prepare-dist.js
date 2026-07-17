@@ -19,13 +19,13 @@
  *   │   ├── node_modules/     → Minimal deps (only what's needed to run)
  *   │   └── package.json      → Minimal package.json
  *   ├── prisma/
- *   │   ├── schema.sqlite.prisma  → SQLite schema
- *   │   ├── migrations.sqlite/    → SQLite migrations
+ *   │   ├── schema.prisma         → SQLite schema
+ *   │   ├── migrations/           → SQLite migrations
  *   │   ├── seed.ts               → Curriculum seeder (TS)
  *   │   └── notes/                → Curriculum content modules
+ *   ├── pymentor.db           → Pre-seeded SQLite database
  *   ├── public/               → Static assets (fonts, pyodide)
- *   ├── bin/                  → CLI entry point
- *   └── seed/                 → Seed wrapper script
+ *   └── bin/                  → CLI entry point
  */
 
 const fs = require("fs");
@@ -163,11 +163,15 @@ async function main() {
   console.log("  → Copying public/ assets...");
   copyDir(path.join(ROOT, "public"), path.join(DIST, "server", "public"));
 
-  // ── 4. Copy Prisma SQLite schema and Database ───────────────────────
-  console.log("  → Copying Prisma SQLite schema and pymentor.db...");
+  // ── 4. Copy Prisma SQLite schema, migrations and database ───────────
+  console.log("  → Copying Prisma schema, migrations and pymentor.db...");
   copyFile(
-    path.join(ROOT, "prisma", "schema.sqlite.prisma"),
-    path.join(DIST, "prisma", "schema.sqlite.prisma")
+    path.join(ROOT, "prisma", "schema.prisma"),
+    path.join(DIST, "prisma", "schema.prisma")
+  );
+  copyDir(
+    path.join(ROOT, "prisma", "migrations"),
+    path.join(DIST, "prisma", "migrations")
   );
 
   const localDb = path.join(ROOT, "pymentor.db");
@@ -184,14 +188,10 @@ async function main() {
     path.join(ROOT, "prisma", "seed.ts"),
     path.join(DIST, "prisma", "seed.ts")
   );
-  if (fs.existsSync(path.join(ROOT, "prisma", "seed.js"))) {
-    copyFile(
-      path.join(ROOT, "prisma", "seed.js"),
-      path.join(DIST, "prisma", "seed.js")
-    );
-  }
-
-  // Removed seed wrapper creation because we now copy a pre-populated db!
+  copyDir(
+    path.join(ROOT, "prisma", "notes"),
+    path.join(DIST, "prisma", "notes")
+  );
   const serverPkgPath = path.join(DIST, "server", "package.json");
   if (fs.existsSync(serverPkgPath)) {
     const pkg = JSON.parse(fs.readFileSync(serverPkgPath, "utf-8"));
@@ -229,15 +229,13 @@ async function main() {
     files: [
       "bin/",
       "server/",
-      "seed/",
       "prisma/",
       "public/",
       "src/",
     ],
     scripts: {
       start: "node dist/server/server.js",
-      seed: "node dist/seed/seed.js",
-      postinstall: "prisma generate --schema=prisma/schema.sqlite.prisma"
+      postinstall: "prisma generate --schema=prisma/schema.prisma"
     },
     dependencies: {
       "prisma": rootPkg.dependencies.prisma || "^7.8.0",
@@ -270,8 +268,8 @@ async function main() {
   }
 
   // ── 10. Copy src/lib/db/ for seed dependencies ───────────────────────
-  // The seed.ts imports from ../src/lib/db/prisma and ../src/lib/db/json-helper
-  // These need to be available in the dist for tsx to resolve them.
+  // The seed.ts imports from ../src/lib/db/prisma — it needs to be
+  // available in the dist for tsx to resolve it.
   console.log("  → Copying src/lib/db/ for seed dependencies...");
   copyDir(
     path.join(ROOT, "src", "lib", "db"),
@@ -309,7 +307,6 @@ async function main() {
   console.log("  📊 Size breakdown:");
   console.log(`     Server:     ${getDirSizeMB(path.join(DIST, "server"))} MB`);
   console.log(`     Prisma:     ${getDirSizeMB(path.join(DIST, "prisma"))} MB`);
-  console.log(`     Seed:       ${getDirSizeMB(path.join(DIST, "seed"))} MB`);
   console.log(`     Src/DB:     ${getDirSizeMB(path.join(DIST, "src"))} MB`);
   console.log(`     Total:      ${getDirSizeMB(DIST)} MB`);
   console.log("\n  Next steps:");

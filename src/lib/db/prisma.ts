@@ -1,12 +1,14 @@
 /**
- * Prisma Database Client — Auto-detecting PostgreSQL vs SQLite
+ * Prisma Database Client — SQLite
  *
- * This module creates the appropriate PrismaClient based on the DATABASE_URL:
- * - `file:` prefix → SQLite (for npm local installs)
- * - `postgresql://` or `postgres://` → PostgreSQL (for cloud deployments)
+ * PyMentor is a single-user, offline-capable app. All data lives in one
+ * local SQLite database file:
+ *   - Development:  ./pymentor.db (repo root)
+ *   - npm CLI:      ~/.pymentor/pymentor.db (set by bin/cli.js via DATABASE_URL)
  *
- * SQLite mode uses a plain PrismaClient (no adapter needed).
- * PostgreSQL mode uses the pg Pool + PrismaPg adapter (original setup).
+ * Prisma 7 requires a driver adapter, so connections go through
+ * @prisma/adapter-better-sqlite3. The database location is controlled by
+ * the DATABASE_URL env var (e.g. "file:./pymentor.db").
  */
 
 import { PrismaClient } from "@prisma/client";
@@ -15,56 +17,17 @@ const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
 
-/**
- * Detect which database provider to use based on DATABASE_URL.
- * - Starts with "file:" → SQLite
- * - Starts with "postgresql://" or "postgres://" → PostgreSQL
- * - Fallback → SQLite (safe default for local/offline usage)
- */
-function getProvider(): "sqlite" | "postgresql" {
-  return "sqlite";
-}
-
 function createPrismaClient() {
-  const provider = getProvider();
-
-  if (provider === "postgresql") {
-    // ── PostgreSQL with pg Pool + PrismaPg adapter (original setup) ──
-    // Dynamic imports so pg/adapter are only loaded when needed
-    // (npm package users won't have these installed)
-    try {
-      const { Pool } = require("pg");
-      const { PrismaPg } = require("@prisma/adapter-pg");
-      const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-      const adapter = new PrismaPg(pool);
-      return new PrismaClient({ adapter });
-    } catch (error) {
-      console.error(
-        "[prisma] PostgreSQL mode requested but pg/adapter not available.",
-        error
-      );
-      throw new Error(
-        "PostgreSQL mode requires 'pg' and '@prisma/adapter-pg' packages. " +
-        "Install them or switch to SQLite with DATABASE_URL=file:./db.sqlite"
-      );
-    }
-  }
-
-  // ── SQLite with better-sqlite3 adapter (Prisma 7 requires adapters) ──
   try {
     const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
-    const rawUrl = process.env.DATABASE_URL || "file:./pymentor.db";
-    // Pass the connection string to the Prisma adapter (Prisma 7 API)
-    const adapter = new PrismaBetterSqlite3({ url: rawUrl });
+    const url = process.env.DATABASE_URL || "file:./pymentor.db";
+    const adapter = new PrismaBetterSqlite3({ url });
     return new PrismaClient({ adapter });
   } catch (error) {
-    console.error(
-      "[prisma] SQLite mode requested but adapter not available.",
-      error
-    );
+    console.error("[prisma] Failed to initialize the SQLite client.", error);
     throw new Error(
-      "SQLite mode requires '@prisma/adapter-better-sqlite3' package. " +
-      "Install it with: npm install @prisma/adapter-better-sqlite3"
+      "PyMentor requires '@prisma/adapter-better-sqlite3' for its local database. " +
+        "Install it with: npm install @prisma/adapter-better-sqlite3"
     );
   }
 }
@@ -74,8 +37,3 @@ export const db = globalForPrisma.prisma ?? createPrismaClient();
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = db;
 }
-
-/**
- * Export the provider detection for use in other modules (e.g., json-helper).
- */
-export { getProvider };

@@ -72,10 +72,14 @@ describe("CLI File Structure", () => {
     }).not.toThrow();
   });
 
-  it("dist/bin/cli.js exists after prepare-dist", () => {
-    const distBin = path.join(ROOT, "dist", "bin", "cli.js");
-    expect(fs.existsSync(distBin)).toBe(true);
-  });
+  // Only runs after `npm run build:npm` — dist/ doesn't exist in fresh checkouts
+  it.runIf(fs.existsSync(path.join(ROOT, "dist")))(
+    "dist/bin/cli.js exists after prepare-dist",
+    () => {
+      const distBin = path.join(ROOT, "dist", "bin", "cli.js");
+      expect(fs.existsSync(distBin)).toBe(true);
+    }
+  );
 });
 
 // ---------------------------------------------------------------------------
@@ -426,7 +430,7 @@ describe("CLI: Port Availability", () => {
 
   it("CLI handles port conflicts gracefully", () => {
     const content = fs.readFileSync(BIN, "utf-8");
-    expect(content).toContain("already in use");
+    expect(content).toContain("is in use");
   });
 });
 

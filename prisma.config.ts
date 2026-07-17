@@ -1,32 +1,21 @@
-// Prisma configuration — supports both PostgreSQL (cloud) and SQLite (npm local).
+// Prisma configuration — SQLite (single-database setup).
 //
-// The active schema is determined by the PRISMA_SCHEMA env var:
-//   - unset or "postgresql" → prisma/schema.prisma (PostgreSQL)
-//   - "sqlite"              → prisma/schema.sqlite.prisma (SQLite)
+// PyMentor uses one local SQLite database for everything:
+//   - Development:  DATABASE_URL="file:./pymentor.db" (see npm run db:push / db:seed)
+//   - npm CLI:      DATABASE_URL is set by bin/cli.js to ~/.pymentor/pymentor.db
 //
-// Example commands:
-//   PostgreSQL: npx prisma migrate dev --name init
-//   SQLite:     PRISMA_SCHEMA=sqlite npx prisma migrate dev --name init
+// Common commands:
+//   npx prisma generate   # Generate the Prisma client
+//   npx prisma db push    # Push the schema to the database
+//   npx prisma db seed    # Seed the curriculum (runs prisma/seed.ts via tsx)
 //
 import "dotenv/config";
 import { defineConfig } from "prisma/config";
 
-const schemaName = process.env.PRISMA_SCHEMA || "postgresql";
-
-const schemaPath =
-  schemaName === "sqlite"
-    ? "prisma/schema.sqlite.prisma"
-    : "prisma/schema.prisma";
-
-const migrationsPath =
-  schemaName === "sqlite"
-    ? "prisma/migrations.sqlite"
-    : "prisma/migrations";
-
 export default defineConfig({
-  schema: schemaPath,
+  schema: "prisma/schema.prisma",
   migrations: {
-    path: migrationsPath,
+    path: "prisma/migrations",
     seed: "npx tsx prisma/seed.ts",
   },
   datasource: {

@@ -68,14 +68,13 @@ All user data is stored in `~/.pymentor/`:
 
 ---
 
-## ☁️ Cloud Deployment (PostgreSQL)
+## 🛠️ Local Development (from source)
 
-For multi-user or hosted deployments, PyMentor supports PostgreSQL as the database backend:
+PyMentor uses a single **SQLite** database — no database server to install or manage.
 
 ### Prerequisites
 
 - **Node.js** ≥ 18
-- **PostgreSQL** ≥ 14 (local or cloud)
 - An AI provider API key for the mentor (optional):
   - [OpenRouter](https://openrouter.ai/keys) or [NVIDIA](https://build.nvidia.com/explore/discover)
 
@@ -92,8 +91,8 @@ npm install
 Create a `.env` file in the project root:
 
 ```env
-# Database (required — PostgreSQL for cloud mode)
-DATABASE_URL="postgresql://user:password@localhost:5432/pymentor"
+# Database (local SQLite file)
+DATABASE_URL="file:./pymentor.db"
 
 # Auth secret (generate with: openssl rand -base64 32)
 AUTH_SECRET="your-secret-here"
@@ -111,14 +110,9 @@ DEFAULT_AI_MODEL="openai/gpt-oss-120b"
 ### 3. Set Up the Database
 
 ```bash
-# Generate the Prisma client
-npx prisma generate
-
-# Push the schema to your database
-npx prisma db push
-
-# Seed the curriculum
-npx tsx prisma/seed.ts
+# Generate the Prisma client, push the schema, and seed the curriculum
+npm run db:push
+npm run db:seed
 ```
 
 > **Re-seeding:** The seed script is safe to re-run — it uses upserts and won't delete user data.
@@ -135,10 +129,11 @@ Open [http://localhost:3000](http://localhost:3000). The app creates a local use
 ### 5. Build for Production
 
 ```bash
-# Cloud build (PostgreSQL)
-npm run build:cloud
+# Standard Next.js build
+npm run build
 
-# Or: npm build for standard Next.js build
+# Or the full npm-distribution pipeline (standalone server + dist/)
+npm run build:npm
 ```
 
 ---
@@ -164,7 +159,7 @@ npm run build:cloud
 |---|---|
 | **Framework** | [Next.js 16](https://nextjs.org) (App Router) with React 19 |
 | **Language** | TypeScript |
-| **Database** | PostgreSQL *or* SQLite via [Prisma ORM](https://prisma.io) |
+| **Database** | SQLite (local file, zero-config) via [Prisma ORM](https://prisma.io) |
 | **UI** | [shadcn/ui](https://ui.shadcn.com) + [Tailwind CSS v4](https://tailwindcss.com) |
 | **Animations** | [Framer Motion](https://motion.dev) |
 | **Code Editor** | [Monaco Editor](https://microsoft.github.io/monaco-editor/) |
@@ -172,24 +167,25 @@ npm run build:cloud
 | **AI** | Streaming chat via [OpenRouter](https://openrouter.ai) / [NVIDIA](https://build.nvidia.com) |
 | **Charts** | [Recharts](https://recharts.org) |
 | **CLI** | Node.js CLI with auto-setup, backup/restore, config management |
-| **Deploy** | [Render](https://render.com) (see `render.yaml`) or `npm install -g pymentor` |
+| **Deploy** | `npm install -g pymentor` (CLI) or the Electron desktop app |
 
 ---
 
 ## Architecture
 
-### Dual Database Support
+### Database
 
-PyMentor supports two database backends, auto-detected via the `DATABASE_URL` environment variable:
+PyMentor uses a single **SQLite** database — one local file, zero configuration:
 
-| | PostgreSQL (Cloud) | SQLite (npm CLI) |
-|---|---|---|
-| **Trigger** | `DATABASE_URL=postgresql://...` | `DATABASE_URL=file:...` |
-| **Schema** | `prisma/schema.prisma` | `prisma/schema.sqlite.prisma` |
-| **Adapter** | pg Pool + PrismaPg | Plain PrismaClient |
-| **Use case** | Multi-user hosted deployment | Single-user local install |
+| | SQLite |
+|---|---|
+| **Location** | Dev: `./pymentor.db` · npm CLI: `~/.pymentor/pymentor.db` |
+| **Schema** | `prisma/schema.prisma` |
+| **Migrations** | `prisma/migrations/` |
+| **Adapter** | `@prisma/adapter-better-sqlite3` |
+| **Use case** | Single-user local install (offline-capable) |
 
-The `src/lib/db/prisma.ts` module auto-detects the provider. The `json-helper.ts` module transparently handles the `Json`→`String` type difference between the two databases.
+The `src/lib/db/prisma.ts` module creates the client through the better-sqlite3 driver adapter, using `DATABASE_URL` for the file location. JSON-shaped data (test cases, objectives, options, …) is stored as `TEXT` and serialized with `JSON.stringify` / `JSON.parse`.
 
 ### Service-Oriented Design
 
@@ -213,10 +209,9 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 │   └── cli.js                  # CLI entry point (pymentor command)
 │
 ├── prisma/
-│   ├── schema.prisma           # PostgreSQL schema (cloud)
-│   ├── schema.sqlite.prisma    # SQLite schema (npm CLI)
-│   ├── migrations.sqlite/      # SQLite migration SQL
-│   ├── seed.ts                 # Curriculum seeder (dual-db compatible)
+│   ├── schema.prisma           # SQLite schema
+│   ├── migrations/             # SQLite migration SQL
+│   ├── seed.ts                 # Curriculum seeder
 │   └── notes/                  # Curriculum content (lessons, exercises)
 │       ├── 1.1 Getting Started/
 │       ├── 1.2 Variables & Data Types/
@@ -232,7 +227,7 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 │       └── 3.2 OOP Pillars/
 │
 ├── scripts/
-│   ├── build.sh                # Full build pipeline (--cloud flag)
+│   ├── build.sh                # Full build pipeline
 │   ├── prepare-dist.js         # Post-build dist assembly
 │   └── download-pyodide.sh     # Download Pyodide for offline use
 │
@@ -250,7 +245,7 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 │   │
 │   ├── lib/
 │   │   ├── ai/                 # LLM client + prompt builder
-│   │   ├── db/                 # Prisma client (auto PG/SQLite) + json-helper
+│   │   ├── db/                 # Prisma client (SQLite)
 │   │   ├── hooks/              # React hooks (usePyodide — local-first loading)
 │   │   ├── services/           # Business logic layer
 │   │   │   ├── curriculum.service.ts
@@ -263,17 +258,13 @@ XP and level calculations are centralised in `xp-calculator.ts` so every part of
 │   │
 │   └── auth.ts                 # Auth stub (NextAuth.js integration point)
 │
-├── __tests__/                  # Test suite (295 tests)
-│   ├── json-helper.test.ts     # JSON parse/stringify helpers
-│   ├── db-provider.test.ts     # PG/SQLite auto-detection
+├── __tests__/                  # Test suite
 │   ├── sqlite-schema.test.ts   # SQLite schema validation
-│   ├── schema-sync.test.ts     # PG↔SQLite schema parity
 │   ├── build-standalone.test.ts # Build pipeline validation
 │   ├── cli.test.ts             # CLI command tests
 │   └── offline-support.test.ts # Pyodide + AI offline handling
 │
 ├── public/                     # Static assets, fonts
-├── render.yaml                 # Render deploy config
 └── NPM_DISTRIBUTION_PLAN.md    # Full distribution plan
 ```
 
@@ -311,10 +302,7 @@ npm run test:watch
 ```
 
 The test suite covers:
-- **JSON helpers** — `parseJsonField()` / `stringifyJsonField()` for PG↔SQLite compatibility
-- **DB provider detection** — Auto-switching between PostgreSQL and SQLite
 - **Schema validation** — SQLite schema structure and migration SQL
-- **Schema sync** — Ensuring PG and SQLite schemas stay in parity
 - **Build pipeline** — Standalone build output validation
 - **CLI** — All CLI commands and argument parsing
 - **Offline support** — Pyodide local-first loading, AI mentor graceful degradation

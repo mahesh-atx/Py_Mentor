@@ -57,7 +57,7 @@ Run the following commands in the root of the project:
 
 ### 1. Generate the SQLite Prisma client
 ```powershell
-npx prisma generate --schema=prisma/schema.sqlite.prisma
+npx prisma generate
 ```
 
 ### 2. Build the Next.js application

@@ -55,7 +55,7 @@ const PRISMA_DIR = fs.existsSync(path.join(ROOT_DIR, "dist", "prisma"))
   ? path.join(ROOT_DIR, "dist", "prisma")
   : path.join(ROOT_DIR, "prisma");
 
-const MIGRATION_DIR = path.join(PRISMA_DIR, "migrations.sqlite");
+const MIGRATION_DIR = path.join(PRISMA_DIR, "migrations");
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -231,7 +231,7 @@ async function cmdSetup() {
 
     if (!fs.existsSync(initMigration)) {
       console.error("  ❌ Migration SQL not found at:", initMigration);
-      console.error("     Make sure prisma/migrations.sqlite/ exists.");
+      console.error("     Make sure prisma/migrations/ exists.");
       process.exit(1);
     }
 

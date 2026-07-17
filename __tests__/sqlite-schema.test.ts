@@ -27,7 +27,7 @@ describe("SQLite Schema Migration", () => {
       __dirname,
       "..",
       "prisma",
-      "migrations.sqlite",
+      "migrations",
       "00000000000000_init",
       "migration.sql"
     );

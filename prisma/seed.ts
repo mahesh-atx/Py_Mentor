@@ -1,6 +1,5 @@
 import "dotenv/config";
 import { db as prisma } from "../src/lib/db/prisma";
-import { stringifyJsonField } from "../src/lib/db/json-helper";
 
 // ── Python module imports ──────────────────────────────────────────────
 import { gettingStartedModule } from "./notes/1.1 Getting Started";
@@ -222,7 +221,7 @@ export async function seedCurriculum(force: boolean = false) {
           update: {
             title: lessonDef.title,
             content: lessonDef.content,
-            objectives: stringifyJsonField(lessonDef.objectives || []),
+            objectives: JSON.stringify(lessonDef.objectives || []),
             duration: 15,
             xpReward: lessonDef.xpReward || 50,
             order: 1,
@@ -232,7 +231,7 @@ export async function seedCurriculum(force: boolean = false) {
             title: lessonDef.title,
             slug: lessonDef.slug,
             content: lessonDef.content,
-            objectives: stringifyJsonField(lessonDef.objectives || []),
+            objectives: JSON.stringify(lessonDef.objectives || []),
             duration: 15,
             xpReward: lessonDef.xpReward || 50,
             order: 1,
@@ -255,8 +254,8 @@ export async function seedCurriculum(force: boolean = false) {
                 description: e.prompt,
                 starterCode: e.starterCode,
                 solution: e.solutionCode || "",
-                testCases: stringifyJsonField(e.testCases || []),
-                hints: stringifyJsonField([]),
+                testCases: JSON.stringify(e.testCases || []),
+                hints: JSON.stringify([]),
                 difficulty: e.difficulty || "beginner",
                 xpReward: e.xpReward || 20,
                 order: eIndex + 1,
@@ -268,8 +267,8 @@ export async function seedCurriculum(force: boolean = false) {
                 description: e.prompt,
                 starterCode: e.starterCode,
                 solution: e.solutionCode || "",
-                testCases: stringifyJsonField(e.testCases || []),
-                hints: stringifyJsonField([]),
+                testCases: JSON.stringify(e.testCases || []),
+                hints: JSON.stringify([]),
                 difficulty: e.difficulty || "beginner",
                 xpReward: e.xpReward || 20,
                 order: eIndex + 1,
