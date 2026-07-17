@@ -136,6 +136,62 @@ const achievements = [
 ];
 
 // ============================================================
+// QUIZ DEFINITIONS — attached to topics by topic slug
+// ============================================================
+const quizzes = [
+  {
+    topicSlug: "1-1-getting-started-topic-1", // Introduction to Python
+    slug: "introduction-to-python-quiz",
+    title: "Introduction to Python Quiz",
+    description: "Check your understanding of what Python is, where it came from, and why it's a great first language.",
+    xpReward: 100,
+    order: 1,
+    questions: [
+      {
+        question: "Who created the Python programming language?",
+        options: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne Stroustrup"],
+        correctOption: 0,
+        explanation: "Guido van Rossum created Python and released it in 1991. He named it after the comedy group Monty Python, not the snake.",
+      },
+      {
+        question: "What kind of language is Python?",
+        options: ["Compiled language", "Interpreted language", "Assembly language", "Markup language"],
+        correctOption: 1,
+        explanation: "Python is an interpreted language — the Python interpreter reads and runs your code line by line, without a separate compilation step.",
+      },
+      {
+        question: "Which of these is a key feature of Python?",
+        options: [
+          "It requires manual memory management",
+          "It has simple, readable syntax",
+          "It only works on Windows",
+          "It cannot be used for web development",
+        ],
+        correctOption: 1,
+        explanation: "Python is famous for its clean, readable syntax that resembles plain English, which makes it beginner-friendly.",
+      },
+      {
+        question: "Which file extension is used for Python source files?",
+        options: [".pt", ".pyt", ".py", ".python"],
+        correctOption: 2,
+        explanation: "Python source files use the .py extension, for example hello.py.",
+      },
+      {
+        question: "Which of these is a real-world application of Python?",
+        options: [
+          "Web development",
+          "Data science and machine learning",
+          "Automation and scripting",
+          "All of the above",
+        ],
+        correctOption: 3,
+        explanation: "Python is a general-purpose language used for web apps, data science, AI/ML, automation, scripting, and much more.",
+      },
+    ],
+  },
+];
+
+// ============================================================
 // EXPORTED SEED FUNCTION
 // ============================================================
 export async function seedCurriculum(force: boolean = false) {
@@ -303,6 +359,53 @@ export async function seedCurriculum(force: boolean = false) {
         condition: a.condition,
       },
     });
+  }
+
+  // ── Seed quizzes ────────────────────────────────────────────────
+  console.log("\x1b[36m│  ├─ ►\x1b[0m Seeding quizzes...");
+  for (const q of quizzes) {
+    const topic = await prisma.topic.findUnique({ where: { slug: q.topicSlug } });
+    if (!topic) {
+      console.warn(`\x1b[33m│  │   ⚠ Skipping quiz "${q.slug}" — topic "${q.topicSlug}" not found\x1b[0m`);
+      continue;
+    }
+
+    const quiz = await prisma.quiz.upsert({
+      where: { topicId_slug: { topicId: topic.id, slug: q.slug } },
+      update: {
+        title: q.title,
+        description: q.description,
+        xpReward: q.xpReward,
+        order: q.order,
+        isPublished: true,
+      },
+      create: {
+        title: q.title,
+        slug: q.slug,
+        description: q.description,
+        xpReward: q.xpReward,
+        order: q.order,
+        isPublished: true,
+        topicId: topic.id,
+      },
+    });
+
+    // Questions have no natural unique key — recreate them so reseeding
+    // stays idempotent instead of duplicating questions.
+    await prisma.quizQuestion.deleteMany({ where: { quizId: quiz.id } });
+    for (let i = 0; i < q.questions.length; i++) {
+      const qq = q.questions[i];
+      await prisma.quizQuestion.create({
+        data: {
+          question: qq.question,
+          options: JSON.stringify(qq.options),
+          correctOption: qq.correctOption,
+          explanation: qq.explanation,
+          order: i + 1,
+          quizId: quiz.id,
+        },
+      });
+    }
   }
 
   // ── Seed projects ───────────────────────────────────────────────

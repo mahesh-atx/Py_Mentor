@@ -1,5 +1,6 @@
 import { db } from "../db";
 import { ProgressService } from "./progress.service";
+import { countFixedErrors } from "../achievements";
 
 export const GamificationService = {
   /**
@@ -39,6 +40,9 @@ export const GamificationService = {
 
     const newlyUnlocked = [];
 
+    // Lazily computed — only queried when a locked achievement needs it.
+    let errorsFixed: number | null = null;
+
     for (const ach of locked) {
       let meetsCondition = false;
       try {
@@ -50,8 +54,19 @@ export const GamificationService = {
           meetsCondition = stats.currentStreak >= condition.days;
         } else if (condition.type === "projects_completed") {
           meetsCondition = projectSubmissions >= condition.count;
+        } else if (condition.type === "errors_fixed") {
+          if (errorsFixed === null) {
+            // Exercises the user failed (or errored) on at least once and
+            // also eventually passed — real errors they hit and fixed.
+            const subs = await db.submission.findMany({
+              where: { userId, exerciseId: { not: null } },
+              select: { exerciseId: true, status: true },
+            });
+            errorsFixed = countFixedErrors(subs);
+          }
+          meetsCondition = errorsFixed >= condition.count;
         }
-        // "quiz_perfect" and "errors_fixed" are skipped in this basic implementation
+        // "quiz_perfect" has no tracking yet and is skipped.
       } catch (e) {
         console.error("Error parsing condition for achievement", ach.id, e);
       }
