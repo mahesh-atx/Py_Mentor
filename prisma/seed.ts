@@ -13,6 +13,7 @@ import { listsModule } from "./notes/2.1 Data Structures/Lists";
 import { tuplesSetsModule } from "./notes/2.1 Data Structures/Tuples & Sets";
 import { stringsCompleteModule } from "./notes/2.1 Data Structures/Strings";
 import { functionsModule } from "./notes/2.2 Functions";
+import { functionalToolsModule } from "./notes/2.6 Lambda, Map, Filter & Reduce";
 import { stringManipulationModule } from "./notes/2.3 String Manipulation";
 import { oopFundamentalsModule } from "./notes/3.1 OOP Fundamentals";
 import { oopPillarsModule } from "./notes/3.2 OOP Pillars";
@@ -51,6 +52,7 @@ const pythonPhases = [
       stringsCompleteModule,
       dictionariesModule,
       functionsModule,
+      functionalToolsModule,
       stringManipulationModule,
       fileHandlingModule,
       errorHandlingModule,
