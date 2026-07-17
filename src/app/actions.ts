@@ -1,5 +1,6 @@
 "use server";
 
+import { db } from "@/lib/db";
 import { UserService } from "@/lib/services/user.service";
 import { ProgressService } from "@/lib/services/progress.service";
 import { GamificationService } from "@/lib/services/gamification.service";
@@ -57,12 +58,20 @@ export async function completeLessonAction(lessonId: string) {
 
     const unlockedAchievements = await GamificationService.checkAchievements(user.id);
 
+    // Look up the lesson's actual XP reward so the client toast can show
+    // the real amount (rewards vary 20-80 XP per lesson).
+    // Progress rows store the lesson slug in the lessonId column.
+    const lesson = await db.lesson.findFirst({
+      where: { slug: lessonId },
+      select: { xpReward: true },
+    });
+
     revalidatePath("/");
     revalidatePath("/progress");
     revalidatePath("/", "layout");
     revalidatePath("/learn/[slug]", "page");
 
-    return { success: true, unlockedAchievements };
+    return { success: true, unlockedAchievements, xpEarned: lesson?.xpReward ?? 50 };
   } catch (error) {
     console.error("Failed to complete lesson", error);
     return { success: false, error: "Failed to mark lesson as complete" };

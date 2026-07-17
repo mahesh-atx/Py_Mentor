@@ -404,10 +404,14 @@ async function cmdStart(port = 3000) {
     port = newPort;
   }
 
-  // Set environment
-  process.env.DATABASE_URL = `file:${DB_PATH}`;
+  // Set environment. Prisma file: URLs need forward slashes — convert
+  // Windows backslashes (same handling as electron/main.js).
+  const prismaDbPath = DB_PATH.replace(/\\/g, "/");
+  process.env.DATABASE_URL = `file:${prismaDbPath}`;
   process.env.PORT = String(port);
-  process.env.HOSTNAME = "0.0.0.0";
+  // Bind localhost only: the app has no auth, so listening on all
+  // interfaces would expose it to the whole network.
+  process.env.HOSTNAME = "127.0.0.1";
 
   if (!fs.existsSync(SERVER_PATH)) {
     console.error(`❌ Server not found at: ${SERVER_PATH}`);
@@ -418,13 +422,15 @@ async function cmdStart(port = 3000) {
   console.log(`\x1b[36m┌─\x1b[0m Server`);
   console.log(`\x1b[36m│  ►\x1b[0m Starting PyMentor...`);
 
-  const server = spawn("node", [SERVER_PATH], {
+  // process.execPath guarantees the same Node binary that's running the CLI
+  // (relying on PATH lookup for "node" breaks in some Windows setups).
+  const server = spawn(process.execPath, [SERVER_PATH], {
     cwd: SERVER_DIR,
     env: {
       ...process.env,
-      DATABASE_URL: `file:${DB_PATH}`,
+      DATABASE_URL: `file:${prismaDbPath}`,
       PORT: String(port),
-      HOSTNAME: "0.0.0.0",
+      HOSTNAME: "127.0.0.1",
     },
     stdio: "inherit",
   });

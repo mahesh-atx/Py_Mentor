@@ -194,7 +194,7 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
       const result = await runPython(code);
       
       if (result.error) {
-        setOutput((prev) => prev + result.output + "\nError: " + result.error);
+        setOutput((result.output ? result.output + "\n" : "") + "Error: " + result.error);
       } else if (result.output) {
         setOutput(result.output);
       } else {
@@ -305,7 +305,7 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
       const result = await completeLessonAction(lessonId);
       if (result.success) {
         setIsCompleted(true);
-        toast.success("Lesson marked as complete! +50 XP");
+        toast.success(`Lesson marked as complete! +${result.xpEarned ?? 50} XP`);
         
         if (result.unlockedAchievements && result.unlockedAchievements.length > 0) {
           result.unlockedAchievements.forEach((ach: any) => {

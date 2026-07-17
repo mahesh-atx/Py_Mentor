@@ -138,13 +138,36 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // ── Cap history size (API cost protection) ─────────────────────────────
+  // The prompt builder truncates lesson/code context but NOT user-supplied
+  // history. Keep the most recent messages within hard bounds.
+  const MAX_MESSAGES = 40;
+  const MAX_MESSAGE_CHARS = 8_000;
+  const MAX_TOTAL_CHARS = 48_000;
+
+  const capped = history.slice(-MAX_MESSAGES).map((m) => ({
+    ...m,
+    content:
+      m.content.length > MAX_MESSAGE_CHARS
+        ? m.content.slice(0, MAX_MESSAGE_CHARS) + "\n…[truncated]"
+        : m.content,
+  }));
+
+  let totalChars = 0;
+  const trimmedHistory: ChatMessage[] = [];
+  for (let i = capped.length - 1; i >= 0; i--) {
+    totalChars += capped[i].content.length;
+    if (totalChars > MAX_TOTAL_CHARS && trimmedHistory.length > 0) break;
+    trimmedHistory.unshift(capped[i]);
+  }
+
   const context = normalizeContext(body.context);
 
   // ── Build grounded prompt ──────────────────────────────────────────────
   let messagesForLLM: ChatMessage[];
   try {
     const user = await UserService.getLocalUser();
-    messagesForLLM = await buildMentorMessages(user.id, history, context);
+    messagesForLLM = await buildMentorMessages(user.id, trimmedHistory, context);
   } catch (error) {
     console.error("[ai-mentor] failed to build messages:", error);
     return Response.json(
