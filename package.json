@@ -1,6 +1,6 @@
 {
   "name": "pymentor",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
@@ -21,7 +21,8 @@
       {
         "provider": "github",
         "owner": "mahesh-atx",
-        "repo": "Py_Mentor"
+        "repo": "Py_Mentor",
+        "releaseType": "release"
       }
     ],
     "directories": {
