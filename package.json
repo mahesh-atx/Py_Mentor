@@ -1,7 +1,7 @@
 {
   "name": "pymentor",
-  "version": "1.0.16",
-  "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
+  "version": "1.0.17",
+  "description": "Learn Python by Building Logic \u2014 an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
   "repository": {
@@ -107,7 +107,8 @@
     "prepublishOnly": "npm run build:npm && npm test",
     "dev:electron": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
     "build:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate && next build && node scripts/prepare-dist.js && electron-builder build --win",
-    "publish:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate && next build && node scripts/prepare-dist.js && electron-builder build --win -p always"
+    "publish:electron": "cross-env DATABASE_URL=\"file:./pymentor.db\" prisma generate && next build && node scripts/prepare-dist.js && electron-builder build --win -p always",
+    "verify:exercises": "tsx scripts/verify-exercises.mts"
   },
   "dependencies": {
     "@base-ui/react": "^1.6.0",

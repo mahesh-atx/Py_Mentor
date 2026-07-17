@@ -36,6 +36,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 50
     }
+  ,
+    {
+      "title": "Math Floor and Ceil",
+      "prompt": "Import the math module. Print math.floor(9.8) on the first line and math.ceil(9.2) on the second.",
+      "starterCode": "# math module\n",
+      "solutionCode": "import math\nprint(math.floor(9.8))\nprint(math.ceil(9.2))",
+      "testCases": [{ "input": "", "expectedOutput": "9\n10\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "import-statements": [
     {
@@ -83,13 +93,23 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 55
     }
+  ,
+    {
+      "title": "Sqrt with Alias",
+      "prompt": "Import math with the alias m and print m.sqrt(144).",
+      "starterCode": "# import ... as ...\n",
+      "solutionCode": "import math as m\nprint(m.sqrt(144))",
+      "testCases": [{ "input": "", "expectedOutput": "12.0\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "creating-your-own-modules": [
     {
       "title": "Create a Simple Module",
       "prompt": "In the starter code, a module `calculator.py` is provided. Import it and use its `add` and `multiply` functions. Print `add(5, 3)` and `multiply(4, 7)`.",
-      "starterCode": "# calculator.py is provided with:\n# def add(a, b): return a + b\n# def multiply(a, b): return a * b\n# Import and use the calculator module\n",
-      "solutionCode": "import calculator\nprint(calculator.add(5, 3))\nprint(calculator.multiply(4, 7))",
+      "starterCode": "# First, calculator.py is created for you:\nwith open('calculator.py', 'w') as f:\n    f.write('def add(a, b): return a + b\\ndef multiply(a, b): return a * b\\n')\n\n# Now import the calculator module and print add(5, 3) and multiply(4, 7)\n",
+      "solutionCode": "with open('calculator.py', 'w') as f:\n    f.write('def add(a, b): return a + b\\ndef multiply(a, b): return a * b\\n')\n\nimport calculator\nprint(calculator.add(5, 3))\nprint(calculator.multiply(4, 7))",
       "testCases": [{ "input": "", "expectedOutput": "8\n28\n" }],
       "difficulty": "beginner",
       "xpReward": 15
@@ -97,8 +117,8 @@ export const exercises: Record<string, any[]> = {
     {
       "title": "Import from Custom Module",
       "prompt": "A module `greetings.py` contains a function `hello(name)`. Import this function directly and print `hello('World')`.",
-      "starterCode": "# greetings.py contains: def hello(name): return f'Hello, {name}!'\n# Import and use the hello function\n",
-      "solutionCode": "from greetings import hello\nprint(hello('World'))",
+      "starterCode": "# First, greetings.py is created for you:\nwith open('greetings.py', 'w') as f:\n    f.write(\"def hello(name): return f'Hello, {name}!'\\n\")\n\n# Now import hello from greetings and print hello('World')\n",
+      "solutionCode": "with open('greetings.py', 'w') as f:\n    f.write(\"def hello(name): return f'Hello, {name}!'\\n\")\n\nfrom greetings import hello\nprint(hello('World'))",
       "testCases": [{ "input": "", "expectedOutput": "Hello, World!\n" }],
       "difficulty": "beginner",
       "xpReward": 15
@@ -106,8 +126,8 @@ export const exercises: Record<string, any[]> = {
     {
       "title": "Module with Constants",
       "prompt": "A module `config.py` defines `MAX_USERS = 100` and `APP_NAME = 'MyApp'`. Import the module and print both constants.",
-      "starterCode": "# config.py contains MAX_USERS and APP_NAME\n# Import config and print constants\n",
-      "solutionCode": "import config\nprint(config.MAX_USERS)\nprint(config.APP_NAME)",
+      "starterCode": "# First, config.py is created for you:\nwith open('config.py', 'w') as f:\n    f.write(\"MAX_USERS = 100\\nAPP_NAME = 'MyApp'\\n\")\n\n# Now import config and print both constants\n",
+      "solutionCode": "with open('config.py', 'w') as f:\n    f.write(\"MAX_USERS = 100\\nAPP_NAME = 'MyApp'\\n\")\n\nimport config\nprint(config.MAX_USERS)\nprint(config.APP_NAME)",
       "testCases": [{ "input": "", "expectedOutput": "100\nMyApp\n" }],
       "difficulty": "intermediate",
       "xpReward": 25
@@ -115,8 +135,8 @@ export const exercises: Record<string, any[]> = {
     {
       "title": "Module Integration: String Utils",
       "prompt": "A module `string_utils.py` contains `reverse(s)` and `count_vowels(s)`. Import both functions. Print `reverse('Python')` and `count_vowels('Hello World')`.",
-      "starterCode": "# string_utils.py contains reverse() and count_vowels()\n# Import and use both functions\n",
-      "solutionCode": "from string_utils import reverse, count_vowels\nprint(reverse('Python'))\nprint(count_vowels('Hello World'))",
+      "starterCode": "# First, string_utils.py is created for you:\nwith open('string_utils.py', 'w') as f:\n    f.write('def reverse(s): return s[::-1]\\ndef count_vowels(s): return sum(1 for c in s.lower() if c in \\\"aeiou\\\")\\n')\n\n# Now import reverse and count_vowels from string_utils\n",
+      "solutionCode": "with open('string_utils.py', 'w') as f:\n    f.write('def reverse(s): return s[::-1]\\ndef count_vowels(s): return sum(1 for c in s.lower() if c in \\\"aeiou\\\")\\n')\n\nfrom string_utils import reverse, count_vowels\nprint(reverse('Python'))\nprint(count_vowels('Hello World'))",
       "testCases": [{ "input": "", "expectedOutput": "nohtyP\n3\n" }],
       "difficulty": "expert",
       "xpReward": 55
@@ -158,6 +178,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "All tests passed!\n" }],
       "difficulty": "expert",
       "xpReward": 55
+    }
+  ,
+    {
+      "title": "Module Name",
+      "prompt": "Print the special variable __name__. When a file is run directly (like this playground), its value is '__main__'.",
+      "starterCode": "# print(__name__)\n",
+      "solutionCode": "print(__name__)",
+      "testCases": [{ "input": "", "expectedOutput": "__main__\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "standard-library-overview": [
@@ -224,13 +254,32 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Counter from collections",
+      "prompt": "Use collections.Counter on the string 'banana' and print how many times 'a' appears.",
+      "starterCode": "# collections.Counter\n",
+      "solutionCode": "from collections import Counter\nc = Counter('banana')\nprint(c['a'])",
+      "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    },
+    {
+      "title": "Sorted JSON Keys",
+      "prompt": "Use json.dumps with sort_keys=True to print the dict {'b': 1, 'a': 2} with keys in alphabetical order.",
+      "starterCode": "# json.dumps(..., sort_keys=True)\n",
+      "solutionCode": "import json\nprint(json.dumps({'b': 1, 'a': 2}, sort_keys=True))",
+      "testCases": [{ "input": "", "expectedOutput": "{\"a\": 2, \"b\": 1}\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "packages-init-py": [
     {
       "title": "Import from Package",
       "prompt": "A package `shapes` contains a module `circle` with class `Circle`. Import `Circle` from `shapes.circle` and create a Circle with radius 5. Print its area (use 3.14159 * r ** 2).",
-      "starterCode": "# shapes/circle.py contains the Circle class\n# Import and use it\n",
-      "solutionCode": "from shapes.circle import Circle\nc = Circle(5)\nprint(c.area())",
+      "starterCode": "# First, the shapes package is created for you:\nimport os\nos.makedirs('shapes', exist_ok=True)\nwith open('shapes/__init__.py', 'w') as f: f.write('')\nwith open('shapes/circle.py', 'w') as f:\n    f.write('class Circle:\\n    def __init__(self, r): self.r = r\\n    def area(self): return 3.14159 * self.r ** 2\\n')\n\n# Now import Circle from shapes.circle, create Circle(5), print its area()\n",
+      "solutionCode": "import os\nos.makedirs('shapes', exist_ok=True)\nwith open('shapes/__init__.py', 'w') as f: f.write('')\nwith open('shapes/circle.py', 'w') as f:\n    f.write('class Circle:\\n    def __init__(self, r): self.r = r\\n    def area(self): return 3.14159 * self.r ** 2\\n')\n\nfrom shapes.circle import Circle\nc = Circle(5)\nprint(c.area())",
       "testCases": [{ "input": "", "expectedOutput": "78.53975\n" }],
       "difficulty": "beginner",
       "xpReward": 15
@@ -238,8 +287,8 @@ export const exercises: Record<string, any[]> = {
     {
       "title": "Package with Multiple Modules",
       "prompt": "A package `utils` has modules `string_utils` (with `reverse(s)`) and `number_utils` (with `is_prime(n)`). Import both and print `reverse('hello')` and `is_prime(17)`.",
-      "starterCode": "# utils package has string_utils and number_utils\n# Import and use both\n",
-      "solutionCode": "from utils.string_utils import reverse\nfrom utils.number_utils import is_prime\nprint(reverse('hello'))\nprint(is_prime(17))",
+      "starterCode": "# First, the utils package is created for you:\nimport os\nos.makedirs('utils', exist_ok=True)\nwith open('utils/__init__.py', 'w') as f: f.write('')\nwith open('utils/string_utils.py', 'w') as f: f.write('def reverse(s): return s[::-1]\\n')\nwith open('utils/number_utils.py', 'w') as f: f.write('def is_prime(n):\\n    if n < 2: return False\\n    return all(n % i for i in range(2, int(n ** 0.5) + 1))\\n')\n\n# Now import reverse and is_prime; print reverse('hello') and is_prime(17)\n",
+      "solutionCode": "import os\nos.makedirs('utils', exist_ok=True)\nwith open('utils/__init__.py', 'w') as f: f.write('')\nwith open('utils/string_utils.py', 'w') as f: f.write('def reverse(s): return s[::-1]\\n')\nwith open('utils/number_utils.py', 'w') as f: f.write('def is_prime(n):\\n    if n < 2: return False\\n    return all(n % i for i in range(2, int(n ** 0.5) + 1))\\n')\n\nfrom utils.string_utils import reverse\nfrom utils.number_utils import is_prime\nprint(reverse('hello'))\nprint(is_prime(17))",
       "testCases": [{ "input": "", "expectedOutput": "olleh\nTrue\n" }],
       "difficulty": "intermediate",
       "xpReward": 25
@@ -247,8 +296,8 @@ export const exercises: Record<string, any[]> = {
     {
       "title": "Module Integration: Math Package",
       "prompt": "A package `math_tools` has modules `basic` (with `add(a, b)`, `multiply(a, b)`) and `advanced` (with `power(base, exp)`). Import all three functions and print: add(3, 4), multiply(5, 6), power(2, 10).",
-      "starterCode": "# math_tools package has basic and advanced modules\n# Import and use all functions\n",
-      "solutionCode": "from math_tools.basic import add, multiply\nfrom math_tools.advanced import power\nprint(add(3, 4))\nprint(multiply(5, 6))\nprint(power(2, 10))",
+      "starterCode": "# First, the math_tools package is created for you:\nimport os\nos.makedirs('math_tools', exist_ok=True)\nwith open('math_tools/__init__.py', 'w') as f: f.write('')\nwith open('math_tools/basic.py', 'w') as f: f.write('def add(a, b): return a + b\\ndef multiply(a, b): return a * b\\n')\nwith open('math_tools/advanced.py', 'w') as f: f.write('def power(base, exp): return base ** exp\\n')\n\n# Now import add, multiply, power; print add(3, 4), multiply(5, 6), power(2, 10)\n",
+      "solutionCode": "import os\nos.makedirs('math_tools', exist_ok=True)\nwith open('math_tools/__init__.py', 'w') as f: f.write('')\nwith open('math_tools/basic.py', 'w') as f: f.write('def add(a, b): return a + b\\ndef multiply(a, b): return a * b\\n')\nwith open('math_tools/advanced.py', 'w') as f: f.write('def power(base, exp): return base ** exp\\n')\n\nfrom math_tools.basic import add, multiply\nfrom math_tools.advanced import power\nprint(add(3, 4))\nprint(multiply(5, 6))\nprint(power(2, 10))",
       "testCases": [{ "input": "", "expectedOutput": "7\n30\n1024\n" }],
       "difficulty": "expert",
       "xpReward": 55
@@ -277,8 +326,8 @@ export const exercises: Record<string, any[]> = {
       "title": "Module Integration: Package Info",
       "prompt": "Use `importlib.metadata` to check if 'os' and 'sys' are available (they're built-in). Print 'os available: True' and 'sys available: True'. Then print the Python version using `sys.version`.",
       "starterCode": "# Check module availability and print Python version\n",
-      "solutionCode": "import sys\nimport os\nprint(f'os available: {True}')\nprint(f'sys available: {True}')\nprint(f'Python version: {sys.version.split()[0]}')",
-      "testCases": [{ "input": "", "expectedOutput": "os available: True\nsys available: True\nPython version: IGNORE_OUTPUT_CHECK\n" }],
+      "solutionCode": "import sys\nimport os\nprint(f'os available: {True}')\nprint(f'sys available: {True}')\nprint(sys.version.split()[0])",
+      "testCases": [{ "input": "", "expectedOutput": "os available: True\nsys available: True\nIGNORE_OUTPUT_CHECK\n" }],
       "difficulty": "expert",
       "xpReward": 50
     }

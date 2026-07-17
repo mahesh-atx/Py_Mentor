@@ -56,6 +56,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 10
     }
+  ,
+    {
+      "title": "Simplest Class",
+      "prompt": "Define an empty class Dog (use pass). Create an instance d, set d.name = 'Rex', and print d.name.",
+      "starterCode": "# Empty class + attribute\n",
+      "solutionCode": "class Dog:\n    pass\n\nd = Dog()\nd.name = 'Rex'\nprint(d.name)",
+      "testCases": [{ "input": "", "expectedOutput": "Rex\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "classes-and-objects": [
     {
@@ -111,6 +121,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "Whiskers\n"
         }
       ],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Two Cats",
+      "prompt": "Define a class Cat with a class attribute sound = 'Meow'. Create two instances and print both of their sound attributes on one line separated by a space.",
+      "starterCode": "# Class attribute shared by instances\n",
+      "solutionCode": "class Cat:\n    sound = 'Meow'\n\na = Cat()\nb = Cat()\nprint(a.sound, b.sound)",
+      "testCases": [{ "input": "", "expectedOutput": "Meow Meow\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -172,6 +192,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Person Greeting",
+      "prompt": "Define a class Person whose __init__ stores a name. Add a method greet() returning 'Hi, I am <name>'. Create Person('Mia') and print her greeting.",
+      "starterCode": "# __init__ and self\n",
+      "solutionCode": "class Person:\n    def __init__(self, name):\n        self.name = name\n    def greet(self):\n        return f'Hi, I am {self.name}'\n\np = Person('Mia')\nprint(p.greet())",
+      "testCases": [{ "input": "", "expectedOutput": "Hi, I am Mia\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "instance-vs-class-variables": [
     {
@@ -215,6 +245,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "beginner",
       "xpReward": 20
+    }
+  ,
+    {
+      "title": "Bird Counter",
+      "prompt": "Define a class Bird with a class attribute count = 0. In __init__, increment Bird.count by 1. Create three birds and print Bird.count.",
+      "starterCode": "# Class variable as a counter\n",
+      "solutionCode": "class Bird:\n    count = 0\n    def __init__(self):\n        Bird.count += 1\n\nBird()\nBird()\nBird()\nprint(Bird.count)",
+      "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "methods": [
@@ -274,6 +314,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Wallet",
+      "prompt": "Define a class Wallet with __init__ setting self.money = 0, a method add(amount) that adds to it, and total() returning the balance. Add 50 then 25 and print the total.",
+      "starterCode": "# Instance methods\n",
+      "solutionCode": "class Wallet:\n    def __init__(self):\n        self.money = 0\n    def add(self, amount):\n        self.money += amount\n    def total(self):\n        return self.money\n\nw = Wallet()\nw.add(50)\nw.add(25)\nprint(w.total())",
+      "testCases": [{ "input": "", "expectedOutput": "75\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "str-and-repr": [
     {
@@ -318,6 +368,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Point to String",
+      "prompt": "Define a class Point storing x and y, with __str__ returning '(x, y)' e.g. '(3, 4)'. Print Point(3, 4).",
+      "starterCode": "# __str__\n",
+      "solutionCode": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __str__(self):\n        return f'({self.x}, {self.y})'\n\nprint(Point(3, 4))",
+      "testCases": [{ "input": "", "expectedOutput": "(3, 4)\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "encapsulation": [
     {
@@ -338,7 +398,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Full Encapsulation: BankAccount",
       "prompt": "Define a `BankAccount` class with:\n- Private `__balance` and `__owner`\n- `@property` for `balance` (read-only) and `owner` (read-only)\n- `deposit(amount)`: validates > 0, adds to balance, prints `Deposited $X`\n- `withdraw(amount)`: validates > 0 and sufficient funds, prints `Withdrew $X` or raises `ValueError`\n- `transfer(amount, other_account)`: withdraws from self, deposits to other\n- `__str__` returning `'OWNER: $BALANCE'`\n\nRead commands until `quit`: `create NAME BALANCE`, `deposit ACC AMT`, `withdraw ACC AMT`, `transfer FROM TO AMT`, `show ACC`.",
       "starterCode": "# Define BankAccount with full encapsulation\n",
-      "solutionCode": "class BankAccount:\n    def __init__(self, owner, balance=0):\n        if balance < 0: raise ValueError('Negative balance')\n        self.__owner = owner\n        self.__balance = balance\n    \n    @property\n    def balance(self): return self.__balance\n    \n    @property\n    def owner(self): return self.__owner\n    \n    def deposit(self, amount):\n        if amount <= 0: raise ValueError('Amount must be positive')\n        self.__balance += amount\n        print(f'Deposited \\${amount:.2f}')\n    \n    def withdraw(self, amount):\n        if amount <= 0: raise ValueError('Amount must be positive')\n        if amount > self.__balance: raise ValueError('Insufficient funds')\n        self.__balance -= amount\n        print(f'Withdrew \\${amount:.2f}')\n    \n    def transfer(self, amount, other):\n        self.withdraw(amount)\n        other.deposit(amount)\n    \n    def __str__(self):\n        return f'{self.__owner}: \\${self.__balance:.2f}'\n\naccounts = {}\nwhile True:\n    line = input().strip()\n    if line == 'quit': break\n    parts = line.split()\n    try:\n        if parts[0] == 'create':\n            accounts[parts[1]] = BankAccount(parts[1], float(parts[2]))\n        elif parts[0] == 'deposit':\n            accounts[parts[1]].deposit(float(parts[2]))\n        elif parts[0] == 'withdraw':\n            accounts[parts[1]].withdraw(float(parts[2]))\n        elif parts[0] == 'transfer':\n            accounts[parts[1]].transfer(float(parts[3]), accounts[parts[2]])\n        elif parts[0] == 'show':\n            print(accounts[parts[1]])\n    except ValueError as e:\n        print(f'Error: {e}')",
+      "solutionCode": "class BankAccount:\n    def __init__(self, owner, balance=0):\n        if balance < 0: raise ValueError('Negative balance')\n        self.__owner = owner\n        self.__balance = balance\n    \n    @property\n    def balance(self): return self.__balance\n    \n    @property\n    def owner(self): return self.__owner\n    \n    def deposit(self, amount):\n        if amount <= 0: raise ValueError('Amount must be positive')\n        self.__balance += amount\n        print(f'Deposited ${amount:.2f}')\n    \n    def withdraw(self, amount):\n        if amount <= 0: raise ValueError('Amount must be positive')\n        if amount > self.__balance: raise ValueError('Insufficient funds')\n        self.__balance -= amount\n        print(f'Withdrew ${amount:.2f}')\n    \n    def transfer(self, amount, other):\n        self.withdraw(amount)\n        other.deposit(amount)\n    \n    def __str__(self):\n        return f'{self.__owner}: ${self.__balance:.2f}'\n\naccounts = {}\nwhile True:\n    line = input().strip()\n    if line == 'quit': break\n    parts = line.split()\n    try:\n        if parts[0] == 'create':\n            accounts[parts[1]] = BankAccount(parts[1], float(parts[2]))\n        elif parts[0] == 'deposit':\n            accounts[parts[1]].deposit(float(parts[2]))\n        elif parts[0] == 'withdraw':\n            accounts[parts[1]].withdraw(float(parts[2]))\n        elif parts[0] == 'transfer':\n            accounts[parts[1]].transfer(float(parts[3]), accounts[parts[2]])\n        elif parts[0] == 'show':\n            print(accounts[parts[1]])\n    except ValueError as e:\n        print(f'Error: {e}')",
       "testCases": [
         {
           "input": "create Alice 1000\ncreate Bob 500\ndeposit Alice 200\nwithdraw Bob 600\ntransfer Alice Bob 300\nshow Alice\nshow Bob\nquit\n",
@@ -389,6 +449,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 90
+    }
+  ,
+    {
+      "title": "Secret Vault",
+      "prompt": "Define a class Vault whose __init__ stores a value in the private attribute __secret, with a method reveal() returning it. Create Vault('gold') and print reveal().",
+      "starterCode": "# Private attribute + getter method\n",
+      "solutionCode": "class Vault:\n    def __init__(self, secret):\n        self.__secret = secret\n    def reveal(self):\n        return self.__secret\n\nv = Vault('gold')\nprint(v.reveal())",
+      "testCases": [{ "input": "", "expectedOutput": "gold\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

@@ -98,6 +98,25 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Positive, Negative or Zero",
+      "prompt": "Read an integer. Print Positive if it is greater than 0, Negative if less than 0, and Zero otherwise.",
+      "starterCode": "# Classify the number\n",
+      "solutionCode": "n = int(input())\nif n > 0:\n    print('Positive')\nelif n < 0:\n    print('Negative')\nelse:\n    print('Zero')",
+      "testCases": [{ "input": "0\n", "expectedOutput": "Zero\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    },
+    {
+      "title": "Leap Year Check",
+      "prompt": "Read a year. Print Leap Year if it is divisible by 4 and (not divisible by 100 or divisible by 400). Otherwise print Not a Leap Year.",
+      "starterCode": "# Leap year logic\n",
+      "solutionCode": "year = int(input())\nif year % 4 == 0 and (year % 100 != 0 or year % 400 == 0):\n    print('Leap Year')\nelse:\n    print('Not a Leap Year')",
+      "testCases": [{ "input": "2024\n", "expectedOutput": "Leap Year\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "if-elif-else": [
     {
@@ -212,6 +231,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Ticket Price",
+      "prompt": "Read an age and print the ticket price: under 5 -> 0, 5-12 -> 10, 13-60 -> 20, over 60 -> 15. Print just the number.",
+      "starterCode": "# Age-based ticket pricing\n",
+      "solutionCode": "age = int(input())\nif age < 5:\n    print(0)\nelif age <= 12:\n    print(10)\nelif age <= 60:\n    print(20)\nelse:\n    print(15)",
+      "testCases": [{ "input": "70\n", "expectedOutput": "15\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "nested-if": [
     {
@@ -298,6 +327,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 50
     }
+  ,
+    {
+      "title": "Even and Positive",
+      "prompt": "Read an integer. If it is positive, check parity: print Positive Even or Positive Odd. Otherwise print Not positive.",
+      "starterCode": "# Nested conditionals\n",
+      "solutionCode": "n = int(input())\nif n > 0:\n    if n % 2 == 0:\n        print('Positive Even')\n    else:\n        print('Positive Odd')\nelse:\n    print('Not positive')",
+      "testCases": [{ "input": "14\n", "expectedOutput": "Positive Even\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "ternary-operator": [
     {
@@ -383,6 +422,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Min of Two",
+      "prompt": "Read two integers (one per line). Use a ternary expression to print the smaller one.",
+      "starterCode": "# Ternary minimum\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nprint(a if a < b else b)",
+      "testCases": [{ "input": "9\n4\n", "expectedOutput": "4\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "match-case": [
@@ -497,6 +546,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "Day Type",
+      "prompt": "Read a day number (1-7). Use match/case to print Weekday for 1-5 and Weekend for 6 or 7.",
+      "starterCode": "# match/case day classifier\n",
+      "solutionCode": "day = int(input())\nmatch day:\n    case 1 | 2 | 3 | 4 | 5:\n        print('Weekday')\n    case 6 | 7:\n        print('Weekend')",
+      "testCases": [{ "input": "6\n", "expectedOutput": "Weekend\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

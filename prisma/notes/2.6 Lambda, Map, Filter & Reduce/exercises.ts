@@ -54,6 +54,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Lambda Add",
+      "prompt": "Create add = lambda a, b: a + b and print add(17, 25).",
+      "starterCode": "# lambda addition\n",
+      "solutionCode": "add = lambda a, b: a + b\nprint(add(17, 25))",
+      "testCases": [{ "input": "", "expectedOutput": "42\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "map-function": [
     {
@@ -110,6 +120,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 55
     }
+  ,
+    {
+      "title": "Square All",
+      "prompt": "Use map() with a lambda to square every number in [1, 2, 3, 4]. Print the result as a list.",
+      "starterCode": "# map + lambda\n",
+      "solutionCode": "print(list(map(lambda x: x ** 2, [1, 2, 3, 4])))",
+      "testCases": [{ "input": "", "expectedOutput": "[1, 4, 9, 16]\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "filter-function": [
     {
@@ -158,6 +178,16 @@ export const exercises: Record<string, any[]> = {
       "testCases": [{ "input": "", "expectedOutput": "['Mouse', 'USB Cable']\n" }],
       "difficulty": "expert",
       "xpReward": 60
+    }
+  ,
+    {
+      "title": "Keep Evens",
+      "prompt": "Use filter() with a lambda to keep only the even numbers of range(10). Print the result as a list.",
+      "starterCode": "# filter + lambda\n",
+      "solutionCode": "print(list(filter(lambda x: x % 2 == 0, range(10))))",
+      "testCases": [{ "input": "", "expectedOutput": "[0, 2, 4, 6, 8]\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "reduce-function": [
@@ -219,6 +249,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 70
     }
+  ,
+    {
+      "title": "Product of All",
+      "prompt": "Use functools.reduce to compute the product of [1, 2, 3, 4, 5] and print it.",
+      "starterCode": "from functools import reduce\n# reduce to a product\n",
+      "solutionCode": "from functools import reduce\nprint(reduce(lambda acc, x: acc * x, [1, 2, 3, 4, 5], 1))",
+      "testCases": [{ "input": "", "expectedOutput": "120\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "zip-function": [
     {
@@ -268,6 +308,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 55
     }
+  ,
+    {
+      "title": "Zip Sum",
+      "prompt": "Given a = [1, 2, 3] and b = [10, 20, 30], use zip() to pair them and print a list of the pairwise sums.",
+      "starterCode": "# zip pairs\n",
+      "solutionCode": "a = [1, 2, 3]\nb = [10, 20, 30]\nprint([x + y for x, y in zip(a, b)])",
+      "testCases": [{ "input": "", "expectedOutput": "[11, 22, 33]\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "enumerate-function": [
     {
@@ -307,6 +357,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 55
+    }
+  ,
+    {
+      "title": "Indexed Letters",
+      "prompt": "Loop over 'abc' with enumerate() and print each index and letter separated by a space, one pair per line.",
+      "starterCode": "# enumerate\n",
+      "solutionCode": "for i, c in enumerate('abc'):\n    print(i, c)",
+      "testCases": [{ "input": "", "expectedOutput": "0 a\n1 b\n2 c\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "sorted-with-key": [
@@ -357,6 +417,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Sort by Length",
+      "prompt": "Print sorted(['pear', 'fig', 'banana'], key=len) — shortest word first.",
+      "starterCode": "# sorted with key=len\n",
+      "solutionCode": "print(sorted(['pear', 'fig', 'banana'], key=len))",
+      "testCases": [{ "input": "", "expectedOutput": "['fig', 'pear', 'banana']\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "any-all-functions": [
     {
@@ -399,6 +469,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Any and All",
+      "prompt": "Given nums = [3, -1, 4]: on the first line print whether ANY number is negative; on the second line print whether ALL numbers are positive.",
+      "starterCode": "# any() and all()\n",
+      "solutionCode": "nums = [3, -1, 4]\nprint(any(n < 0 for n in nums))\nprint(all(n > 0 for n in nums))",
+      "testCases": [{ "input": "", "expectedOutput": "True\nFalse\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "combining-lambda-map-filter-reduce": [
     {
@@ -435,7 +515,7 @@ export const exercises: Record<string, any[]> = {
       "prompt": "Given sales data as a list of dictionaries, calculate the total revenue from items priced over $50. Use `filter()` to select qualifying items, `map()` to compute revenue (price * quantity), and `reduce()` to sum. Print the total.\n\nsales = [\n    {'item': 'Laptop', 'price': 999, 'qty': 2},\n    {'item': 'Mouse', 'price': 25, 'qty': 10},\n    {'item': 'Monitor', 'price': 349, 'qty': 3},\n    {'item': 'Cable', 'price': 10, 'qty': 50},\n]",
       "starterCode": "from functools import reduce\nsales = [\n    {'item': 'Laptop', 'price': 999, 'qty': 2},\n    {'item': 'Mouse', 'price': 25, 'qty': 10},\n    {'item': 'Monitor', 'price': 349, 'qty': 3},\n    {'item': 'Cable', 'price': 10, 'qty': 50},\n]\n# Calculate total revenue for items over $50\n",
       "solutionCode": "from functools import reduce\nsales = [\n    {'item': 'Laptop', 'price': 999, 'qty': 2},\n    {'item': 'Mouse', 'price': 25, 'qty': 10},\n    {'item': 'Monitor', 'price': 349, 'qty': 3},\n    {'item': 'Cable', 'price': 10, 'qty': 50},\n]\nexpensive = filter(lambda s: s['price'] > 50, sales)\nrevenues = map(lambda s: s['price'] * s['qty'], expensive)\ntotal = reduce(lambda acc, x: acc + x, revenues, 0)\nprint(f'Total revenue: ${total}')",
-      "testCases": [{ "input": "", "expectedOutput": "Total revenue: $5045\n" }],
+      "testCases": [{ "input": "", "expectedOutput": "Total revenue: $3045\n" }],
       "difficulty": "expert",
       "xpReward": 75
     }

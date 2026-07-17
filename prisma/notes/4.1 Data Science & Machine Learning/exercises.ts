@@ -56,6 +56,25 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Arange Sum",
+      "prompt": "Use np.arange(1, 11) to create the numbers 1..10 and print their sum (call .sum()).",
+      "starterCode": "import numpy as np\n# arange + sum\n",
+      "solutionCode": "import numpy as np\nprint(np.arange(1, 11).sum())",
+      "testCases": [{ "input": "", "expectedOutput": "55\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    },
+    {
+      "title": "Reshape Check",
+      "prompt": "Create np.arange(12), reshape it to 3 rows and 4 columns, and print its .shape.",
+      "starterCode": "import numpy as np\n# reshape\n",
+      "solutionCode": "import numpy as np\nprint(np.arange(12).reshape(3, 4).shape)",
+      "testCases": [{ "input": "", "expectedOutput": "(3, 4)\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "pandas": [
     {
@@ -87,10 +106,10 @@ export const exercises: Record<string, any[]> = {
     },
     {
       "title": "GroupBy Aggregation",
-      "prompt": "Given df with 'dept' and 'salary' columns, calculate the average salary per department and print the result.\ndf = pd.DataFrame({'dept': ['HR', 'IT', 'IT', 'HR'], 'salary': [50000, 60000, 70000, 55000]})",
+      "prompt": "Given df with 'dept' and 'salary' columns, calculate the average salary per department. Print each department and its average (1 decimal place) on its own line, e.g. \`HR: 52500.0\`.\ndf = pd.DataFrame({'dept': ['HR', 'IT', 'IT', 'HR'], 'salary': [50000, 60000, 70000, 55000]})",
       "starterCode": "import pandas as pd\ndf = pd.DataFrame({'dept': ['HR', 'IT', 'IT', 'HR'], 'salary': [50000, 60000, 70000, 55000]})\n# Calculate average salary per department\n",
-      "solutionCode": "import pandas as pd\ndf = pd.DataFrame({'dept': ['HR', 'IT', 'IT', 'HR'], 'salary': [50000, 60000, 70000, 55000]})\navg = df.groupby('dept')['salary'].mean()\nprint(avg)",
-      "testCases": [{ "input": "", "expectedOutput": "dept\nHR     52500.0\nIT     65000.0\nName: salary, dtype: float64\n" }],
+      "solutionCode": "import pandas as pd\ndf = pd.DataFrame({'dept': ['HR', 'IT', 'IT', 'HR'], 'salary': [50000, 60000, 70000, 55000]})\navg = df.groupby('dept')['salary'].mean()\nfor dept, salary in avg.items():\n    print(f'{dept}: {salary:.1f}')",
+      "testCases": [{ "input": "", "expectedOutput": "HR: 52500.0\nIT: 65000.0\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     },
@@ -105,14 +124,33 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 65
     }
+  ,
+    {
+      "title": "Series Mean",
+      "prompt": "Create s = pd.Series([10, 20, 30, 40]) and print s.mean().",
+      "starterCode": "import pandas as pd\n# Series mean\n",
+      "solutionCode": "import pandas as pd\ns = pd.Series([10, 20, 30, 40])\nprint(s.mean())",
+      "testCases": [{ "input": "", "expectedOutput": "25.0\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    },
+    {
+      "title": "Column Total",
+      "prompt": "Create df = pd.DataFrame({'x': [1, 2, 3], 'y': [4, 5, 6]}) and print the sum of column 'y'.",
+      "starterCode": "import pandas as pd\n# Column sum\n",
+      "solutionCode": "import pandas as pd\ndf = pd.DataFrame({'x': [1, 2, 3], 'y': [4, 5, 6]})\nprint(df['y'].sum())",
+      "testCases": [{ "input": "", "expectedOutput": "15\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "data-cleaning": [
     {
       "title": "Handle Missing Values",
-      "prompt": "Given a DataFrame with missing values, fill NaN values in the 'age' column with the mean age. Print the result.\ndf = pd.DataFrame({'name': ['Alice', 'Bob', None], 'age': [25, None, 35]})",
+      "prompt": "Given a DataFrame with missing values, fill NaN values in the 'age' column with the mean age. Then print the 'age' column as a list (use \`.tolist()\`).\ndf = pd.DataFrame({'name': ['Alice', 'Bob', None], 'age': [25, None, 35]})",
       "starterCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', None], 'age': [25, np.nan, 35]})\n# Fill missing age values with mean\n",
-      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', None], 'age': [25, np.nan, 35]})\ndf['age'] = df['age'].fillna(df['age'].mean())\nprint(df)",
-      "testCases": [{ "input": "", "expectedOutput": "    name   age\n0  Alice  25.0\n1    Bob  30.0\n2   None  35.0\n" }],
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'name': ['Alice', 'Bob', None], 'age': [25, np.nan, 35]})\ndf['age'] = df['age'].fillna(df['age'].mean())\nprint(df['age'].tolist())",
+      "testCases": [{ "input": "", "expectedOutput": "[25.0, 30.0, 35.0]\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     },
@@ -144,6 +182,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 65
+    }
+  ,
+    {
+      "title": "Drop Missing Rows",
+      "prompt": "Create df = pd.DataFrame({'a': [1, np.nan, 3], 'b': [4, 5, 6]}). Print how many rows remain after df.dropna().",
+      "starterCode": "import pandas as pd\nimport numpy as np\n# dropna row count\n",
+      "solutionCode": "import pandas as pd\nimport numpy as np\ndf = pd.DataFrame({'a': [1, np.nan, 3], 'b': [4, 5, 6]})\nprint(len(df.dropna()))",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "data-visualization": [
@@ -221,6 +269,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 75
     }
+  ,
+    {
+      "title": "Predict the Pattern",
+      "prompt": "Train a LinearRegression on X = [[1], [2], [3]] with y = [2, 4, 6]. Print round(model.predict([[4]])[0]).",
+      "starterCode": "from sklearn.linear_model import LinearRegression\n# Fit and predict\n",
+      "solutionCode": "from sklearn.linear_model import LinearRegression\nX = [[1], [2], [3]]\ny = [2, 4, 6]\nmodel = LinearRegression()\nmodel.fit(X, y)\nprint(round(model.predict([[4]])[0]))",
+      "testCases": [{ "input": "", "expectedOutput": "8\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
+    }
   ],
   "deep-learning": [
     {
@@ -246,36 +304,36 @@ export const exercises: Record<string, any[]> = {
       "prompt": "Create a function \`forward_pass(inputs, weights1, bias1, weights2, bias2)\` that implements a 2-layer neural network with ReLU activation in the hidden layer and sigmoid in the output layer. Test with inputs=[1, 2], weights1=[[0.1, 0.2], [0.3, 0.4]], bias1=[0.1, 0.2], weights2=[0.5, 0.6], bias2=0.1. Print the output.",
       "starterCode": "import numpy as np\n# Build a 2-layer neural network\n",
       "solutionCode": "import numpy as np\ndef sigmoid(x):\n    return 1 / (1 + np.exp(-x))\n\ndef forward_pass(inputs, weights1, bias1, weights2, bias2):\n    # Hidden layer with ReLU\n    hidden = np.dot(inputs, weights1) + bias1\n    hidden = np.maximum(0, hidden)\n    # Output layer with sigmoid\n    output = sigmoid(np.dot(hidden, weights2) + bias2)\n    return output\n\ninputs = np.array([1, 2])\nweights1 = np.array([[0.1, 0.2], [0.3, 0.4]])\nbias1 = np.array([0.1, 0.2])\nweights2 = np.array([0.5, 0.6])\nbias2 = 0.1\noutput = forward_pass(inputs, weights1, bias1, weights2, bias2)\nprint(f'{output:.4f}')",
-      "testCases": [{ "input": "", "expectedOutput": "0.6682\n" }],
+      "testCases": [{ "input": "", "expectedOutput": "0.7721\n" }],
       "difficulty": "expert",
       "xpReward": 80
     }
   ],
   "jupyter-notebook": [
     {
-      "title": "Magic Commands",
-      "prompt": "Use the \`%timeit\` magic command to time the execution of \`sum(range(1000))\`. Print the result (the magic command itself will output timing info).",
-      "starterCode": "# Use %timeit magic command\n",
-      "solutionCode": "%timeit sum(range(1000))",
-      "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
+      "title": "Timing Code Without Magics",
+      "prompt": "In Jupyter, \`%timeit\` times a statement — but magic commands only exist inside IPython, not in a standard Python environment like this playground. Use the \`time\` module instead: record \`time.perf_counter()\` before and after computing \`sum(range(1000))\`. Print the sum on the first line, then print \`Timed successfully\`.",
+      "starterCode": "import time\n\n# Time sum(range(1000)) with time.perf_counter()\n",
+      "solutionCode": "import time\n\nstart = time.perf_counter()\ntotal = sum(range(1000))\nend = time.perf_counter()\n\nprint(total)\nprint('Timed successfully')",
+      "testCases": [{ "input": "", "expectedOutput": "499500\nTimed successfully\n" }],
       "difficulty": "beginner",
       "xpReward": 15
     },
     {
-      "title": "List Variables",
-      "prompt": "Create variables x = 10, y = 20, z = 30. Then use the \`%who\` magic command to list all variables.",
-      "starterCode": "# Create variables and list them\n",
-      "solutionCode": "x = 10\ny = 20\nz = 30\n%who",
-      "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
+      "title": "Listing Variables Without %who",
+      "prompt": "In Jupyter, \`%who\` lists your variables — another IPython-only magic. In standard Python you inspect them yourself. Create x = 10, y = 20, z = 30, then print each value on its own line (x first, then y, then z).",
+      "starterCode": "# Create x, y, z and print each on its own line\n",
+      "solutionCode": "x = 10\ny = 20\nz = 30\nprint(x)\nprint(y)\nprint(z)",
+      "testCases": [{ "input": "", "expectedOutput": "10\n20\n30\n" }],
       "difficulty": "beginner",
       "xpReward": 15
     },
     {
       "title": "Module Integration: Notebook Analysis",
-      "prompt": "In a Jupyter notebook cell: (1) import pandas and numpy, (2) create a DataFrame with 5 rows of random data, (3) use \`%timeit\` to time calculating the mean of a column, (4) print the DataFrame head. (This exercise tests multiple notebook concepts.)",
-      "starterCode": "# Jupyter notebook analysis cell\n",
-      "solutionCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\ndf = pd.DataFrame({'A': np.random.randn(5), 'B': np.random.randn(5)})\nprint(df.head())\n%timeit df['A'].mean()",
-      "testCases": [{ "input": "", "expectedOutput": "IGNORE_OUTPUT_CHECK" }],
+      "prompt": "Analyze data like you would in a notebook cell — but in plain Python (\`%timeit\` and other magics don't work outside IPython). (1) Import pandas and numpy. (2) With \`np.random.seed(42)\`, create a DataFrame with columns 'A' and 'B', 5 rows each, using \`np.random.randn(5)\` for each column. (3) Print the DataFrame's \`.shape\`. (4) Print the mean of column 'A' rounded to 4 decimal places.",
+      "starterCode": "import pandas as pd\nimport numpy as np\n\n# Seeded random DataFrame; print its shape and the mean of column 'A'\n",
+      "solutionCode": "import pandas as pd\nimport numpy as np\n\nnp.random.seed(42)\ndf = pd.DataFrame({'A': np.random.randn(5), 'B': np.random.randn(5)})\nprint(df.shape)\nprint(round(df['A'].mean(), 4))",
+      "testCases": [{ "input": "", "expectedOutput": "(5, 2)\n0.459\n" }],
       "difficulty": "expert",
       "xpReward": 55
     }

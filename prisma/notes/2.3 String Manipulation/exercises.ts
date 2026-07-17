@@ -36,7 +36,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "Python\n",
-          "expectedOutput": "6\nP\nt\nn\n"
+          "expectedOutput": "6\nP\nh\nn\n"
         }
       ],
       "difficulty": "intermediate",
@@ -83,6 +83,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "beginner",
       "xpReward": 20
+    }
+  ,
+    {
+      "title": "Quote Mix",
+      "prompt": "Print exactly: It's \"fine\"  (single quote inside, double quotes around fine — choose your string quoting carefully.)",
+      "starterCode": "# Mixed quotes\n",
+      "solutionCode": "print('It\\'s \"fine\"')",
+      "testCases": [{ "input": "", "expectedOutput": "It's \"fine\"\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "string-indexing-and-slicing": [
@@ -167,6 +177,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "ace\n"
         }
       ],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Every Second Char",
+      "prompt": "Given s = 'abcdefgh', print every second character starting from the first (use slicing with a step).",
+      "starterCode": "# s[::2]\n",
+      "solutionCode": "s = 'abcdefgh'\nprint(s[::2])",
+      "testCases": [{ "input": "", "expectedOutput": "aceg\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -256,6 +276,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Shout It",
+      "prompt": "Read a line of text (it has extra spaces around it). Strip the whitespace and print it in UPPERCASE.",
+      "starterCode": "# strip + upper\n",
+      "solutionCode": "text = input()\nprint(text.strip().upper())",
+      "testCases": [{ "input": "  hey  \n", "expectedOutput": "HEY\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "string-methods-search": [
     {
@@ -341,6 +371,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Find the Needle",
+      "prompt": "Given s = 'where is the cat', print the index where 'cat' first appears (use .find()).",
+      "starterCode": "# .find()\n",
+      "solutionCode": "s = 'where is the cat'\nprint(s.find('cat'))",
+      "testCases": [{ "input": "", "expectedOutput": "13\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "string-methods-modify": [
@@ -428,6 +468,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Underscore Join",
+      "prompt": "Use .join() to print the word 'python' with underscores between letters: p_y_t_h_o_n",
+      "starterCode": "# '_'.join(...)\n",
+      "solutionCode": "print('_'.join('python'))",
+      "testCases": [{ "input": "", "expectedOutput": "p_y_t_h_o_n\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "string-methods-validation": [
     {
@@ -514,6 +564,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Digits Only",
+      "prompt": "Read a string and print whether it contains only digits (use .isdigit()).",
+      "starterCode": "# .isdigit()\n",
+      "solutionCode": "s = input()\nprint(s.isdigit())",
+      "testCases": [{ "input": "12345\n", "expectedOutput": "True\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "string-concatenation-repetition": [
     {
@@ -566,7 +626,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "2\nCoffee 4.50 2\nSandwich 8.99 1\n",
-          "expectedOutput": "                RECEIPT                 \n========================================\nCoffee               $     9.00\nSandwich             $     8.99\n----------------------------------------\nTOTAL:                       $    17.99\n"
+          "expectedOutput": "                RECEIPT                 \n========================================\nCoffee               $    9.00\nSandwich             $    8.99\n----------------------------------------\nTOTAL:                        $   17.99\n"
         }
       ],
       "difficulty": "expert",
@@ -585,6 +645,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Fence Line",
+      "prompt": "Use the repetition operator to print '+-' repeated 10 times (a 20-character fence).",
+      "starterCode": "# '+-' * 10\n",
+      "solutionCode": "print('+-' * 10)",
+      "testCases": [{ "input": "", "expectedOutput": "+-+-+-+-+-+-+-+-+-+-\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "string-immutability": [
@@ -655,6 +725,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "cat\n"
         }
       ],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Replace Returns New",
+      "prompt": "Given s = 'hello', create t = s.replace('l', 'L'). Print s and t separated by a space — notice s is unchanged (immutability).",
+      "starterCode": "# Strings are immutable\n",
+      "solutionCode": "s = 'hello'\nt = s.replace('l', 'L')\nprint(s, t)",
+      "testCases": [{ "input": "", "expectedOutput": "hello heLLo\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -743,6 +823,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "beginner",
       "xpReward": 20
+    }
+  ,
+    {
+      "title": "Tabbed Columns",
+      "prompt": "Use escape sequences to print A, tab, B, newline, C, tab, D (4 letters in a 2x2 tab-separated grid).",
+      "starterCode": "# \\t and \\n\n",
+      "solutionCode": "print('A\\tB\\nC\\tD')",
+      "testCases": [{ "input": "", "expectedOutput": "A\tB\nC\tD\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "raw-strings": [
@@ -850,11 +940,11 @@ export const exercises: Record<string, any[]> = {
       "title": "Student Report Card",
       "prompt": "Read a student name and 3 subject scores (as floats) from input. Print a formatted report:\n- Name right-aligned in 20 chars\n- Each score with 1 decimal place\n- Average with 2 decimal places\n- Grade: A(>=90), B(>=80), C(>=70), D(>=60), F(<60)\n\nIf any score is outside 0-100, print `Invalid score`.",
       "starterCode": "# Read name and 3 scores, print a formatted report card\n",
-      "solutionCode": "name = input().strip()\nscores = [float(input()) for _ in range(3)]\nif any(s < 0 or s > 100 for s in scores):\n    print('Invalid score')\nelse:\n    avg = sum(scores) / 3\n    grade = 'A' if avg >= 90 else 'B' if avg >= 80 else 'C' if avg >= 70 else 'D' if avg >= 60 else 'F'\n    print(f'{'Name':<10}: {name:>20}')\n    print(f'{'Score 1':<10}: {scores[0]:>19.1f}')\n    print(f'{'Score 2':<10}: {scores[1]:>19.1f}')\n    print(f'{'Score 3':<10}: {scores[2]:>19.1f}')\n    print(f'{'Average':<10}: {avg:>19.2f}')\n    print(f'{'Grade':<10}: {grade:>20}')",
+      "solutionCode": "name = input().strip()\nscores = [float(input()) for _ in range(3)]\nif any(s < 0 or s > 100 for s in scores):\n    print('Invalid score')\nelse:\n    avg = sum(scores) / 3\n    grade = 'A' if avg >= 90 else 'B' if avg >= 80 else 'C' if avg >= 70 else 'D' if avg >= 60 else 'F'\n    print(f\"{'Name':<10}: {name:>20}\")\n    print(f\"{'Score 1':<10}: {scores[0]:>19.1f}\")\n    print(f\"{'Score 2':<10}: {scores[1]:>19.1f}\")\n    print(f\"{'Score 3':<10}: {scores[2]:>19.1f}\")\n    print(f\"{'Average':<10}: {avg:>19.2f}\")\n    print(f\"{'Grade':<10}: {grade:>20}\")",
       "testCases": [
         {
           "input": "Alice\n85\n90\n78\n",
-          "expectedOutput": "Name      :                Alice\nScore 1   :                 85.0\nScore 2   :                 90.0\nScore 3   :                 78.0\nAverage   :                84.33\nGrade     :                    B\n"
+          "expectedOutput": "Name      :                Alice\nScore 1   :                85.0\nScore 2   :                90.0\nScore 3   :                78.0\nAverage   :               84.33\nGrade     :                    B\n"
         }
       ],
       "difficulty": "advanced",
@@ -868,7 +958,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "2\nCoffee 4.50 2\nSandwich 8.99 1\n",
-          "expectedOutput": "                 INVOICE                 \n=============================================\nItem                  Qty     Price    Total\n---------------------------------------------\nCoffee                  2 $    4.50 $   9.00\nSandwich                1 $    8.99 $   8.99\n=============================================\n                              Subtotal $  17.99\n                              Tax (8%) $   1.44\n                                 TOTAL $  19.43\n"
+          "expectedOutput": "                   INVOICE                   \n=============================================\nItem                   Qty     Price    Total\n---------------------------------------------\nCoffee                   2 $    4.50 $   9.00\nSandwich                 1 $    8.99 $   8.99\n=============================================\n                            Subtotal $  17.99\n                            Tax (8%) $   1.44\n                               TOTAL $  19.43\n"
         }
       ],
       "difficulty": "expert",
@@ -943,6 +1033,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "Formatted Price",
+      "prompt": "Given price = 9.5, use an f-string to print: Price: $9.50  (format with 2 decimal places.)",
+      "starterCode": "# f-string formatting\n",
+      "solutionCode": "price = 9.5\nprint(f'Price: ${price:.2f}')",
+      "testCases": [{ "input": "", "expectedOutput": "Price: $9.50\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

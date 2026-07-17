@@ -156,6 +156,14 @@ export function usePyodide(enabled: boolean = true) {
       });
 
       try {
+        // Auto-load Pyodide packages (numpy, pandas, matplotlib, …) that the
+        // code imports. Stdlib imports are ignored. Without this, every
+        // Data Science & ML exercise fails with ModuleNotFoundError.
+        // Downloads from the active indexURL (local bundle or CDN), so it
+        // needs internet on first use when a package isn't bundled locally.
+        if (typeof pyodide.loadPackagesFromImports === "function") {
+          await pyodide.loadPackagesFromImports(code);
+        }
         await pyodide.runPythonAsync(code);
         const output = outputLines.join("\n") + (outputLines.length > 0 ? "\n" : "");
         return { output, error: null };

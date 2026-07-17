@@ -70,6 +70,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Rectangle Area",
+      "prompt": "Read two integers: width then height (one per line). Store them in variables and print the area (width * height).",
+      "starterCode": "# Read width and height, print the area\n",
+      "solutionCode": "width = int(input())\nheight = int(input())\nprint(width * height)",
+      "testCases": [{ "input": "7\n3\n", "expectedOutput": "21\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "data-types": [
     {
@@ -142,6 +152,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "String or Number?",
+      "prompt": "Create x = '42' (a string, not a number). Print its type name using type(x).__name__.",
+      "starterCode": "# Print the type of x\n",
+      "solutionCode": "x = '42'\nprint(type(x).__name__)",
+      "testCases": [{ "input": "", "expectedOutput": "str\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "type-and-id-functions": [
     {
@@ -171,6 +191,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Cast and Add",
+      "prompt": "Read a string containing a number, convert it with int(), add 10, and print the result.",
+      "starterCode": "# Read, cast, add 10, print\n",
+      "solutionCode": "n = int(input())\nprint(n + 10)",
+      "testCases": [{ "input": "5\n", "expectedOutput": "15\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "type-casting": [
@@ -244,6 +274,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Conversion Roundtrip",
+      "prompt": "Convert the strings '8' and '2' to integers, add them, and print the result.",
+      "starterCode": "# int('8') + int('2')\n",
+      "solutionCode": "print(int('8') + int('2'))",
+      "testCases": [{ "input": "", "expectedOutput": "10\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "user-input": [
     {
@@ -302,6 +342,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Greeting Machine",
+      "prompt": "Read a name from input and print a greeting in the format: Hello, <name>!",
+      "starterCode": "# Read a name and greet it\n",
+      "solutionCode": "name = input()\nprint(f'Hello, {name}!')",
+      "testCases": [{ "input": "Sam\n", "expectedOutput": "Hello, Sam!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "dynamic-typing": [
     {
@@ -345,6 +395,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Change Type",
+      "prompt": "Create x = 5 (an int). Then reassign x = 'five' (a string). Print x.",
+      "starterCode": "# Assign, reassign with a different type, print\n",
+      "solutionCode": "x = 5\nx = 'five'\nprint(x)",
+      "testCases": [{ "input": "", "expectedOutput": "five\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "print-formatting": [
@@ -431,6 +491,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 80
+    }
+  ,
+    {
+      "title": "F-String Bio",
+      "prompt": "Read a name and an age (one per line). Use an f-string to print: <name> is <age> years old.",
+      "starterCode": "# Read name and age, print a formatted bio\n",
+      "solutionCode": "name = input()\nage = input()\nprint(f'{name} is {age} years old.')",
+      "testCases": [{ "input": "Ana\n25\n", "expectedOutput": "Ana is 25 years old.\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

@@ -112,6 +112,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 60
     }
+  ,
+    {
+      "title": "Countdown",
+      "prompt": "Read an integer n. Use a while loop to print the numbers from n down to 1, one per line.",
+      "starterCode": "# while-loop countdown\n",
+      "solutionCode": "n = int(input())\nwhile n > 0:\n    print(n)\n    n -= 1",
+      "testCases": [{ "input": "3\n", "expectedOutput": "3\n2\n1\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "for-loop": [
     {
@@ -223,6 +233,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "I like apple\nI like banana\nI like cherry\n"
         }
       ],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Sum of List",
+      "prompt": "Given nums = [4, 8, 15, 16, 23, 42], use a for loop to compute the sum and print it.",
+      "starterCode": "nums = [4, 8, 15, 16, 23, 42]\n# Sum with a for loop\n",
+      "solutionCode": "nums = [4, 8, 15, 16, 23, 42]\ntotal = 0\nfor n in nums:\n    total += n\nprint(total)",
+      "testCases": [{ "input": "", "expectedOutput": "108\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -340,6 +360,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Range Sum",
+      "prompt": "Use range() and sum() to print the sum of all integers from 1 to 100 inclusive.",
+      "starterCode": "# sum(range(...))\n",
+      "solutionCode": "print(sum(range(1, 101)))",
+      "testCases": [{ "input": "", "expectedOutput": "5050\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "loop-control-statements": [
     {
@@ -426,6 +456,25 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Skip Threes",
+      "prompt": "Print the numbers 1 to 10 (one per line) but skip any number divisible by 3 using continue.",
+      "starterCode": "# 1..10, skip multiples of 3\n",
+      "solutionCode": "for n in range(1, 11):\n    if n % 3 == 0:\n        continue\n    print(n)",
+      "testCases": [{ "input": "", "expectedOutput": "1\n2\n4\n5\n7\n8\n10\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    },
+    {
+      "title": "First Square Over",
+      "prompt": "Starting at 1, find the first integer whose square is greater than 200. Print that integer. (Use a loop with break.)",
+      "starterCode": "# break when n*n > 200\n",
+      "solutionCode": "n = 1\nwhile True:\n    if n * n > 200:\n        print(n)\n        break\n    n += 1",
+      "testCases": [{ "input": "", "expectedOutput": "15\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "nested-loops": [
     {
@@ -511,6 +560,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 50
+    }
+  ,
+    {
+      "title": "Times Row",
+      "prompt": "Read an integer n. Print n*1, n*2, ..., n*5, one result per line (use a for loop with range).",
+      "starterCode": "# Multiplication row\n",
+      "solutionCode": "n = int(input())\nfor i in range(1, 6):\n    print(n * i)",
+      "testCases": [{ "input": "7\n", "expectedOutput": "7\n14\n21\n28\n35\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "pattern-printing": [
@@ -625,6 +684,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "Number Triangle",
+      "prompt": "Print a 4-row triangle where row i contains the digit i repeated i times:\n1\n22\n333\n4444",
+      "starterCode": "# Nested loop pattern\n",
+      "solutionCode": "for i in range(1, 5):\n    print(str(i) * i)",
+      "testCases": [{ "input": "", "expectedOutput": "1\n22\n333\n4444\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

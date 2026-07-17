@@ -46,7 +46,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Invoice Printer",
       "prompt": "Define three functions:\n1. `print_header(title)` - prints `=== TITLE ===`\n2. `print_item(name, price)` - prints `  name: $price` (price to 2dp)\n3. `print_total(items)` - prints `Total: $X.XX`\n\nRead N items (N given first, each line `name price`). Call the functions to print a full invoice. If N is 0, print `No items`.",
       "starterCode": "# Define three functions and use them to print an invoice\n",
-      "solutionCode": "def print_header(title):\n    print(f'=== {title} ===')\n\ndef print_item(name, price):\n    print(f'  {name}: \\${price:.2f}')\n\ndef print_total(items):\n    total = sum(p for _, p in items)\n    print(f'Total: \\${total:.2f}')\n\nn = int(input())\nif n == 0:\n    print('No items')\nelse:\n    items = []\n    for _ in range(n):\n        parts = input().split()\n        name = parts[0]\n        price = float(parts[1])\n        items.append((name, price))\n    print_header('INVOICE')\n    for name, price in items:\n        print_item(name, price)\n    print_total(items)",
+      "solutionCode": "def print_header(title):\n    print(f'=== {title} ===')\n\ndef print_item(name, price):\n    print(f'  {name}: ${price:.2f}')\n\ndef print_total(items):\n    total = sum(p for _, p in items)\n    print(f'Total: ${total:.2f}')\n\nn = int(input())\nif n == 0:\n    print('No items')\nelse:\n    items = []\n    for _ in range(n):\n        parts = input().split()\n        name = parts[0]\n        price = float(parts[1])\n        items.append((name, price))\n    print_header('INVOICE')\n    for name, price in items:\n        print_item(name, price)\n    print_total(items)",
       "testCases": [
         {
           "input": "3\nCoffee 4.99\nSandwich 8.99\nJuice 3.25\n",
@@ -81,6 +81,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "beep\nbeep\nbeep\n"
         }
       ],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Define a Greeter",
+      "prompt": "Define a function greet(name) that returns the string 'Hello, <name>'. Read a name from input and print greet(name).",
+      "starterCode": "# Define greet(name), then use it\n",
+      "solutionCode": "def greet(name):\n    return f'Hello, {name}'\n\nname = input()\nprint(greet(name))",
+      "testCases": [{ "input": "Lee\n", "expectedOutput": "Hello, Lee\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -212,6 +222,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Default Power",
+      "prompt": "Define power(base, exp=2) that returns base ** exp. Print power(5) on the first line and power(2, 3) on the second.",
+      "starterCode": "# Default parameter values\n",
+      "solutionCode": "def power(base, exp=2):\n    return base ** exp\n\nprint(power(5))\nprint(power(2, 3))",
+      "testCases": [{ "input": "", "expectedOutput": "25\n8\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "return-statement": [
     {
@@ -312,6 +332,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Is Even",
+      "prompt": "Define is_even(n) that returns True when n is even. Read an integer and print Even or Odd using your function.",
+      "starterCode": "# Boolean-returning function\n",
+      "solutionCode": "def is_even(n):\n    return n % 2 == 0\n\nn = int(input())\nprint('Even' if is_even(n) else 'Odd')",
+      "testCases": [{ "input": "11\n", "expectedOutput": "Odd\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "scope": [
     {
@@ -398,6 +428,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Global Counter",
+      "prompt": "Create a global variable count = 0. Define bump() that uses the global keyword to increment count. Call bump() three times, then print count.",
+      "starterCode": "# global keyword\n",
+      "solutionCode": "count = 0\n\ndef bump():\n    global count\n    count += 1\n\nbump()\nbump()\nbump()\nprint(count)",
+      "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "docstrings": [
     {
@@ -441,6 +481,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "beginner",
       "xpReward": 20
+    }
+  ,
+    {
+      "title": "Docstring Reader",
+      "prompt": "Define a function helper with the docstring 'Adds nothing' (and an empty body using pass). Print its __doc__ attribute.",
+      "starterCode": "# Docstrings\n",
+      "solutionCode": "def helper():\n    '''Adds nothing'''\n    pass\n\nprint(helper.__doc__)",
+      "testCases": [{ "input": "", "expectedOutput": "Adds nothing\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ],
   "recursive-functions": [
@@ -514,6 +564,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 50
     }
+  ,
+    {
+      "title": "Recursive Sum",
+      "prompt": "Define s(n) that returns the sum 1 + 2 + ... + n using recursion (base case: s(1) returns 1). Print s(10).",
+      "starterCode": "# Recursion\n",
+      "solutionCode": "def s(n):\n    if n == 1:\n        return 1\n    return n + s(n - 1)\n\nprint(s(10))",
+      "testCases": [{ "input": "", "expectedOutput": "55\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "nested-functions": [
     {
@@ -571,6 +631,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "Outer and Inner",
+      "prompt": "Define outer() containing a nested function inner() that returns 'in'. outer() should return inner() + 'ner'. Print outer().",
+      "starterCode": "# Nested functions\n",
+      "solutionCode": "def outer():\n    def inner():\n        return 'in'\n    return inner() + 'ner'\n\nprint(outer())",
+      "testCases": [{ "input": "", "expectedOutput": "inner\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "lambda-functions": [
@@ -700,6 +770,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Lambda Square",
+      "prompt": "Create sq = lambda x: x * x and print sq(9).",
+      "starterCode": "# lambda\n",
+      "solutionCode": "sq = lambda x: x * x\nprint(sq(9))",
+      "testCases": [{ "input": "", "expectedOutput": "81\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "first-class-functions": [
     {
@@ -785,6 +865,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "Apply Twice",
+      "prompt": "Define apply_twice(f, x) that returns f(f(x)). Print apply_twice(lambda n: n + 3, 10).",
+      "starterCode": "# Functions as arguments\n",
+      "solutionCode": "def apply_twice(f, x):\n    return f(f(x))\n\nprint(apply_twice(lambda n: n + 3, 10))",
+      "testCases": [{ "input": "", "expectedOutput": "16\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
     }
   ]
 };

@@ -98,6 +98,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Dog Overrides Animal",
+      "prompt": "Define Animal with a method speak() returning 'Generic'. Define Dog(Animal) overriding speak() to return 'Woof'. Print Dog().speak().",
+      "starterCode": "# Inheritance + override\n",
+      "solutionCode": "class Animal:\n    def speak(self):\n        return 'Generic'\n\nclass Dog(Animal):\n    def speak(self):\n        return 'Woof'\n\nprint(Dog().speak())",
+      "testCases": [{ "input": "", "expectedOutput": "Woof\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "polymorphism": [
     {
@@ -132,7 +142,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Duck Typing Payment System",
       "prompt": "Define three payment classes WITHOUT a shared parent:\n- `CreditCard(card_last4, amount)` with `process()` returning `'Charged $AMT to card ending ****LAST4'`\n- `PayPal(email, amount)` with `process()` returning `'PayPal: $AMT sent from EMAIL'`\n- `Bitcoin(wallet, amount)` with `process()` returning `'BTC: $AMT to WALLET'`\n\nRead N payments (N first, each line: `type data amount`). Call process() on each using duck typing (single function `checkout(p)` that calls p.process()).",
       "starterCode": "# Define payment classes without shared parent - use duck typing\n",
-      "solutionCode": "class CreditCard:\n    def __init__(self, card_last4, amount):\n        self.card_last4 = card_last4\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'Charged \\${self.amount:.2f} to card ending ****{self.card_last4}'\n\nclass PayPal:\n    def __init__(self, email, amount):\n        self.email = email\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'PayPal: \\${self.amount:.2f} sent from {self.email}'\n\nclass Bitcoin:\n    def __init__(self, wallet, amount):\n        self.wallet = wallet\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'BTC: \\${self.amount:.2f} to {self.wallet}'\n\ndef checkout(p):\n    print(p.process())\n\nn = int(input())\nfor _ in range(n):\n    parts = input().split()\n    if parts[0] == 'CreditCard':\n        checkout(CreditCard(parts[1], parts[2]))\n    elif parts[0] == 'PayPal':\n        checkout(PayPal(parts[1], parts[2]))\n    elif parts[0] == 'Bitcoin':\n        checkout(Bitcoin(parts[1], parts[2]))",
+      "solutionCode": "class CreditCard:\n    def __init__(self, card_last4, amount):\n        self.card_last4 = card_last4\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'Charged ${self.amount:.2f} to card ending ****{self.card_last4}'\n\nclass PayPal:\n    def __init__(self, email, amount):\n        self.email = email\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'PayPal: ${self.amount:.2f} sent from {self.email}'\n\nclass Bitcoin:\n    def __init__(self, wallet, amount):\n        self.wallet = wallet\n        self.amount = float(amount)\n    \n    def process(self):\n        return f'BTC: ${self.amount:.2f} to {self.wallet}'\n\ndef checkout(p):\n    print(p.process())\n\nn = int(input())\nfor _ in range(n):\n    parts = input().split()\n    if parts[0] == 'CreditCard':\n        checkout(CreditCard(parts[1], parts[2]))\n    elif parts[0] == 'PayPal':\n        checkout(PayPal(parts[1], parts[2]))\n    elif parts[0] == 'Bitcoin':\n        checkout(Bitcoin(parts[1], parts[2]))",
       "testCases": [
         {
           "input": "3\nCreditCard 3456 99.99\nPayPal alice@example.com 49.50\nBitcoin 1BvBM 0.01\n",
@@ -167,6 +177,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "3.14\n4.0\n"
         }
       ],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+    {
+      "title": "Shape Areas",
+      "prompt": "Define Square (side) and Rectangle (w, h), each with an area() method. Loop over [Square(4), Rectangle(2, 5)] and print each area on its own line — same call, different behavior.",
+      "starterCode": "# Polymorphism in a loop\n",
+      "solutionCode": "class Square:\n    def __init__(self, side):\n        self.side = side\n    def area(self):\n        return self.side ** 2\n\nclass Rectangle:\n    def __init__(self, w, h):\n        self.w = w\n        self.h = h\n    def area(self):\n        return self.w * self.h\n\nfor shape in [Square(4), Rectangle(2, 5)]:\n    print(shape.area())",
+      "testCases": [{ "input": "", "expectedOutput": "16\n10\n" }],
       "difficulty": "intermediate",
       "xpReward": 30
     }
@@ -213,6 +233,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "Abstract Vehicle",
+      "prompt": "Define an abstract class Vehicle (abc.ABC) with an abstract method wheels(). Define Bike(Vehicle) implementing wheels() to return 2. Print Bike().wheels().",
+      "starterCode": "from abc import ABC, abstractmethod\n# Abstract base class\n",
+      "solutionCode": "from abc import ABC, abstractmethod\n\nclass Vehicle(ABC):\n    @abstractmethod\n    def wheels(self):\n        pass\n\nclass Bike(Vehicle):\n    def wheels(self):\n        return 2\n\nprint(Bike().wheels())",
+      "testCases": [{ "input": "", "expectedOutput": "2\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "composition-vs-inheritance": [
@@ -271,6 +301,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "Car Has Engine",
+      "prompt": "Define Engine with start() returning 'Vroom'. Define Car that HAS an Engine (composition) with ignite() delegating to its engine's start(). Print Car().ignite().",
+      "starterCode": "# Composition\n",
+      "solutionCode": "class Engine:\n    def start(self):\n        return 'Vroom'\n\nclass Car:\n    def __init__(self):\n        self.engine = Engine()\n    def ignite(self):\n        return self.engine.start()\n\nprint(Car().ignite())",
+      "testCases": [{ "input": "", "expectedOutput": "Vroom\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "magic-methods": [
@@ -371,6 +411,25 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "Add Two Points",
+      "prompt": "Define Point(x, y) with an __add__ method that returns a new Point with summed coordinates. Compute Point(1, 2) + Point(3, 4) and print the resulting x and y separated by a space.",
+      "starterCode": "# __add__\n",
+      "solutionCode": "class Point:\n    def __init__(self, x, y):\n        self.x = x\n        self.y = y\n    def __add__(self, other):\n        return Point(self.x + other.x, self.y + other.y)\n\np = Point(1, 2) + Point(3, 4)\nprint(p.x, p.y)",
+      "testCases": [{ "input": "", "expectedOutput": "4 6\n" }],
+      "difficulty": "advanced",
+      "xpReward": 40
+    },
+    {
+      "title": "Cart Length",
+      "prompt": "Define a class Cart storing a list of items, with __len__ returning the item count. Print len(Cart(['a', 'b', 'c'])).",
+      "starterCode": "# __len__\n",
+      "solutionCode": "class Cart:\n    def __init__(self, items):\n        self.items = items\n    def __len__(self):\n        return len(self.items)\n\nprint(len(Cart(['a', 'b', 'c'])))",
+      "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

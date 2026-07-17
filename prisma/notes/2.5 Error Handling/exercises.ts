@@ -98,6 +98,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Safe Divide",
+      "prompt": "Read two integers a and b. Try to print a / b; if b is 0, catch ZeroDivisionError and print Cannot divide by zero.",
+      "starterCode": "# try/except ZeroDivisionError\n",
+      "solutionCode": "a = int(input())\nb = int(input())\ntry:\n    print(a / b)\nexcept ZeroDivisionError:\n    print('Cannot divide by zero')",
+      "testCases": [{ "input": "10\n0\n", "expectedOutput": "Cannot divide by zero\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "common-exceptions": [
     {
@@ -170,6 +180,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Index Rescue",
+      "prompt": "Given lst = [1, 2, 3], try to print lst[5]. Catch the IndexError and print Index out of range.",
+      "starterCode": "# try/except IndexError\n",
+      "solutionCode": "lst = [1, 2, 3]\ntry:\n    print(lst[5])\nexcept IndexError:\n    print('Index out of range')",
+      "testCases": [{ "input": "", "expectedOutput": "Index out of range\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "raising-exceptions": [
     {
@@ -214,6 +234,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "advanced",
       "xpReward": 40
     }
+  ,
+    {
+      "title": "Validate Age",
+      "prompt": "Define check(age) that raises ValueError('Invalid age') when age is negative. Read an age, call check inside try/except, print OK when valid or the error message when not.",
+      "starterCode": "# raise ValueError\n",
+      "solutionCode": "def check(age):\n    if age < 0:\n        raise ValueError('Invalid age')\n\nage = int(input())\ntry:\n    check(age)\n    print('OK')\nexcept ValueError as e:\n    print(e)",
+      "testCases": [{ "input": "-3\n", "expectedOutput": "Invalid age\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "custom-exceptions": [
     {
@@ -257,6 +287,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 50
+    }
+  ,
+    {
+      "title": "Custom Error",
+      "prompt": "Define a custom exception TooSmallError. Read an integer n; if n < 10, raise TooSmallError('Too small') and catch it, printing the message.",
+      "starterCode": "# Custom exception class\n",
+      "solutionCode": "class TooSmallError(Exception):\n    pass\n\nn = int(input())\ntry:\n    if n < 10:\n        raise TooSmallError('Too small')\n    print('Big enough')\nexcept TooSmallError as e:\n    print(e)",
+      "testCases": [{ "input": "4\n", "expectedOutput": "Too small\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "assertions": [
@@ -343,6 +383,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 90
+    }
+  ,
+    {
+      "title": "Assert Positive",
+      "prompt": "Read an integer n. Use assert n > 0 inside try/except AssertionError: print Positive when it holds, otherwise Assertion failed.",
+      "starterCode": "# assert with try/except\n",
+      "solutionCode": "n = int(input())\ntry:\n    assert n > 0\n    print('Positive')\nexcept AssertionError:\n    print('Assertion failed')",
+      "testCases": [{ "input": "-2\n", "expectedOutput": "Assertion failed\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

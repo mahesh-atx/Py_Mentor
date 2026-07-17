@@ -8,7 +8,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "4\nHello World\n\nPython is great\nFile handling\n",
-          "expectedOutput": "chars: 40\nlines: 4\nnon_empty_lines: 3\nwords: 6\n"
+          "expectedOutput": "chars: 42\nlines: 4\nnon_empty_lines: 3\nwords: 7\n"
         }
       ],
       "difficulty": "intermediate",
@@ -32,7 +32,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Read Entire File",
       "prompt": "Open 'data.txt' in read mode ('r'). Read its entire contents using `.read()` and print it. Remember to `.close()` the file.",
       "starterCode": "# A file 'data.txt' is created for you\nwith open('data.txt', 'w') as f: f.write('Hello\\nWorld')\n\n# Now open it, read it, print it, and close it\n",
-      "solutionCode": "f = open('data.txt', 'r')\ncontent = f.read()\nprint(content)\nf.close()",
+      "solutionCode": "with open('data.txt', 'w') as f: f.write('Hello\\nWorld')\n\nf = open('data.txt', 'r')\ncontent = f.read()\nprint(content)\nf.close()",
       "testCases": [
         {
           "input": "",
@@ -46,7 +46,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Read Lines",
       "prompt": "Open 'data.txt' in read mode. Use `.readlines()` to read it into a list. Print the list. Close the file.",
       "starterCode": "# Setup file\nwith open('data.txt', 'w') as f: f.write('Line1\\nLine2')\n\n# Read lines and print\n",
-      "solutionCode": "f = open('data.txt', 'r')\nlines = f.readlines()\nprint(lines)\nf.close()",
+      "solutionCode": "with open('data.txt', 'w') as f: f.write('Line1\\nLine2')\n\nf = open('data.txt', 'r')\nlines = f.readlines()\nprint(lines)\nf.close()",
       "testCases": [
         {
           "input": "",
@@ -55,6 +55,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "First Line Only",
+      "prompt": "A file notes.txt is created below with three lines. Open it, read ONLY the first line with .readline(), and print it stripped.",
+      "starterCode": "with open('notes.txt', 'w') as f: f.write('alpha\\nbeta\\ngamma')\n\n# Read and print the first line\n",
+      "solutionCode": "with open('notes.txt', 'w') as f: f.write('alpha\\nbeta\\ngamma')\n\nwith open('notes.txt', 'r') as f:\n    print(f.readline().strip())",
+      "testCases": [{ "input": "", "expectedOutput": "alpha\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "writing-appending-files": [
@@ -118,7 +128,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Append to File",
       "prompt": "Open 'log.txt' in append mode ('a'). Write 'Appended' to it. Close the file.",
       "starterCode": "# Setup\nwith open('log.txt', 'w') as f: f.write('Start\\n')\n\n# Append 'Appended' to log.txt\n\n\n# Verification\nwith open('log.txt', 'r') as f: print(f.read())",
-      "solutionCode": "f = open('log.txt', 'a')\nf.write('Appended')\nf.close()\n\nwith open('log.txt', 'r') as f: print(f.read())",
+      "solutionCode": "with open('log.txt', 'w') as f: f.write('Start\\n')\n\nf = open('log.txt', 'a')\nf.write('Appended')\nf.close()\n\nwith open('log.txt', 'r') as f: print(f.read())",
       "testCases": [
         {
           "input": "",
@@ -127,6 +137,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Write Three Lines",
+      "prompt": "Write the lines one, two, three to a file out.txt (one per line), then read the file back and print its contents.",
+      "starterCode": "# Write, then read back\n",
+      "solutionCode": "with open('out.txt', 'w') as f:\n    f.write('one\\ntwo\\nthree')\n\nwith open('out.txt', 'r') as f:\n    print(f.read())",
+      "testCases": [{ "input": "", "expectedOutput": "one\ntwo\nthree\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "context-manager-with": [
@@ -204,7 +224,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Read with Context Manager",
       "prompt": "Use `with` to open 'test.txt' in read mode, read all its lines into a variable, and loop through printing each line (using `.strip()` to avoid double newlines).",
       "starterCode": "# Setup\nwith open('test.txt', 'w') as f: f.write('A\\nB\\nC')\n\n# Read and print each line stripped\n",
-      "solutionCode": "with open('test.txt', 'r') as f:\n    for line in f:\n        print(line.strip())",
+      "solutionCode": "with open('test.txt', 'w') as f: f.write('A\\nB\\nC')\n\nwith open('test.txt', 'r') as f:\n    for line in f:\n        print(line.strip())",
       "testCases": [
         {
           "input": "",
@@ -213,6 +233,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Line Counter",
+      "prompt": "A file data.txt is created below with 4 lines. Use with open(...) to count how many lines it has, and print the count.",
+      "starterCode": "with open('data.txt', 'w') as f: f.write('a\\nb\\nc\\nd')\n\n# Count the lines\n",
+      "solutionCode": "with open('data.txt', 'w') as f: f.write('a\\nb\\nc\\nd')\n\nwith open('data.txt', 'r') as f:\n    print(sum(1 for _ in f))",
+      "testCases": [{ "input": "", "expectedOutput": "4\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "working-with-csv": [
@@ -237,8 +267,8 @@ export const exercises: Record<string, any[]> = {
       "solutionCode": "import csv\nimport io\n\nn = int(input())\nlines = [input() for _ in range(n + 1)]\ncontent = '\\n'.join(lines)\n\ntry:\n    reader = csv.DictReader(io.StringIO(content))\n    rows = list(reader)\n    \n    for row in rows:\n        if not (0 <= int(row['score']) <= 100):\n            print('Invalid score')\n            raise ValueError\n    \n    subjects = {}\n    students = {}\n    \n    for row in rows:\n        name = row['name']\n        subj = row['subject']\n        score = int(row['score'])\n        \n        if subj not in subjects or score > subjects[subj]['score']:\n            subjects[subj] = {'winner': name, 'score': score}\n        \n        students.setdefault(name, []).append(score)\n    \n    print('Subject Winners:')\n    for subj in sorted(subjects):\n        info = subjects[subj]\n        print(f'  {subj}: {info[\"winner\"]} ({info[\"score\"]})')\n    \n    print('Student Averages:')\n    avgs = [(n, sum(s)/len(s)) for n, s in students.items()]\n    for name, avg in sorted(avgs, key=lambda x: x[1], reverse=True):\n        print(f'  {name}: {avg:.1f}')\nexcept ValueError:\n    pass",
       "testCases": [
         {
-          "input": "6\nname,subject,score\nAlice,Math,92\nBob,Math,78\nAlice,Science,88\nCharlie,Math,95\nBob,Science,65\n",
-          "expectedOutput": "Subject Winners:\n  Math: Charlie (95)\n  Science: Alice (88)\nStudent Averages:\n  Alice: 90.0\n  Bob: 71.5\n  Charlie: 95.0\n"
+          "input": "5\nname,subject,score\nAlice,Math,92\nBob,Math,78\nAlice,Science,88\nCharlie,Math,95\nBob,Science,65\n",
+          "expectedOutput": "Subject Winners:\n  Math: Charlie (95)\n  Science: Alice (88)\nStudent Averages:\n  Charlie: 95.0\n  Alice: 90.0\n  Bob: 71.5\n"
         }
       ],
       "difficulty": "expert",
@@ -248,7 +278,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Read Simple CSV",
       "prompt": "A file 'data.csv' exists with lines of 'name,age'. Open it, read each line, split it by comma, and print the name (the first item).",
       "starterCode": "# Setup\nwith open('data.csv', 'w') as f: f.write('Alice,30\\nBob,25')\n\n# Read and split CSV, print names\n",
-      "solutionCode": "with open('data.csv', 'r') as f:\n    for line in f:\n        parts = line.strip().split(',')\n        print(parts[0])",
+      "solutionCode": "with open('data.csv', 'w') as f: f.write('Alice,30\\nBob,25')\n\nwith open('data.csv', 'r') as f:\n    for line in f:\n        parts = line.strip().split(',')\n        print(parts[0])",
       "testCases": [
         {
           "input": "",
@@ -271,6 +301,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "CSV Column Sum",
+      "prompt": "A file scores.csv is created below with a header and 3 rows (name,score). Use the csv module to sum the score column and print the total.",
+      "starterCode": "with open('scores.csv', 'w') as f: f.write('name,score\\nA,10\\nB,20\\nC,5')\n\n# Sum the score column with the csv module\n",
+      "solutionCode": "import csv\n\nwith open('scores.csv', 'w') as f: f.write('name,score\\nA,10\\nB,20\\nC,5')\n\nwith open('scores.csv', 'r') as f:\n    reader = csv.DictReader(f)\n    total = sum(int(row['score']) for row in reader)\nprint(total)",
+      "testCases": [{ "input": "", "expectedOutput": "35\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "working-with-json": [
@@ -344,6 +384,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "JSON Roundtrip",
+      "prompt": "A file data.json is created below containing {\"a\": 1, \"b\": [2, 3]}. Load it with json.load() and print the second item of 'b'.",
+      "starterCode": "import json\nwith open('data.json', 'w') as f: json.dump({'a': 1, 'b': [2, 3]}, f)\n\n# Load and print b's second item\n",
+      "solutionCode": "import json\n\nwith open('data.json', 'w') as f: json.dump({'a': 1, 'b': [2, 3]}, f)\n\nwith open('data.json', 'r') as f:\n    data = json.load(f)\nprint(data['b'][1])",
+      "testCases": [{ "input": "", "expectedOutput": "3\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "file-directory-operations": [
     {
@@ -368,7 +418,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "7\nphoto.jpg\nreport.pdf\nscript.py\nimage.png\nnotes.txt\napp.js\nvideo.mp4\n",
-          "expectedOutput": "Code (2):\n  app.js\n  script.py\nDocuments (2):\n  notes.txt\n  report.pdf\nImages (2):\n  image.png\n  photo.jpg\nOther (1):\n  video.mp4\nTotal: 7\nMost files: Code (2)\n"
+          "expectedOutput": "Code (2):\n  app.js\n  script.py\nDocuments (2):\n  notes.txt\n  report.pdf\nImages (2):\n  image.png\n  photo.jpg\nOther (1):\n  video.mp4\nTotal: 7\nMost files: Images (2)\n"
         }
       ],
       "difficulty": "advanced",
@@ -406,7 +456,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Module Integration: Log Analyzer",
       "prompt": "You have a log file 'server.log' with many lines. Read the file. Extract only the lines that contain the word 'ERROR'. Write these lines to a new file 'errors.log'. After that, read and print the contents of 'errors.log'.",
       "starterCode": "# Setup server.log\nwith open('server.log', 'w') as f:\n    f.write('INFO Booting up\\nERROR Disk full\\nINFO Shutting down\\nERROR Timeout\\n')\n\n# Implement Log Analyzer here\n",
-      "solutionCode": "with open('server.log', 'r') as infile, open('errors.log', 'w') as outfile:\n    for line in infile:\n        if 'ERROR' in line:\n            outfile.write(line)\n\nwith open('errors.log', 'r') as f:\n    print(f.read())",
+      "solutionCode": "with open('server.log', 'w') as f:\n    f.write('INFO Booting up\\nERROR Disk full\\nINFO Shutting down\\nERROR Timeout\\n')\n\nwith open('server.log', 'r') as infile, open('errors.log', 'w') as outfile:\n    for line in infile:\n        if 'ERROR' in line:\n            outfile.write(line)\n\nwith open('errors.log', 'r') as f:\n    print(f.read())",
       "testCases": [
         {
           "input": "",
@@ -420,7 +470,7 @@ export const exercises: Record<string, any[]> = {
       "title": "Module Integration: JSON Config Updater",
       "prompt": "You are given a JSON file 'config.json' containing `{\"theme\": \"light\", \"port\": 8080}`. Read the JSON file into a dictionary. Change the 'theme' to 'dark'. Write the dictionary back to 'config.json'. (Use `json.load()` and `json.dump()`). Finally, read and print the updated file.",
       "starterCode": "import json\n# Setup config.json\nwith open('config.json', 'w') as f: json.dump({'theme': 'light', 'port': 8080}, f)\n\n# Read, update theme to 'dark', write back, then read & print\n",
-      "solutionCode": "import json\nwith open('config.json', 'r') as f:\n    config = json.load(f)\n\nconfig['theme'] = 'dark'\n\nwith open('config.json', 'w') as f:\n    json.dump(config, f)\n\nwith open('config.json', 'r') as f:\n    print(f.read())",
+      "solutionCode": "import json\n\nwith open('config.json', 'w') as f: json.dump({'theme': 'light', 'port': 8080}, f)\n\nwith open('config.json', 'r') as f:\n    config = json.load(f)\n\nconfig['theme'] = 'dark'\n\nwith open('config.json', 'w') as f:\n    json.dump(config, f)\n\nwith open('config.json', 'r') as f:\n    print(f.read())",
       "testCases": [
         {
           "input": "",
@@ -429,6 +479,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 100
+    }
+  ,
+    {
+      "title": "List Python Files",
+      "prompt": "A folder demo is created below containing a.py, b.py and c.txt. Use os.listdir('demo') to print a sorted list of only the .py files.",
+      "starterCode": "import os\nos.makedirs('demo', exist_ok=True)\nwith open('demo/a.py', 'w') as f: f.write('')\nwith open('demo/b.py', 'w') as f: f.write('')\nwith open('demo/c.txt', 'w') as f: f.write('')\n\n# Print sorted .py files in demo\n",
+      "solutionCode": "import os\nos.makedirs('demo', exist_ok=True)\nwith open('demo/a.py', 'w') as f: f.write('')\nwith open('demo/b.py', 'w') as f: f.write('')\nwith open('demo/c.txt', 'w') as f: f.write('')\n\nprint(sorted(f for f in os.listdir('demo') if f.endswith('.py')))",
+      "testCases": [{ "input": "", "expectedOutput": "['a.py', 'b.py']\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

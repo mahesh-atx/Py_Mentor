@@ -70,6 +70,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Power and Modulo",
+      "prompt": "Print 2 raised to the power 5 on the first line, and the remainder of 17 divided by 5 on the second line.",
+      "starterCode": "# 2 ** 5, then 17 % 5\n",
+      "solutionCode": "print(2 ** 5)\nprint(17 % 5)",
+      "testCases": [{ "input": "", "expectedOutput": "32\n2\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "assignment-operators": [
     {
@@ -128,6 +138,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "Compound Counter",
+      "prompt": "Start with x = 10. Use += to add 5, then *= to multiply by 2. Print x.",
+      "starterCode": "# Compound assignment operators\n",
+      "solutionCode": "x = 10\nx += 5\nx *= 2\nprint(x)",
+      "testCases": [{ "input": "", "expectedOutput": "30\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
   ],
   "comparison-operators": [
     {
@@ -183,6 +203,16 @@ export const exercises: Record<string, any[]> = {
           "expectedOutput": "True\n"
         }
       ],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Compare Ages",
+      "prompt": "Read two integers a and b (one per line). Print whether a is strictly greater than b (True or False).",
+      "starterCode": "# Print a > b\n",
+      "solutionCode": "a = int(input())\nb = int(input())\nprint(a > b)",
+      "testCases": [{ "input": "18\n21\n", "expectedOutput": "False\n" }],
       "difficulty": "beginner",
       "xpReward": 20
     }
@@ -257,6 +287,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "intermediate",
       "xpReward": 30
+    }
+  ,
+    {
+      "title": "Working Age",
+      "prompt": "Read an age. Print True if it is between 18 and 65 inclusive (use and), otherwise False.",
+      "starterCode": "# 18 <= age <= 65?\n",
+      "solutionCode": "age = int(input())\nprint(age >= 18 and age <= 65)",
+      "testCases": [{ "input": "30\n", "expectedOutput": "True\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "identity-operators": [
@@ -344,6 +384,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+    {
+      "title": "None Check",
+      "prompt": "Create x = None. Use the is operator to print whether x is None.",
+      "starterCode": "# Identity check with None\n",
+      "solutionCode": "x = None\nprint(x is None)",
+      "testCases": [{ "input": "", "expectedOutput": "True\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "membership-operators": [
     {
@@ -402,6 +452,16 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "beginner",
       "xpReward": 20
     }
+  ,
+    {
+      "title": "Letter in Word",
+      "prompt": "Use the in operator to print whether the letter 'y' appears in the word 'python'.",
+      "starterCode": "# Membership test\n",
+      "solutionCode": "print('y' in 'python')",
+      "testCases": [{ "input": "", "expectedOutput": "True\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
   ],
   "bitwise-operators": [
     {
@@ -459,6 +519,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "advanced",
       "xpReward": 40
+    }
+  ,
+    {
+      "title": "Shift It",
+      "prompt": "Print 1 shifted left by 4 bits (1 << 4) on the first line, and 32 shifted right by 2 bits (32 >> 2) on the second.",
+      "starterCode": "# Bit shifts\n",
+      "solutionCode": "print(1 << 4)\nprint(32 >> 2)",
+      "testCases": [{ "input": "", "expectedOutput": "16\n8\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ],
   "operator-precedence": [
@@ -573,6 +643,16 @@ export const exercises: Record<string, any[]> = {
       ],
       "difficulty": "expert",
       "xpReward": 80
+    }
+  ,
+    {
+      "title": "Precedence Puzzle",
+      "prompt": "Without parentheses, print the value of 2 + 3 * 4 ** 2. (Let Python's precedence rules do the work.)",
+      "starterCode": "# Print 2 + 3 * 4 ** 2\n",
+      "solutionCode": "print(2 + 3 * 4 ** 2)",
+      "testCases": [{ "input": "", "expectedOutput": "50\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
     }
   ]
 };

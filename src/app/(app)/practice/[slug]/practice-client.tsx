@@ -8,6 +8,7 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
+import { outputsMatch } from "@/lib/output-match";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -172,7 +173,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
         error = result.error;
         
         const expected = tc.expectedOutput || "";
-        const passed = actualOutput.trim() === expected.trim() && !error;
+        const passed = outputsMatch(actualOutput, expected) && !error;
         
         if (!passed) {
           allPassed = false;
