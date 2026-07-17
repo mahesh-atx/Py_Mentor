@@ -7,6 +7,8 @@
  */
 
 import { describe, it, expect } from "vitest";
+import * as fs from "fs";
+import * as path from "path";
 import { pickContinueIndex } from "../src/lib/continue-topic";
 
 const topic = (...lessonIds: string[]) => ({
@@ -45,5 +47,29 @@ describe("pickContinueIndex", () => {
   it("ignores completed IDs that do not belong to the curriculum", () => {
     const topics = [topic("l1")];
     expect(pickContinueIndex(topics, new Set(["other"]))).toBe(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Regression guards: the pages must use progress-aware topic selection
+// across ALL roadmaps (not just Phase 1)
+// ---------------------------------------------------------------------------
+
+describe("continue-learning page integration (source guards)", () => {
+  const readSrc = (p: string) =>
+    fs.readFileSync(path.join(__dirname, "..", p), "utf-8");
+
+  it("dashboard flattens topics across ALL roadmaps", () => {
+    const content = readSrc("src/app/(app)/page.tsx");
+    expect(content).toContain("roadmaps.flatMap");
+    expect(content).not.toContain("firstRoadmap.modules.flatMap");
+    expect(content).toContain("pickContinueIndex");
+  });
+
+  it("/learn redirects to the first incomplete topic (resume)", () => {
+    const content = readSrc("src/app/(app)/learn/page.tsx");
+    expect(content).toContain("pickContinueIndex");
+    expect(content).toContain("roadmaps.flatMap");
+    expect(content).not.toContain("roadmaps[0].modules[0]");
   });
 });

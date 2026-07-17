@@ -16,9 +16,12 @@ export default async function DashboardPage() {
     );
   }
 
-  // Flatten topics with module references
-  const allTopics = firstRoadmap.modules.flatMap((module: any) => 
-    module.topics.map((topic: any) => ({ ...topic, module }))
+  // Flatten topics across ALL roadmaps (Phase 1 → Phase 5) in curriculum
+  // order — getRoadmaps() returns roadmaps, modules and topics ordered.
+  const allTopics = roadmaps.flatMap((roadmap: any) =>
+    roadmap.modules.flatMap((module: any) =>
+      module.topics.map((topic: any) => ({ ...topic, module }))
+    )
   );
 
   // Get user stats
