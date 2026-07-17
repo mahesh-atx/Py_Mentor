@@ -199,7 +199,7 @@ export default function ProjectClient({ project }: ProjectClientProps) {
                       <CheckCircle2 className="h-5 w-5" /> Review Passed!
                     </div>
                     <p className="text-xs text-success/80">Excellent work! Your code is clean and passes all requirements.</p>
-                    <Button variant="outline" className="w-full mt-2 border-success/30 hover:bg-success/20 text-success" onClick={() => router.push('/dashboard')}>
+                    <Button variant="outline" className="w-full mt-2 border-success/30 hover:bg-success/20 text-success" onClick={() => router.push('/')}>
                       Return to Dashboard
                     </Button>
                   </div>

@@ -113,7 +113,7 @@ export function QuizClient({ quiz, nextTopicSlug }: QuizClientProps) {
     if (nextTopicSlug) {
       router.push(`/learn/${nextTopicSlug}`);
     } else {
-      router.push('/dashboard');
+      router.push('/');
     }
   };
 

@@ -24,7 +24,7 @@ export default async function DailyChallengePage() {
 
   if (uncompletedExercises.length === 0) {
     if (allExercises.length === 0) {
-      redirect("/dashboard");
+      redirect("/");
     }
     const randomIndex = Math.floor(Math.random() * allExercises.length);
     redirect(`/practice/${allExercises[randomIndex].slug}`);

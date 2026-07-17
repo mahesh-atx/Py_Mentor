@@ -48,7 +48,7 @@ export async function completeLessonAction(lessonId: string) {
 
     const unlockedAchievements = await GamificationService.checkAchievements(user.id);
 
-    revalidatePath("/dashboard");
+    revalidatePath("/");
     revalidatePath("/progress");
     revalidatePath("/", "layout");
     revalidatePath("/learn/[slug]", "page");
@@ -98,7 +98,7 @@ export async function submitExerciseAction({
 
     const unlockedAchievements = await GamificationService.checkAchievements(user.id);
 
-    revalidatePath("/dashboard");
+    revalidatePath("/");
     revalidatePath("/progress");
     revalidatePath("/practice");
     revalidatePath("/", "layout");
@@ -133,7 +133,7 @@ export async function submitQuizAction(quizId: string, score: number, total: num
 
     const unlockedAchievements = await GamificationService.checkAchievements(user.id);
 
-    revalidatePath("/dashboard");
+    revalidatePath("/");
     revalidatePath("/progress");
     revalidatePath("/", "layout");
     revalidatePath("/quiz/[slug]", "page");
@@ -164,7 +164,7 @@ export async function submitProjectAction(projectId: string, repoUrl: string) {
 
     const unlockedAchievements = await GamificationService.checkAchievements(user.id);
 
-    revalidatePath("/dashboard");
+    revalidatePath("/");
     revalidatePath("/progress");
     revalidatePath("/projects");
     revalidatePath("/", "layout");

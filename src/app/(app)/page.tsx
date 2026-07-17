@@ -64,7 +64,7 @@ export default async function DashboardPage() {
       stats={{
         totalXp: stats.totalXp,
         lessonsCompleted: stats.completedLessons,
-        exercisesCompleted: stats.totalSubmissions, // Approximating exercises via submissions for now
+        exercisesCompleted: stats.exercisesCompleted,
         level: stats.level,
         currentStreak: stats.currentStreak,
         xpInCurrentLevel: stats.xpInCurrentLevel,

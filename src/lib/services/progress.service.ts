@@ -102,16 +102,22 @@ export const ProgressService = {
     // Avg quiz score — based on all quiz submissions (not just passed exercises)
     const allSubmissions = await db.submission.findMany({
       where: { userId, exerciseId: { not: null }, status: "passed" },
-      select: { score: true },
+      select: { exerciseId: true, score: true },
     });
     const avgQuizScore =
       allSubmissions.length > 0
         ? Math.round(allSubmissions.reduce((sum: number, s: { score: number | null }) => sum + (s.score ?? 0), 0) / allSubmissions.length)
         : 0;
 
+    // Distinct exercises passed (re-passing the same exercise doesn't count twice)
+    const exercisesCompleted = new Set(
+      allSubmissions.map((s: { exerciseId: string | null }) => s.exerciseId)
+    ).size;
+
     return {
       completedLessons: completedLessonSlugs.length,
       totalSubmissions: allSubmissions.length,
+      exercisesCompleted,
       totalXp: xp.totalXp,
       level: xp.level,
       xpInCurrentLevel: xp.xpInCurrentLevel,
