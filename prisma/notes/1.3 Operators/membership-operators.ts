@@ -5,6 +5,8 @@ export const membershipOperatorsLesson = {
 
 Membership operators check whether a value **exists inside a collection** (like a string, list, tuple, set, or dictionary). They return \`True\` or \`False\`.
 
+Membership operators answer \"is this item inside that collection?\" by scanning the structure according to its own rules - for a dictionary \`in\` checks the *keys*, while sets and dicts use hashing for near-instant lookups versus a list searched one by one. The common pitfall is forgetting that \`in\` on a dict looks at keys, giving a false \"not found\" when you actually wanted to test the values.
+
 ## The Operators
 
 \`\`\`

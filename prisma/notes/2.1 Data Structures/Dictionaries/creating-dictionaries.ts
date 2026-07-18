@@ -3,6 +3,8 @@ export const creatingDictionariesLesson = {
   slug: "creating-dictionaries",
   content: `# Creating Dictionaries
 
+A dictionary is a **hash map**: think of labelled drawers where each key points directly to one value, so you find data by meaningful name rather than by position. Because keys are hashed to locate their values, keys must be **immutable** and unique — don't assume order or position matters when creating a dict.
+
 ## What is a Dictionary?
 
 A dictionary is an **unordered collection of key-value pairs**. Instead of accessing items by a numeric index like lists, you access them by a **key** - which can be any immutable value like a string, number, or tuple.

@@ -3,6 +3,8 @@ export const customExceptionsLesson = {
   slug: "custom-exceptions",
   content: `# Custom Exception Classes
 
+Custom exceptions let you name a *specific* failure so callers can react precisely, since exceptions are ordinary classes that inherit \`Exception\` and \`except\` matches by class and parent — a shared base \`AppError\` can catch an entire hierarchy. The pitfall is inheriting from \`BaseException\` instead of \`Exception\`, which can interfere with interpreter-level signals such as program exit.
+
 ## Why Custom Exceptions?
 
 Built-in exceptions like \`ValueError\` and \`TypeError\` are generic. Custom exceptions let you:

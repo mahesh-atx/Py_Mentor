@@ -3,6 +3,8 @@ export const returnStatementLesson = {
   slug: "return-statement",
   content: `# Return Statement & Multiple Return Values
 
+\`return\` hands a value back to the caller and immediately exits the function, so any code after it never runs; without it the function yields \`None\`. A common pitfall is writing a function that only \`print\`s its result and forgetting to \`return\` it — the text shows up, but the function gives back \`None\`.
+
 ## The return Statement
 
 The \`return\` statement sends a value back to the caller and **immediately exits** the function.

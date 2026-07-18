@@ -5,6 +5,8 @@ export const nestedLoopsLesson = {
 
 A **nested loop** is a loop inside another loop. The inner loop runs **completely** for every single iteration of the outer loop. Think of it like a clock: for every 1 hour (outer), the minute hand goes around 60 times (inner).
 
+A nested loop runs its *inner* loop to completion on every pass of the *outer* loop, so total iterations multiply (n × m) rather than add. A common pitfall is nesting too deeply — the multiplied iterations quietly make a simple-looking program very slow.
+
 ## Basic Structure
 
 \`\`\`python

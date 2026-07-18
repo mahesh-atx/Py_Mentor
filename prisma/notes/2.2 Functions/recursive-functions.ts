@@ -7,6 +7,8 @@ A **recursive function** is a function that calls **itself**. Every recursive so
 1. **Base case** - the condition where the function stops calling itself
 2. **Recursive case** - where the function calls itself with a simpler input
 
+Recursion solves a problem by breaking it into a smaller copy of the *same* problem, opening a new stack frame each call until the base case is reached and the frames unwind in reverse. The classic pitfall is the naive recursive Fibonacci, which recomputes the same subproblems exponentially — fixed by memoization, which remembers past answers.
+
 ## How Recursion Works
 
 \`\`\`python

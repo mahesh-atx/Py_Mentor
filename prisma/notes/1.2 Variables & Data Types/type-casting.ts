@@ -3,7 +3,7 @@ export const typeCastingLesson = {
   slug: "type-casting",
   content: `# Type Casting
 
-Sometimes you have a value of one type but you need it in a different type. For example, you might have the number \`25\` as a string \`"25"\` but need to do math with it. **Type casting** is the process of converting a value from one data type to another.
+Sometimes you have a value of one type but you need it in a different type. For example, you might have the number \`25\` as a string \`"25"\` but need to do math with it. **Type casting** is the process of converting a value from one data type to another. Type casting asks Python to reinterpret one kind of value as another by creating a new object of the target type — and only when the source has a clear meaning in that target type. A frequent pitfall is expecting numbers and strings to cooperate automatically; they will not, so you must cast explicitly or hit a \`TypeError\`.
 
 ## int() - Convert to Integer
 

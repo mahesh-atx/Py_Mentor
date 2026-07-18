@@ -5,6 +5,8 @@ export const logicalOperatorsLesson = {
 
 Logical operators let you combine multiple conditions together. Instead of asking one yes/no question, you can ask multiple questions at once and combine their answers.
 
+Under the hood, \`and\`/\`or\`/\`not\` follow fixed truth tables and use short-circuit evaluation (e.g., \`False and (1/0)\` is safe, but \`5 or 10\` returns \`5\`, not \`True\`).
+
 ## The Operators
 
 \`\`\`

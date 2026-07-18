@@ -3,6 +3,8 @@ export const encapsulationLesson = {
   slug: "encapsulation",
   content: `# Encapsulation: Public, Protected, Private & @property
 
+Encapsulation is a *contract* that exposes a small stable set of operations while hiding internal state, and Python trusts you rather than blocking access — single underscores are polite warnings and double underscores use name mangling mainly to avoid parent/child attribute collisions. The pitfall is treating double underscores as truly private like in Java or C++ and being surprised they remain reachable via name mangling; the safety comes from convention and discipline, not the language.
+
 ## What is Encapsulation?
 
 **Encapsulation** means bundling data and the methods that work on that data together, and **controlling access** to that data. It prevents outside code from directly messing with an object's internal state.

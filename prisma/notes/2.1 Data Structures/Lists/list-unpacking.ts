@@ -3,7 +3,7 @@ export const listUnpackingLesson = {
   slug: "list-unpacking",
   content: `# List Unpacking
 
-**List unpacking** (also called destructuring) lets you assign individual list items to separate variables in a single line. It is clean, readable, and very Pythonic.
+**List unpacking** (also called destructuring) lets you assign individual list items to separate variables in a single line. It is clean, readable, and very Pythonic. Under the hood, unpacking matches an iterable on the right of an assignment position-by-position to variables on the left, with \`*\` collecting any leftover items into a list. The pitfall is mismatching the number of variables and values, which raises a \`ValueError\` unless a star target absorbs the extras.
 
 ## Basic Unpacking
 

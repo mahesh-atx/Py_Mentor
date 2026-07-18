@@ -1,7 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { usePlatform } from "@/components/platform-provider";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar";
 import {
@@ -14,8 +16,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Search, LogOut, Settings, User } from "lucide-react";
-import { CommandPalette } from "./command-palette";
+import { LogOut, Settings, User, DownloadCloud } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -25,11 +26,48 @@ import {
   DropdownMenuTrigger,
   DropdownMenuGroup,
 } from "@/components/ui/dropdown-menu";
+import { UpdateModal } from "@/components/update-modal";
+import { VersionInfo } from "@/lib/services/version.service";
+import { motion } from "framer-motion";
 
-export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
-  const [searchOpen, setSearchOpen] = useState(false);
+export function TopNav({ roadmaps = [], user }: { roadmaps?: any[], user?: any }) {
   const pathname = usePathname();
   const { state, isMobile } = useSidebar();
+  const config = usePlatform();
+  
+  const [versionInfo, setVersionInfo] = useState<VersionInfo | null>(null);
+  const [updateModalOpen, setUpdateModalOpen] = useState(false);
+
+  useEffect(() => {
+    // 1. Electron auto-updater listener
+    if (typeof window !== 'undefined' && window.electron) {
+      window.electron.onUpdateAvailable((info) => {
+        setVersionInfo({
+          currentVersion: "Current",
+          latestVersion: info.version || "New",
+          updateAvailable: true
+        });
+      });
+      // The main process automatically checks for updates on startup
+    } else {
+      // 2. Fallback to NPM check for web/cli
+      const checkForUpdates = async () => {
+        try {
+          const res = await fetch("/api/version");
+          if (res.ok) {
+            const data = await res.json();
+            setVersionInfo(data);
+          }
+        } catch (e) {
+          console.error("Failed to check for updates");
+        }
+      };
+      
+      checkForUpdates();
+      const interval = setInterval(checkForUpdates, 14400000); 
+      return () => clearInterval(interval);
+    }
+  }, []);
   
   // Find matching topic context
   let breadcrumbs: { title: string; href?: string }[] = [];
@@ -44,10 +82,10 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
         if (found) break;
         for (const topic of mod.topics || []) {
           if (topic.slug === slug) {
+            const cleanTopicTitle = topic.title.replace(/^(?:Module|Topic|Phase)?\s*[\d\.]+\s*[\.\-\:]?\s*/i, '');
             breadcrumbs = [
-              { title: roadmap.title },
-              { title: mod.title },
-              { title: topic.title, href: `/learn/${topic.slug}` }
+              { title: "Learn" },
+              { title: cleanTopicTitle, href: `/learn/${topic.slug}` }
             ];
             found = true;
             break;
@@ -57,15 +95,26 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
     }
     
     if (!found) {
-       breadcrumbs = [{ title: "Learn" }, { title: slug || "Topic" }];
+       breadcrumbs = [{ title: "Learn" }, { title: slug ? slug.replace(/-/g, ' ') : "Topic" }];
     }
   } else {
     // Basic dynamic breadcrumb generation
     const segments = pathname.split('/').filter(Boolean);
-    const currentPathName = segments.length > 0 ? segments[segments.length - 1] : "Dashboard";
-    const titleCasePath = currentPathName.charAt(0).toUpperCase() + currentPathName.slice(1);
-    if (currentPathName !== "Dashboard") {
-      breadcrumbs = [{ title: titleCasePath }];
+    if (segments.length > 0 && segments[0] !== "dashboard") {
+      breadcrumbs = segments
+        .filter(seg => seg !== 'module') // Skip filler segments
+        .map((seg, index, arr) => {
+          let title = seg;
+          // Capitalize first segment (e.g., 'practice' -> 'Practice')
+          if (index === 0) {
+            title = seg.charAt(0).toUpperCase() + seg.slice(1);
+          }
+          
+          return {
+            title: title,
+            href: index < arr.length - 1 ? `/${segments.slice(0, segments.indexOf(seg) + 1).join('/')}` : undefined
+          };
+        });
     }
   }
 
@@ -81,7 +130,7 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem className="hidden md:block">
-              <BreadcrumbLink href="/">PyMentor</BreadcrumbLink>
+              <BreadcrumbLink href="/">{config.appName}</BreadcrumbLink>
             </BreadcrumbItem>
             
             {breadcrumbs.map((crumb, index) => (
@@ -102,56 +151,41 @@ export function TopNav({ roadmaps = [] }: { roadmaps?: any[] }) {
         </Breadcrumb>
         
         <div className="ml-auto flex items-center gap-2 md:gap-4">
-          <Button
-            variant="outline"
-            className="hidden md:flex relative h-8 w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-40 lg:w-64"
-            onClick={() => setSearchOpen(true)}
-          >
-            <span className="hidden lg:inline-flex">Search documentation...</span>
-            <span className="inline-flex lg:hidden">Search...</span>
-            <kbd className="pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-              <span className="text-xs">⌘</span>K
-            </kbd>
-          </Button>
-          
-          <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setSearchOpen(true)}>
-            <Search className="h-4 w-4" />
-          </Button>
-          
+
+          {versionInfo?.updateAvailable && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="hidden sm:flex items-center gap-1.5 border-primary/30 bg-primary/5 hover:bg-primary/10 text-primary hover:text-primary transition-all rounded-full px-3 h-8"
+                onClick={() => setUpdateModalOpen(true)}
+              >
+                <DownloadCloud className="h-4 w-4" />
+                <span className="text-xs font-semibold">Update Available</span>
+              </Button>
+            </motion.div>
+          )}
+
           <ThemeToggle />
           
-          <DropdownMenu>
-            <DropdownMenuTrigger render={<button className="rounded-full outline-none" />}>
-              <Avatar className="h-8 w-8 cursor-pointer border hover:opacity-80 transition-opacity">
-                <AvatarImage src="https://github.com/shadcn.png" alt="@user" />
-                <AvatarFallback>U</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem>
-                  <User className="mr-2 h-4 w-4" />
-                  <span>Profile</span>
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-              <DropdownMenuSeparator />
-              <DropdownMenuGroup>
-                <DropdownMenuItem className="text-destructive focus:text-destructive">
-                  <LogOut className="mr-2 h-4 w-4" />
-                  <span>Log out</span>
-                </DropdownMenuItem>
-              </DropdownMenuGroup>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Link href="/profile">
+            <Avatar className="h-8 w-8 cursor-pointer border hover:opacity-80 transition-opacity">
+              <AvatarImage src={user?.image || "https://github.com/shadcn.png"} alt={user?.name || "@user"} />
+              <AvatarFallback>{user?.name?.charAt(0) || "U"}</AvatarFallback>
+            </Avatar>
+          </Link>
         </div>
       </header>
-      <CommandPalette open={searchOpen} setOpen={setSearchOpen} />
+      
+      <UpdateModal 
+        open={updateModalOpen} 
+        onOpenChange={setUpdateModalOpen} 
+        versionInfo={versionInfo} 
+      />
     </>
   );
 }

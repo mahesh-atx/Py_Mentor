@@ -3,6 +3,8 @@ export const instanceVsClassVariablesLesson = {
   slug: "instance-vs-class-variables",
   content: `# Instance Variables vs Class Variables
 
+Instance and class variables mirror real data: per-object state lives in the object's own \`__dict__\`, while class variables live in one shared location Python consults only after the instance has none of its own. The pitfall is using a mutable class variable (like a shared grades list) expecting each object to get its own — always create mutable state inside \`__init__\` so every instance owns a private copy.
+
 ## Instance Variables
 
 **Instance variables** are unique to each object. They are defined using \`self\` inside \`__init__()\` or other methods. Each object gets its OWN copy.

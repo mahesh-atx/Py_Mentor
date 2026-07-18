@@ -5,6 +5,8 @@ export const forLoopLesson = {
 
 A \`for\` loop lets you **repeat a block of code** for each item in a sequence. Instead of writing the same code ten times, you write it once and let the loop handle the repetition.
 
+Under the hood, a \`for\` loop walks any *iterable* (lists, strings, dicts, \`range()\`) one item at a time, binding each to your loop variable so you never track an index by hand. A common pitfall is confusing that loop variable with the collection — reassigning it inside the loop rebinds the name but does not change the original sequence.
+
 ## How the for Loop Works
 
 \`\`\`python

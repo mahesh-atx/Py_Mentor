@@ -5,6 +5,8 @@ export const whileLoopLesson = {
 
 A \`while\` loop keeps repeating a block of code **as long as a condition remains \`True\`**. Unlike the \`for\` loop which runs for each item in a sequence, the \`while\` loop runs until something changes.
 
+A \`while\` loop repeats as long as a condition stays \`True\`, re-checking that test before every pass — ideal when you don't know the repetition count in advance. Its biggest danger is the infinite loop: if nothing inside the loop changes the condition (or you update the wrong variable), it runs forever.
+
 ## How the while Loop Works
 
 \`\`\`python

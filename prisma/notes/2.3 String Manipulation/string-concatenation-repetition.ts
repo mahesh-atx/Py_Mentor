@@ -3,6 +3,8 @@ export const stringConcatenationRepetitionLesson = {
   slug: "string-concatenation-repetition",
   content: `# String Concatenation & Repetition
 
+Concatenation and repetition are operators that build a brand-new string by copying characters from their inputs; they never grow or shrink an existing string because strings are immutable, so each + must allocate fresh memory while * is shorthand for repeated concatenation. The pitfall is trying to add a string directly to a number (a TypeError), and building a large string with += in a loop is slow since every step makes another full copy — join() is preferred for many pieces.
+
 ## String Concatenation
 
 **Concatenation** means joining two or more strings together into one. In Python, you use the \`+\` operator to concatenate strings.

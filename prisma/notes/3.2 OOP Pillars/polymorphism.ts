@@ -3,6 +3,8 @@ export const polymorphismLesson = {
   slug: "polymorphism",
   content: `# Polymorphism
 
+Polymorphism lets one piece of code operate correctly on many different types because each supplies its own meaning for the same operation, resolved by *late binding* at runtime — so a loop over \`Dog\`, \`Cat\`, and \`Robot\` can call the same method and get different results. The pitfall is assuming polymorphism requires a shared parent class; in Python it usually does not, since the only requirement is that the objects respond to the same message.
+
 ## What is Polymorphism?
 
 **Polymorphism** means "many forms". In OOP, it means the same method name works differently depending on the object it is called on. One interface, many implementations.

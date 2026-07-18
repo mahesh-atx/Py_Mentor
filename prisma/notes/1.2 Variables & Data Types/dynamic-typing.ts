@@ -3,6 +3,8 @@ export const dynamicTypingLesson = {
   slug: "dynamic-typing",
   content: `# Dynamic Typing in Python
 
+Under the hood, a name in Python is a label that points at a value, and the type belongs to the value itself — not the name — so the same name can refer to different types at different times. The trade-off is that type errors surface only at runtime, because nothing stops a name from later pointing at an unexpected type.
+
 ## What is Dynamic Typing?
 
 In some programming languages like Java or C++, when you create a variable, you must declare what type it is and it can never change:

@@ -3,6 +3,8 @@ export const inheritanceLesson = {
   slug: "inheritance",
   content: `# Inheritance
 
+A child class is built on top of its parent and carries all its attributes and methods, with Python resolving any name by walking the chain (instance → child → parent → \`object\`) along the fixed Method Resolution Order that \`super()\` follows. The pitfall is using inheritance purely to reuse a few methods from an unrelated class, which creates a false IS-A link and an over-coupled design — genuine "is-a" sameness should be the only reason to inherit.
+
 ## What is Inheritance?
 
 **Inheritance** allows a class (child/subclass) to **inherit** attributes and methods from another class (parent/superclass). The child class gets everything the parent has, and can add more or change what it inherits.

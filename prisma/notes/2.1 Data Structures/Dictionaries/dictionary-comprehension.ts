@@ -3,7 +3,7 @@ export const dictionaryComprehensionLesson = {
   slug: "dictionary-comprehension",
   content: `# Dictionary Comprehension
 
-Dictionary comprehension is a concise way to create dictionaries, similar to list comprehension but using \`{}\` and producing key-value pairs.
+Dictionary comprehension is a concise way to create dictionaries, similar to list comprehension but using \`{}\` and producing key-value pairs. Think of it as a declarative pipeline — take an iterable, optionally **filter** with an \`if\`, then **transform** each item into a \`key: value\` pair — that describes *what* the dict should be rather than *how* to build it. Beware silent key collisions: if your key expression produces the same key for two items, later pairs quietly overwrite earlier ones and entries seem to vanish.
 
 ## Basic Syntax
 

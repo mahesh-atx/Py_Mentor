@@ -6,21 +6,19 @@ import { Play, Terminal as TerminalIcon, X, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 import { usePyodide } from "@/lib/hooks/usePyodide";
-
-const DEFAULT_CODE = `# Quick Practice Editor
-# Write your Python code here and run it instantly.
-
-def hello_world():
-    print("Ready to code!")
-
-hello_world()
-`;
+import { usePlatform } from "@/components/platform-provider";
 
 export function FloatingEditor() {
+  const config = usePlatform();
   const [isOpen, setIsOpen] = useState(false);
+  
+  const DEFAULT_CODE = `# Quick Practice Editor\n# Write your Python code here and run it instantly.\n\ndef hello_world():\n    print("Ready to code!")\n\nhello_world()\n`;
+
   const [code, setCode] = useState(DEFAULT_CODE);
   const [output, setOutput] = useState("");
   const [isRunning, setIsRunning] = useState(false);
+  
+  // We only enable Pyodide if Python is the language.
   const { isPyodideLoading, runPython } = usePyodide(isOpen);
 
   const runCode = async () => {
@@ -29,7 +27,6 @@ export function FloatingEditor() {
     
     try {
       const result = await runPython(code);
-      
       if (result.error) {
         setOutput((prev) => prev + result.output + "\nError: " + result.error);
       } else if (result.output) {
@@ -50,12 +47,13 @@ export function FloatingEditor() {
       <div className="fixed bottom-[5.5rem] right-6 z-[90] flex flex-col items-end">
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className={`group h-12 rounded-full px-3.5 shadow-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-primary/25 flex items-center overflow-hidden ${
+          className={`group relative h-12 rounded-full px-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 flex items-center overflow-hidden bg-primary/90 backdrop-blur-md text-primary-foreground border border-primary/20 hover:bg-primary hover:shadow-primary/50 hover:shadow-lg ${
             isOpen ? 'translate-y-20 opacity-0 pointer-events-none absolute' : 'translate-y-0 opacity-100 delay-100'
           }`}
         >
-          <Code2 className="h-5 w-5 shrink-0" />
-          <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm">
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <Code2 className="h-5 w-5 shrink-0 relative z-10" />
+          <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm relative z-10">
             Practice Code
           </span>
         </Button>
@@ -75,7 +73,7 @@ export function FloatingEditor() {
         
         {/* Editor Window */}
         <div 
-          className={`relative w-[95vw] sm:w-[90vw] md:w-[80vw] h-[85vh] max-h-[900px] bg-background border rounded-2xl shadow-2xl flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+          className={`relative w-[95vw] sm:w-[90vw] md:w-[80vw] h-[85vh] max-h-[900px] bg-card/80 backdrop-blur-2xl border border-primary/20 rounded-3xl shadow-2xl flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] ${
             isOpen ? 'scale-100 translate-y-0' : 'scale-95 translate-y-8'
           }`}
         >
@@ -108,7 +106,6 @@ export function FloatingEditor() {
 
           {/* Main Editor Area */}
           <div className="flex-1 overflow-hidden bg-background">
-            {/* @ts-expect-error - shadcn type issue */}
             <ResizablePanelGroup direction="horizontal">
               
               {/* Code Editor Panel */}
@@ -119,7 +116,7 @@ export function FloatingEditor() {
                 <div className="absolute inset-0 top-9">
                   <Editor
                     height="100%"
-                    defaultLanguage="python"
+                    defaultLanguage={config.language}
                     theme="vs-dark"
                     value={code}
                     onChange={(val) => setCode(val || "")}

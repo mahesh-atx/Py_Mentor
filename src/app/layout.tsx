@@ -1,14 +1,52 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
 import localFont from "next/font/local";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-const fontSans = Manrope({
+// ── Fonts ────────────────────────────────────────────────────────────────
+// For the npm distribution, we use local fonts instead of Google Fonts
+// so the app works fully offline. Manrope is loaded with multiple weights
+// (400 Regular, 600 SemiBold, 700 Bold, 800 ExtraBold) to match the
+// original Google Fonts variable font behaviour. The browser falls back
+// to the system sans-serif font via CSS if files are missing.
+
+const fontSans = localFont({
+  src: [
+    {
+      path: "../../public/fonts/Manrope.woff2",
+      weight: "400",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-SemiBold.woff2",
+      weight: "600",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-Bold.woff2",
+      weight: "700",
+      style: "normal",
+    },
+    {
+      path: "../../public/fonts/Manrope-ExtraBold.woff2",
+      weight: "800",
+      style: "normal",
+    },
+  ],
   variable: "--font-sans",
-  subsets: ["latin"],
+  fallback: [
+    "system-ui",
+    "-apple-system",
+    "Segoe UI",
+    "Roboto",
+    "Helvetica Neue",
+    "Arial",
+    "sans-serif",
+  ],
+  display: "swap",
+  adjustFontFallback: "Arial",
 });
 
 const fontMono = localFont({
@@ -16,8 +54,13 @@ const fontMono = localFont({
   variable: "--font-mono",
 });
 
+import { getPlatformConfig } from "@/lib/config/platform";
+import { PlatformProvider } from "@/components/platform-provider";
+
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = {
-  title: "PyMentor",
+  title: getPlatformConfig().appName,
   description: "Learn Programming by Building Logic.",
 };
 
@@ -26,6 +69,8 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const config = getPlatformConfig();
+
   return (
     <html lang="en" suppressHydrationWarning className={`${fontSans.variable} ${fontMono.variable} font-sans h-full antialiased`}>
       <body className="min-h-screen bg-background text-foreground">
@@ -36,7 +81,9 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <TooltipProvider>
-            {children}
+            <PlatformProvider config={config}>
+              {children}
+            </PlatformProvider>
             <Toaster position="bottom-right" />
           </TooltipProvider>
         </ThemeProvider>

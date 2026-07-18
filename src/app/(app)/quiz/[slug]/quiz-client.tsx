@@ -22,6 +22,7 @@ interface QuizQuestion {
 interface QuizData {
   id: string;
   title: string;
+  slug: string;
   topicId: string;
   questions: QuizQuestion[];
 }
@@ -83,7 +84,7 @@ export function QuizClient({ quiz, nextTopicSlug }: QuizClientProps) {
 
     try {
       const { submitQuizAction } = await import("@/app/actions");
-      const result = await submitQuizAction(quiz.id, calculatedScore, questions.length);
+      const result = await submitQuizAction(quiz.slug, calculatedScore, questions.length);
       
       if (result.success) {
         setEarnedXp(result.earnedXp ?? 0);
@@ -112,7 +113,7 @@ export function QuizClient({ quiz, nextTopicSlug }: QuizClientProps) {
     if (nextTopicSlug) {
       router.push(`/learn/${nextTopicSlug}`);
     } else {
-      router.push('/dashboard');
+      router.push('/');
     }
   };
 

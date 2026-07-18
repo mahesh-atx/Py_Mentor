@@ -10,7 +10,7 @@ export default async function RoadmapPage() {
     where: { userId: user.id, status: "completed" },
     select: { lessonId: true }
   });
-  const completedLessonSlugs = new Set(progress.map((p) => p.lessonId));
+  const completedLessonSlugs = new Set(progress.map((p: { lessonId: string }) => p.lessonId));
   const firstRoadmap = roadmaps[0];
 
   if (!firstRoadmap) {

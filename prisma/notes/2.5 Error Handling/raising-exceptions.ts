@@ -3,6 +3,8 @@ export const raisingExceptionsLesson = {
   slug: "raising-exceptions",
   content: `# Raising Exceptions (raise)
 
+Raising an exception is your function refusing to continue on invalid terms and transferring control upward to the caller, who then decides how to recover — following the fail-fast principle that an error caught immediately is easier to debug. The pitfall is returning \`None\` or a sentinel to signal errors, because callers often forget to check and then hit a confusing \`TypeError\` far from the true cause.
+
 ## Why Raise Exceptions?
 
 You raise exceptions to signal that something has gone wrong - that the inputs are invalid, a precondition is not met, or an operation cannot be completed. This is how you communicate errors from your functions to their callers.

@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Bookmark, FileText, Bot, Search, ExternalLink, MoreVertical } from "lucide-react";
 import type { Note, Bookmark as BookmarkModel } from "@prisma/client";
+import { formatDate } from "@/lib/utils";
 
 interface NotesClientProps {
   initialNotes: Note[];
@@ -69,7 +70,7 @@ export default function NotesClient({ initialNotes, initialBookmarks }: NotesCli
                       <p className="text-sm leading-relaxed">{note.content}</p>
                     </CardContent>
                     <CardFooter className="pt-0 text-xs text-muted-foreground">
-                      Added {new Date(note.createdAt).toLocaleDateString()}
+                      Added {formatDate(new Date(note.createdAt))}
                     </CardFooter>
                   </Card>
                 ))}
@@ -102,7 +103,7 @@ export default function NotesClient({ initialNotes, initialBookmarks }: NotesCli
                       <CardDescription>{bm.module || "General"}</CardDescription>
                     </CardHeader>
                     <CardFooter className="text-xs text-muted-foreground flex justify-between">
-                      <span>{new Date(bm.createdAt).toLocaleDateString()}</span>
+                      <span>{formatDate(new Date(bm.createdAt))}</span>
                       <ExternalLink className="h-3 w-3" />
                     </CardFooter>
                   </Card>

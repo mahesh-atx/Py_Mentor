@@ -3,6 +3,8 @@ export const dictionaryVsJsonLesson = {
   slug: "dictionary-vs-json",
   content: `# Dictionary vs JSON
 
+A Python dictionary is a **live object in memory** your program manipulates, while JSON is **text** — a language-neutral format for storing or transmitting that data, converted via serialization (\`dumps\`/\`dump\`) and deserialization (\`loads\`/\`load\`). The pitfall is that the round trip is **lossy for types**: a tuple becomes a list and non-string keys become strings, so never assume JSON preserves every Python type perfectly.
+
 ## What is JSON?
 
 **JSON** (JavaScript Object Notation) is a text-based data format used to exchange data between systems - between a Python backend and a web browser, between APIs, or for storing configuration. JSON looks very similar to Python dictionaries, which is why understanding the relationship between them is important.

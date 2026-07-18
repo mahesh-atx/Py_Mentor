@@ -5,6 +5,8 @@ export const rangeFunctionLesson = {
 
 The \`range()\` function generates a sequence of numbers. It is one of the most frequently used functions in Python, especially with \`for\` loops. Understanding \`range()\` well will make your loops much more powerful.
 
+Rather than building a giant list, \`range()\` returns a lazy sequence that computes each value only when needed, so it stays tiny in memory even for a million numbers. Its key trap is the half-open design — the stop value is excluded, so \`range(1, 10)\` stops at 9 and off-by-one errors are easy to make.
+
 ## Why range() Exists
 
 Without \`range()\`, if you wanted to print numbers 1 to 100, you would need to create a list of 100 numbers manually. \`range()\` generates them on-demand without storing all of them in memory at once.

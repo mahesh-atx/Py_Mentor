@@ -3,6 +3,8 @@ export const oopIntroductionLesson = {
   slug: "oop-introduction",
   content: `# What is OOP & Why Use It
 
+Object-oriented programming bundles state and behavior together so the logic for some data lives right beside that data instead of in faraway functions, letting you model a program around the "things" in your domain. The pitfall is forcing OOP onto a tiny script where a few plain functions would be clearer — OOP pays off when you have many instances of related things and behavior that must evolve over time.
+
 ## The Problem OOP Solves
 
 Imagine you are building a student management system. Without OOP, you might store student data in separate variables and functions:

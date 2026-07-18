@@ -3,7 +3,7 @@ export const typeAndIdLesson = {
   slug: "type-and-id-functions",
   content: `# type() and id() Functions
 
-Python gives you built-in tools to inspect your variables. Two of the most useful inspection functions are \`type()\` and \`id()\`.
+Python gives you built-in tools to inspect your variables. Two of the most useful inspection functions are \`type()\` and \`id()\`. \`type()\` reveals the class an object belongs to while \`id()\` reveals its unique identity in memory — so two variables can hold equal content yet point at different objects. A common pitfall is using \`is\` to compare values by content; reserve \`is\` for identity (and \`None\`) and use \`==\` or \`isinstance()\` instead.
 
 ## type() Function
 

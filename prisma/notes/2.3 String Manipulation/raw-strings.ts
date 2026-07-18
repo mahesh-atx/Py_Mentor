@@ -3,6 +3,8 @@ export const rawStringsLesson = {
   slug: "raw-strings",
   content: `# Raw Strings
 
+A raw string is not a new data type — it is the exact same str object, just interpreted differently by Python at parse time: the r prefix switches off escape processing so every backslash stays literal instead of merging with the next character. The pitfall is thinking raw strings escape the normal rules of str: after creation they behave exactly like any other string, and a raw literal still cannot end on a single trailing backslash.
+
 ## What is a Raw String?
 
 A **raw string** tells Python to treat every character literally - including backslashes. No escape sequences are processed. You create a raw string by putting \`r\` or \`R\` before the opening quote.

@@ -3,6 +3,8 @@ export const listCreatingLesson = {
   slug: "list-creating",
   content: `# Creating Lists
 
+Under the hood, a list is a mutable, ordered container of object references, so it can hold mixed types and edits happen in place. The pitfall is treating it like an immutable string and expecting an element change to leave the original untouched.
+
 ## What is a List?
 
 A list is one of the most important data structures in Python. It is an **ordered, mutable collection** that can hold multiple items of any type - all in a single variable.

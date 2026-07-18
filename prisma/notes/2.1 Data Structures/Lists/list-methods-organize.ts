@@ -3,7 +3,7 @@ export const listMethodsOrganizeLesson = {
   slug: "list-methods-organize",
   content: `# List Methods - Organizing & Copying
 
-These methods help you sort, reverse, and copy lists.
+These methods help you sort, reverse, and copy lists. Under the hood, \`sort()\` and \`reverse()\` mutate the list in place and return \`None\`, while \`sorted()\` returns a fresh list and \`copy()\` builds a new outer list whose nested elements are still shared. The pitfall is writing \`my_list = my_list.sort()\`, which discards the list and leaves you holding \`None\`.
 
 ## sort() - Sort a List In-Place
 

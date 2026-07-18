@@ -5,6 +5,8 @@ export const stringMethodsModifyLesson = {
 
 These are some of the most frequently used string methods. They let you transform strings, break them into pieces, and combine them back together.
 
+Replace, split, and join are three views of the same idea — moving text between one piece and many: split breaks a string apart at a separator into a list, join glues a list back together, and replace swaps one substring for another throughout. The pitfall is that join only accepts strings, so a number hiding in the list raises a TypeError, and replace changes every occurrence unless you pass an explicit count.
+
 ## replace() - Replace Substrings
 
 \`replace()\` returns a new string with all occurrences of a substring replaced with another.

@@ -161,7 +161,7 @@ export const CurriculumService = {
       }
     });
 
-    const currentIndex = allTopics.findIndex(t => t.id === currentTopicId);
+    const currentIndex = allTopics.findIndex((t: { id: string }) => t.id === currentTopicId);
     
     let prevTopic = null;
     let nextTopic = null;
@@ -184,7 +184,8 @@ export const CurriculumService = {
         include: {
           topic: {
             include: {
-              module: { include: { roadmap: true } }
+              module: { include: { roadmap: true } },
+              exercises: { where: { isPublished: true }, orderBy: { order: "asc" } }
             }
           }
         }

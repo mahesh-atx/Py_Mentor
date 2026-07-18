@@ -9,6 +9,7 @@ import { CheckCircle2, ChevronLeft, Bot, GitBranch, Clock, Calculator, Loader2, 
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { submitProjectAction } from "@/app/actions";
+import { parseStringList, parseMilestones } from "@/lib/parse-project-fields";
 
 interface Milestone {
   title: string;
@@ -32,9 +33,9 @@ export default function ProjectClient({ project }: ProjectClientProps) {
   const [isReviewed, setIsReviewed] = useState(false);
   const [repoLink, setRepoLink] = useState("");
 
-  const requirements = project.requirements ? JSON.parse(project.requirements) : [];
-  const milestones = project.milestones ? JSON.parse(project.milestones) : [];
-  const hints = project.hints ? JSON.parse(project.hints) : [];
+  const requirements = parseStringList(project.requirements);
+  const milestones = parseMilestones(project.milestones);
+  const hints = parseStringList(project.hints);
   
   const ProjectIcon = IconMap[project.icon] || Trophy;
 
@@ -199,7 +200,7 @@ export default function ProjectClient({ project }: ProjectClientProps) {
                       <CheckCircle2 className="h-5 w-5" /> Review Passed!
                     </div>
                     <p className="text-xs text-success/80">Excellent work! Your code is clean and passes all requirements.</p>
-                    <Button variant="outline" className="w-full mt-2 border-success/30 hover:bg-success/20 text-success" onClick={() => router.push('/dashboard')}>
+                    <Button variant="outline" className="w-full mt-2 border-success/30 hover:bg-success/20 text-success" onClick={() => router.push('/')}>
                       Return to Dashboard
                     </Button>
                   </div>

@@ -3,7 +3,7 @@ export const listMethodsSearchLesson = {
   slug: "list-methods-search",
   content: `# List Methods - Search & Count
 
-Two simple but very useful methods: \`index()\` finds where an item is, and \`count()\` counts how many times it appears.
+Two simple but very useful methods: \`index()\` finds where an item is, and \`count()\` counts how many times it appears. Under the hood, \`index()\` and \`count()\` both scan the list left-to-right, so they report the first match and slow down as the list grows. The pitfall is calling \`index()\` without first checking membership with \`in\`, which crashes on a missing value.
 
 ## index() - Find the Position of an Item
 

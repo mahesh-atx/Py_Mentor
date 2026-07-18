@@ -1,5 +1,6 @@
 import { db } from "../db/prisma";
 import { unstable_cache } from "next/cache";
+import { ProgressService } from "./progress.service";
 
 export const QuizService = {
   getQuizBySlug: unstable_cache(
@@ -48,6 +49,9 @@ export const QuizService = {
         total
       }
     });
+
+    // Quiz activity counts toward the daily streak (same as lessons/exercises/projects)
+    await ProgressService.recordStreak(userId);
 
     const quiz = await db.quiz.findFirst({ where: { slug: quizId } });
     const maxReward = quiz?.xpReward || 100;

@@ -45,7 +45,7 @@ interface ProviderStatus {
   model: string;
 }
 
-export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: string; code?: string } = {}): string[] {
+export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: string; code?: string } = {}, config: any): string[] {
   if (ctx.code) {
     return [
       "My code isn't working — help me debug",
@@ -69,20 +69,24 @@ export function getSuggestedQuestions(ctx: { topicSlug?: string; exerciseSlug?: 
       "Show me a real-world example",
     ];
   }
+  
   return [
     "Quiz me on something I should know",
     "What should I learn next?",
-    "Explain a Python concept I'm shaky on",
+    `Explain a ${config.languageCapitalized} concept I'm shaky on`,
   ];
 }
+
+import { usePlatform } from "@/components/platform-provider";
 
 // ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
-const WELCOME_MESSAGE: Message = {
-  role: "assistant",
-  content: `Hi! I'm **PyMentor**, your AI coding mentor. 👋
+function getWelcomeMessage(config: any): Message {
+  return {
+    role: "assistant",
+    content: `Hi! I'm **${config.appName}**, your AI coding mentor. 👋
 
 I can help you:
 - **Explain** a lesson or concept in plain language
@@ -91,22 +95,26 @@ I can help you:
 - **Suggest** what to learn next
 
 Ask me anything, or tap a suggestion below to get started.`,
-};
+  };
+}
 
-const GENERIC_SUGGESTIONS = [
-  "Quiz me on Python basics",
-  "What should I learn next?",
-  "Explain variables like I'm 5",
-  "Give me a quick practice problem",
-];
+function getGenericSuggestions(config: any) {
+  return [
+    `Quiz me on ${config.languageCapitalized} basics`,
+    "What should I learn next?",
+    "Explain variables like I'm 5",
+    "Give me a quick practice problem",
+  ];
+}
 
 // Regex that captures model-generated "what you can ask next" follow-up block.
 // Matches the exact format the system prompt instructs the model to emit.
 const SUGGESTION_BLOCK_REGEX = /\n*>>>\s*What you can ask next:\s*\n([\s\S]*?)$/i;
 
 export function FloatingAiMentor() {
+  const config = usePlatform();
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([WELCOME_MESSAGE]);
+  const [messages, setMessages] = useState<Message[]>([getWelcomeMessage(config)]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -177,10 +185,10 @@ export function FloatingAiMentor() {
       topicSlug: context.topicSlug,
       exerciseSlug: context.exerciseSlug,
       code: context.code,
-    });
+    }, config);
     // Prefer context-aware ones, fall back to generic.
-    return fromContext.length > 0 ? fromContext.slice(0, 4) : GENERIC_SUGGESTIONS;
-  }, [context.topicSlug, context.exerciseSlug, context.code]);
+    return fromContext.length > 0 ? fromContext.slice(0, 4) : getGenericSuggestions(config);
+  }, [context.topicSlug, context.exerciseSlug, context.code, config]);
 
   // ── Parse a model reply into (body, followUpSuggestions) ───────────────
   function parseSuggestions(content: string): { body: string; followUps: string[] } {
@@ -259,7 +267,7 @@ export function FloatingAiMentor() {
           }
           // 503 means no provider configured — surface a setup hint.
           if (response.status === 503) {
-            setError("AI provider not configured. Add an API key in .env to enable the mentor.");
+            setError("AI provider not configured. Run 'pymentor config --set-key OPENROUTER_API_KEY=your-key' to enable the mentor, or add it to ~/.pymentor/.env");
           } else {
             setError(detail);
           }
@@ -313,7 +321,7 @@ export function FloatingAiMentor() {
           });
         } else {
           console.error("Mentor stream error", e);
-          setError("Couldn't reach the AI mentor. Check your connection and try again.");
+          setError("Couldn't reach the AI mentor. Check your connection and try again. If you're offline, all other features still work — only AI chat needs internet.");
           setMessages((prev) => prev.slice(0, assistantIndex));
         }
       } finally {
@@ -343,7 +351,7 @@ export function FloatingAiMentor() {
     abortRef.current?.abort();
     chatIdRef.current = null;
     setError(null);
-    setMessages([WELCOME_MESSAGE]);
+    setMessages([getWelcomeMessage(config)]);
   };
 
   // Determine the most recent assistant follow-up suggestions (for the chips).
@@ -379,7 +387,7 @@ export function FloatingAiMentor() {
     <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end">
       {/* Expanded Chat Window */}
       <div
-        className={`mb-4 w-[90vw] sm:w-[450px] h-[600px] max-h-[calc(100vh-6rem)] bg-background border border-border/60 rounded-2xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right ${
+        className={`mb-4 w-[90vw] sm:w-[450px] h-[600px] max-h-[calc(100vh-6rem)] bg-card/80 backdrop-blur-2xl border border-primary/20 rounded-3xl shadow-[0_20px_50px_-12px_rgba(0,0,0,0.25)] flex flex-col overflow-hidden transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] origin-bottom-right ${
           isOpen
             ? "opacity-100 scale-100 translate-y-0 pointer-events-auto"
             : "opacity-0 scale-90 translate-y-12 pointer-events-none absolute bottom-16 right-0"
@@ -422,12 +430,23 @@ export function FloatingAiMentor() {
 
         {/* Not-configured banner */}
         {providerStatus && !providerStatus.configured && (
-          <div className="px-4 py-2 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive flex items-start gap-2">
+          <div className="px-4 py-3 bg-destructive/10 border-b border-destructive/20 text-xs text-destructive flex items-start gap-2">
             <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
-            <span>
-              No AI provider configured. Set <code className="font-mono">OPENROUTER_API_KEY</code> or{" "}
-              <code className="font-mono">NVIDIA_API_KEY</code> in <code className="font-mono">.env</code> to enable real answers.
-            </span>
+            <div className="space-y-1.5">
+              <p className="font-medium">AI Mentor requires an API key</p>
+              <p className="opacity-80">
+                The AI Mentor is the only feature that needs internet. Everything else — lessons, exercises, quizzes, code execution — works fully offline.
+              </p>
+              <p className="opacity-80">
+                To enable AI chat, run:
+              </p>
+              <code className="block bg-background/50 px-2 py-1 rounded text-[11px] font-mono border">
+                pymentor config --set-key OPENROUTER_API_KEY=your-key
+              </code>
+              <p className="opacity-60">
+                Or add it to <code className="font-mono">~/.pymentor/.env</code>
+              </p>
+            </div>
           </div>
         )}
 
@@ -583,7 +602,7 @@ export function FloatingAiMentor() {
             {/* Follow-up suggestion chips after the last assistant reply */}
             {showFollowUps && followUps.length > 0 && (
               <div className="flex flex-wrap gap-2 pl-11">
-                {followUps.map((q, i) => (
+                {followUps.map((q: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => handleSuggestion(q)}
@@ -599,7 +618,7 @@ export function FloatingAiMentor() {
             {/* Initial suggestions under the welcome message */}
             {messages.length === 1 && !isTyping && (
               <div className="flex flex-wrap gap-2 pl-11">
-                {suggestions.map((q, i) => (
+                {suggestions.map((q: string, i: number) => (
                   <button
                     key={i}
                     onClick={() => handleSuggestion(q)}
@@ -651,14 +670,15 @@ export function FloatingAiMentor() {
       {/* Floating Action Button */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className={`group h-12 rounded-full px-3.5 shadow-xl transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 hover:shadow-primary/25 flex items-center overflow-hidden ${
+        className={`group relative h-12 rounded-full px-3.5 shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all duration-500 ease-[cubic-bezier(0.23,1,0.32,1)] hover:scale-105 flex items-center overflow-hidden bg-primary/90 backdrop-blur-md text-primary-foreground border border-primary/20 hover:bg-primary hover:shadow-primary/50 hover:shadow-lg ${
           isOpen
             ? "translate-y-20 opacity-0 pointer-events-none absolute"
             : "translate-y-0 opacity-100 delay-100"
         }`}
       >
-        <Bot className="h-5 w-5 shrink-0 animate-pulse" />
-        <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm">
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent to-white/20 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <Bot className="h-5 w-5 shrink-0 animate-pulse relative z-10" />
+        <span className="max-w-0 overflow-hidden opacity-0 group-hover:max-w-[150px] group-hover:opacity-100 group-hover:ml-2 transition-all duration-500 whitespace-nowrap font-semibold text-sm relative z-10">
           Ask AI Mentor
         </span>
       </Button>

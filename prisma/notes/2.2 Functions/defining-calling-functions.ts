@@ -3,6 +3,8 @@ export const definingCallingFunctionsLesson = {
   slug: "defining-calling-functions",
   content: `# Defining & Calling Functions
 
+A function is a named, reusable container for logic: \`def\` only creates the function object (writing the recipe), while calling it actually runs the body in a fresh local frame. A common pitfall is expecting a function to do anything just by defining it — until you call it, none of its code runs.
+
 ## What is a Function?
 
 A function is a **named, reusable block of code** that performs a specific task. Instead of writing the same code multiple times, you define it once and call it whenever you need it.

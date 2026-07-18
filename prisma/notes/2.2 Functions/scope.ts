@@ -3,6 +3,8 @@ export const scopeLesson = {
   slug: "scope",
   content: `# Scope: Local, Global & nonlocal
 
+Scope is the set of rules Python uses to decide which name refers to which value, searching in the fixed LEGB order: Local, Enclosing, Global, Built-in. The pitfall is variable shadowing, where a local name quietly hides a global of the same name, leading to "why didn't my change take effect?" bugs.
+
 ## What is Scope?
 
 Scope determines **where a variable can be accessed** in your code. Python uses the **LEGB rule** to find variables:

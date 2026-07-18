@@ -3,6 +3,8 @@ export const strAndReprLesson = {
   slug: "str-and-repr",
   content: `# __str__() and __repr__() Methods
 
+\`__str__\` and \`__repr__\` are special methods that hook custom objects into built-in operations like \`print()\` and \`str()\`, with \`__repr__\` as the "official" developer-facing form that containers and the REPL fall back to. The pitfall is defining only \`__str__\` and then struggling to debug, since containers and the REPL otherwise show the unhelpful default memory-address form — always define at least \`__repr__\`.
+
 ## The Problem Without These Methods
 
 Without \`__str__\` or \`__repr__\`, printing an object gives you a useless memory address:

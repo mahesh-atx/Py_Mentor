@@ -3,6 +3,8 @@ export const userInputLesson = {
   slug: "user-input",
   content: `# Input from User
 
+\`input()\` is the bridge from the keyboard to your program, and Python treats everything that crosses it as raw text by design, since it cannot know in advance what the user will type. A frequent pitfall is doing arithmetic directly on the result — it looks like \`25\` but is really \`"25"\`, so an addition will concatenate text or raise an error instead of computing a number.
+
 ## The input() Function
 
 Programs become much more useful when they can interact with users. The \`input()\` function pauses your program and waits for the user to type something and press Enter. Whatever the user types is returned as a **string**.

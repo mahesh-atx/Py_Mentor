@@ -7,6 +7,8 @@ When you write Python code, you are writing instructions in a format that humans
 
 So, how does the computer run your Python code? Enter the **Python Interpreter**.
 
+At its core, the interpreter reads your source one statement at a time, translates it into machine instructions, and runs them immediately — there's no separate build step, which is why a line runs instantly in the REPL. The pitfall is expecting compiled-language speed: because translation happens at runtime, interpreted code is generally slower than pre-compiled code.
+
 ## What is an Interpreter?
 
 Python is an **interpreted language**. This means that there is a special program—the Python Interpreter—that reads your code line-by-line, translates it into machine code on the fly, and immediately executes it.

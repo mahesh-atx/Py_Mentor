@@ -5,6 +5,8 @@ export const arithmeticOperatorsLesson = {
 
 Arithmetic operators are used to perform basic mathematical operations. If you have done any math in school, these will feel very familiar.
 
+Under the hood, every arithmetic operation produces a brand-new value rather than modifying the originals - numbers are objects, so \`5 + 3\` really calls \`int.__add__\`, which is why adding two strings joins them. The common pitfall is assuming \`/\` returns an integer, or that \`-7 // 2\` rounds toward zero; floor division always rounds *down*, so it gives -4, not -3.
+
 ## The Operators
 
 \`\`\`

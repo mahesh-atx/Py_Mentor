@@ -3,7 +3,7 @@ export const listIteratingLesson = {
   slug: "list-iterating",
   content: `# Iterating Through Lists
 
-Iterating means going through each item in a list one by one. Python gives you several ways to do this, each useful in different situations.
+Iterating means going through each item in a list one by one. Python gives you several ways to do this, each useful in different situations. Under the hood, iteration is driven by the iterator protocol: a \`for\` loop repeatedly asks the list for its next item until none remain, so you loop over values rather than indices. The pitfall is reassigning the loop variable and expecting the list to change — that only rebinds a temporary name, leaving the original data untouched.
 
 ## Method 1: Basic for Loop
 

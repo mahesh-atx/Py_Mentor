@@ -3,7 +3,7 @@ export const nestedDictionariesLesson = {
   slug: "nested-dictionaries",
   content: `# Nested Dictionaries
 
-A nested dictionary is a dictionary where the **values are themselves dictionaries**. This creates a hierarchical structure perfect for representing complex real-world data.
+A nested dictionary is a dictionary where the **values are themselves dictionaries**. This creates a hierarchical structure perfect for representing complex real-world data. Because a value can be any object, structure grows to any depth like a tree, where a key chain such as \`data["a"]["b"]["c"]\` walks one path to a leaf. Beware that inner dictionaries are stored by **reference**, so a shallow \`copy()\` leaves them shared — editing a nested value in the "copy" silently mutates the original, and only \`copy.deepcopy()\` gives true independence.
 
 ## Creating Nested Dictionaries
 

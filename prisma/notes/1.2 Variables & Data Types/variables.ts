@@ -3,6 +3,8 @@ export const variablesLesson = {
   slug: "variables",
   content: `# Variables & Variable Naming Conventions
 
+A variable in Python is a name bound to an object, where the \`=\` sign means "make this name point at the object on the right" rather than asserting equality. A common pitfall is treating \`=\` as a mathematical equation that holds permanently, when it only records the current binding and can be overwritten at any time.
+
 ## What is a Variable?
 
 Think of a variable as a **labeled box** where you can store information. Just like you might label a box "Books" or "Clothes", in Python you give your variable a name and store a value in it.

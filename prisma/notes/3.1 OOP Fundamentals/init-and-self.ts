@@ -3,6 +3,8 @@ export const initAndSelfLesson = {
   slug: "init-and-self",
   content: `# __init__() Constructor & self Keyword
 
+\`__init__\` gives an object its required starting state, and \`self\` is simply the plain reference to the specific instance that Python auto-supplies when you call \`dog.bark()\` — really \`Dog.bark(dog)\`. The pitfall is forgetting that \`__init__\` is an *initializer*, not a constructor: Python already creates the empty object before \`__init__\` runs, so you fill in state rather than build it from nothing.
+
 ## The Problem Without __init__
 
 Without a constructor, you have to manually set attributes after creating an object - easy to forget and error-prone:

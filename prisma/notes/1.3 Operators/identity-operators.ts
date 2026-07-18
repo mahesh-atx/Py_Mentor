@@ -5,6 +5,8 @@ export const identityOperatorsLesson = {
 
 Identity operators check whether two variables **point to the exact same object in memory**, not just whether they have the same value.
 
+Identity operators go deeper than equality: \`==\` asks \"same value?\" while \`is\` asks \"literally the same object in memory?\" - since a variable is just a name pointing at an object, \`b = a\` makes \`b\` a second name for that same object. The common pitfall is using \`is\` for ordinary value comparisons; it may seem to work on small cached integers or short strings, but fails unpredictably on larger values, so reserve \`is\` for checks like \`is None\`.
+
 ## The Operators
 
 \`\`\`

@@ -7,6 +7,8 @@ When you write an expression with multiple operators, Python needs to know which
 
 This is exactly like the BODMAS/PEMDAS rule you learned in math class.
 
+Operator precedence is the grammar of expressions: it gives each operator a fixed rank so a line like \`2 + 3 * 4\` has exactly one unambiguous answer, and parentheses act as punctuation that force a grouping and always win. The common pitfall is trusting your eye over the rules - assuming \`2 + 3 * 4\` is 20, or forgetting that \`**\` evaluates right to left, so \`2 ** 3 ** 2\` is \`2 ** 9\`, not \`8 ** 2\`.
+
 ## The Precedence Table
 
 Operators higher in the table are evaluated **first**. Operators on the same row have equal precedence (evaluated left to right).

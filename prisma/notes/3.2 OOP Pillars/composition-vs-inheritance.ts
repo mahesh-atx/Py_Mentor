@@ -3,6 +3,8 @@ export const compositionVsInheritanceLesson = {
   slug: "composition-vs-inheritance",
   content: `# Composition vs Inheritance
 
+Inheritance and composition are two reuse strategies answering different questions: inheritance means "B *is a kind of* A" and shares its identity, while composition means "B *uses* an A as one of its parts." The pitfall is forcing an IS-A relationship just to borrow a method, reaching for inheritance when the objects are only loosely related and HAS-A would be more honest and flexible.
+
 ## The Key Question
 
 When designing classes, you face a choice: should class B **inherit from** class A (B IS-A A), or should class B **contain** class A (B HAS-A A)?

@@ -3,6 +3,8 @@ export const contextManagerWithLesson = {
   slug: "context-manager-with",
   content: `# Context Manager (with statement)
 
+A context manager is a promise about cleanup: it guarantees that a paired setup-and-teardown always happens, even when things go wrong, because behind the with statement Python calls __enter__() on entry and __exit__() on exit. The pitfall is assuming the file closes only on success, when in fact the teardown fires on errors too — which is exactly why with is safer than manual open/close.
+
 ## The Problem With Manual File Handling
 
 When you open a file manually, you MUST close it. But what happens if an error occurs?

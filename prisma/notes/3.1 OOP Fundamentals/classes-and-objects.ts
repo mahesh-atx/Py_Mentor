@@ -3,6 +3,8 @@ export const classesAndObjectsLesson = {
   slug: "classes-and-objects",
   content: `# Classes & Objects
 
+A class is a blueprint that defines shared shape and behavior but occupies no memory until instantiated, and because every Python value — integers, strings, even functions — is itself an object, "object" is the default way Python represents *everything*. The pitfall is assuming that setting a class attribute on one instance changes it for everyone — in reality you usually create a separate instance attribute that merely shadows the shared one.
+
 ## Defining a Class
 
 Use the \`class\` keyword followed by the class name and a colon. By convention, class names use **PascalCase** (each word capitalized, no underscores).

@@ -7,6 +7,8 @@ Every language, whether spoken (like English) or programmatic (like Python), has
 
 Python is famous for having an incredibly clean, uncluttered syntax that is designed to be highly readable.
 
+In Python, structure itself carries meaning: indentation is the syntax that defines a block, so the visual layout and the logical structure are the same thing — shape equals meaning. The pitfall is assuming code that merely *looks* grouped is a block; if it isn't actually indented, Python throws an IndentationError.
+
 ## No Semicolons or Curly Braces
 
 If you have seen other languages like C++, JavaScript, or Java, you're probably used to seeing code drowning in semicolons \`;\` and curly braces \`{}\`. 

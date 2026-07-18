@@ -3,11 +3,10 @@
  *
  * POST /api/ai-mentor
  *   body: { messages: ChatMessage[], context?: MentorContext }
- *   -> a streaming response (text/plain) of assistant text chunks, one per line
+ *   -> a streaming response (text/plain) of assistant text chunks
  *
- * The route resolves the local learner, builds a grounded system prompt from
- * the page context + learner memory, and streams the LLM's reply back. If no
- * provider is configured, it returns a friendly 503 instead of crashing.
+ * Rate-limited to 20 requests/minute per user with a global fallback of
+ * 60 req/min across all users to protect against API cost overruns.
  */
 
 import { NextRequest } from "next/server";
@@ -20,14 +19,44 @@ import {
   type ChatRole,
 } from "@/lib/ai/llm";
 import { buildMentorMessages, type MentorContext } from "@/lib/ai/build-prompt";
+import { aiMentorLimiter, aiMentorGlobalLimiter } from "@/lib/rate-limit";
 
-// This endpoint is inherently dynamic: it streams LLM output per request and
-// must never be prerendered or cached.
+// ---------------------------------------------------------------------------
+// Route config
+// ---------------------------------------------------------------------------
+
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 // ---------------------------------------------------------------------------
-// Request validation
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Derive a stable rate-limit key from the request headers. */
+function rateLimitKey(request: NextRequest): string {
+  // Prefer x-forwarded-for (proxies/Vercel), fall back to direct IP.
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+  return `ai-mentor:${ip}`;
+}
+
+/** Return a 429 Too Many Requests with standard RateLimit headers. */
+function tooManyRequests(resetAt: number): Response {
+  return Response.json(
+    { error: "Too many requests. Please slow down and try again shortly." },
+    {
+      status: 429,
+      headers: {
+        "Retry-After": String(Math.ceil((resetAt - Date.now()) / 1000)),
+        "X-RateLimit-Remaining": "0",
+        "X-RateLimit-Reset": String(Math.ceil(resetAt / 1000)),
+      },
+    },
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Request validation (same as before)
 // ---------------------------------------------------------------------------
 
 interface RequestBody {
@@ -62,11 +91,27 @@ function normalizeContext(raw: unknown): MentorContext {
 }
 
 // ---------------------------------------------------------------------------
-// POST — stream a mentor reply
+// POST — stream a mentor reply (with rate limiting)
 // ---------------------------------------------------------------------------
 
 export async function POST(request: NextRequest) {
-  // --- Parse & validate body -------------------------------------------------
+  // ── Rate limiting ──────────────────────────────────────────────────────
+  const key = rateLimitKey(request);
+
+  const [userLimit, globalLimit] = await Promise.all([
+    aiMentorLimiter.check(key),
+    aiMentorGlobalLimiter.check("global"),
+  ]);
+
+  const effective = !userLimit.allowed || !globalLimit.allowed
+    ? { allowed: false, remaining: 0, resetAt: Math.max(userLimit.resetAt, globalLimit.resetAt) }
+    : { allowed: true, remaining: Math.min(userLimit.remaining, globalLimit.remaining), resetAt: Math.max(userLimit.resetAt, globalLimit.resetAt) };
+
+  if (!effective.allowed) {
+    return tooManyRequests(effective.resetAt);
+  }
+
+  // ── Parse & validate body ──────────────────────────────────────────────
   let body: RequestBody;
   try {
     body = (await request.json()) as RequestBody;
@@ -75,27 +120,54 @@ export async function POST(request: NextRequest) {
   }
 
   if (!Array.isArray(body.messages) || body.messages.length === 0) {
-    return Response.json({ error: "`messages` must be a non-empty array." }, { status: 400 });
+    return Response.json(
+      { error: "`messages` must be a non-empty array." },
+      { status: 400 },
+    );
   }
 
-  // Keep only valid chat messages; drop any system messages the client may send
-  // (the route owns the system prompt). Coerce roles to the safe union.
   const history: ChatMessage[] = body.messages
     .filter(isChatMessage)
     .filter((m) => m.role !== "system")
     .map((m) => ({ role: m.role as ChatRole, content: m.content }));
 
   if (history.length === 0) {
-    return Response.json({ error: "No valid user/assistant messages provided." }, { status: 400 });
+    return Response.json(
+      { error: "No valid user/assistant messages provided." },
+      { status: 400 },
+    );
+  }
+
+  // ── Cap history size (API cost protection) ─────────────────────────────
+  // The prompt builder truncates lesson/code context but NOT user-supplied
+  // history. Keep the most recent messages within hard bounds.
+  const MAX_MESSAGES = 40;
+  const MAX_MESSAGE_CHARS = 8_000;
+  const MAX_TOTAL_CHARS = 48_000;
+
+  const capped = history.slice(-MAX_MESSAGES).map((m) => ({
+    ...m,
+    content:
+      m.content.length > MAX_MESSAGE_CHARS
+        ? m.content.slice(0, MAX_MESSAGE_CHARS) + "\n…[truncated]"
+        : m.content,
+  }));
+
+  let totalChars = 0;
+  const trimmedHistory: ChatMessage[] = [];
+  for (let i = capped.length - 1; i >= 0; i--) {
+    totalChars += capped[i].content.length;
+    if (totalChars > MAX_TOTAL_CHARS && trimmedHistory.length > 0) break;
+    trimmedHistory.unshift(capped[i]);
   }
 
   const context = normalizeContext(body.context);
 
-  // --- Resolve learner + build grounded prompt ------------------------------
+  // ── Build grounded prompt ──────────────────────────────────────────────
   let messagesForLLM: ChatMessage[];
   try {
     const user = await UserService.getLocalUser();
-    messagesForLLM = await buildMentorMessages(user.id, history, context);
+    messagesForLLM = await buildMentorMessages(user.id, trimmedHistory, context);
   } catch (error) {
     console.error("[ai-mentor] failed to build messages:", error);
     return Response.json(
@@ -104,9 +176,7 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // --- Stream the reply ------------------------------------------------------
-  // Allow the client to cancel the stream (e.g. closing the chat) by wiring the
-  // request's abort signal through to the provider fetch.
+  // ── Stream the reply ───────────────────────────────────────────────────
   const abortController = new AbortController();
   request.signal.addEventListener("abort", () => abortController.abort());
 
@@ -118,8 +188,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     if (error instanceof NoProviderError) {
-      // Friendly, actionable: the UI also reads `configured:false` via the
-      // status endpoint, but a body message helps anyone hitting this directly.
       return Response.json(
         {
           error:
@@ -129,9 +197,13 @@ export async function POST(request: NextRequest) {
       );
     }
     if (error instanceof ProviderRequestError) {
-      console.error(`[ai-mentor] provider ${error.provider} error ${error.status}: ${error.body.slice(0, 300)}`);
+      console.error(
+        `[ai-mentor] provider ${error.provider} error ${error.status}: ${error.body.slice(0, 300)}`,
+      );
       return Response.json(
-        { error: `The AI provider returned an error (${error.status}). Please try again shortly.` },
+        {
+          error: `The AI provider returned an error (${error.status}). Please try again shortly.`,
+        },
         { status: 502 },
       );
     }
@@ -142,11 +214,6 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // Frame the stream as one text token per line (newline-delimited). The client
-  // splits on "\n" and accumulates content. We use TextEncoderPair-free piping:
-  // llmStream already emits UTF-8 text chunks, so we pass them through as-is and
-  // append a trailing newline so each chunk is a discrete "line" the client can
-  // display incrementally.
   const framed = llmStream.pipeThrough(
     new TransformStream<Uint8Array, Uint8Array>({
       transform(chunk, controller) {
@@ -159,19 +226,19 @@ export async function POST(request: NextRequest) {
     headers: {
       "Content-Type": "text/plain; charset=utf-8",
       "Cache-Control": "no-cache, no-transform",
-      // Hint that this is a streamed response; some proxies buffer otherwise.
       "X-Accel-Buffering": "no",
+      // Rate-limit headers so the client can throttle itself.
+      "X-RateLimit-Remaining": String(effective.remaining),
+      "X-RateLimit-Reset": String(Math.ceil(effective.resetAt / 1000)),
     },
   });
 }
 
 // ---------------------------------------------------------------------------
-// GET — quick status check (used by the UI to show whether a provider is live)
+// GET — quick status check
 // ---------------------------------------------------------------------------
 
 export async function GET() {
-  // Lazy import to avoid pulling provider logic into the status path's hot
-  // module graph unnecessarily — though it's cheap, this keeps intent clear.
   const { getActiveProvider } = await import("@/lib/ai/llm");
   const provider = getActiveProvider();
   return Response.json(provider);

@@ -5,6 +5,8 @@ export const escapeCharactersLesson = {
 
 Some characters have special meaning in Python strings or are impossible to type directly inside a string. **Escape characters** let you include these special characters by using a backslash \`\\\` followed by another character.
 
+The backslash tells Python to treat the following character as special rather than literal, so escape sequences are really a source-code notation rather than extra characters stored in memory. A common pitfall is forgetting that an escape such as \\n is a single character (one newline), so beginners often miscount string length and positions.
+
 ## What is an Escape Character?
 
 When Python sees a backslash \`\\\` inside a string, it treats the next character specially instead of literally.

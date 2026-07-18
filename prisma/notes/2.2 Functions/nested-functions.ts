@@ -5,6 +5,8 @@ export const nestedFunctionsLesson = {
 
 A **nested function** (also called an inner function) is a function defined **inside another function**. The inner function has access to variables in the outer function's scope.
 
+An inner function lives within its enclosing call and can see the outer scope's variables, carrying a snapshot of them (a closure) even after the parent returns. The pitfall is forgetting \`nonlocal\` when you want to *reassign* a captured variable — reading works automatically, but writing needs the keyword.
+
 ## Basic Nested Functions
 
 \`\`\`python

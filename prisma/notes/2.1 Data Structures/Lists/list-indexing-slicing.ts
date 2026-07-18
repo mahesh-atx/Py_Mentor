@@ -3,7 +3,7 @@ export const listIndexingSlicingLesson = {
   slug: "list-indexing-slicing",
   content: `# List Indexing, Slicing & Negative Indexing
 
-Accessing items in a list works almost identically to strings - using index numbers and slicing. Since you learned these concepts with strings, they will feel very familiar here.
+Accessing items in a list works almost identically to strings - using index numbers and slicing. Since you learned these concepts with strings, they will feel very familiar here. Under the hood, a list index is just an offset from the start (negative indices count from the end), and slicing copies a range of references into a brand-new list with an exclusive \`stop\` index. The pitfall is expecting slice assignment to preserve length — it inserts or deletes items whenever the new sequence differs in size.
 
 ## Indexing
 

@@ -3,6 +3,8 @@ export const abstractionLesson = {
   slug: "abstraction",
   content: `# Abstraction: Abstract Classes & Methods
 
+Abstraction defines a *contract* — a promise of *what* an object can do while hiding the *how* — and Python's \`abc\` module enforces it at instantiation time, refusing to build an object until every abstract method is implemented by a subclass. The pitfall is expecting abstraction to hide data or reduce code; its real job is to guarantee a consistent shape, and a class built only from concrete methods behaves exactly like any ordinary class.
+
 ## What is Abstraction?
 
 **Abstraction** means hiding complex implementation details and showing only the essential features. In OOP, abstract classes define a **contract** - what methods subclasses MUST implement - without providing the implementation.

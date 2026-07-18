@@ -5,6 +5,8 @@ export const assignmentOperatorsLesson = {
 
 Assignment operators are used to **store values in variables**. You already know the basic \`=\` operator. Python also has shorthand operators that combine assignment with arithmetic in one step.
 
+At its core, \`=\` is a *command* that binds a name to a value (a reference to an object in memory), not a statement of mathematical truth - which is why \`x += 5\` just re-binds \`x\` to a fresh result. The common pitfall is reading \`=\` as \"is equal to\" and writing \`if x = 5\`, which assigns instead of comparing and raises an error.
+
 ## The Basic Assignment Operator (=)
 
 The \`=\` operator stores a value in a variable.

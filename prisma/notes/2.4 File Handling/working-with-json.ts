@@ -3,6 +3,8 @@ export const workingWithJsonLesson = {
   slug: "working-with-json",
   content: `# Working with JSON Files
 
+JSON is a text format for structured data that maps almost one-to-one onto Python's building blocks — objects become dictionaries, arrays become lists, and scalars become strings, numbers, booleans, or None — so the core idea is serialization: converting a live Python object graph into a portable string another program can rebuild. The pitfall is trying to store Python-specific objects like tuples or datetimes directly and expecting them back unchanged, when JSON only preserves the universal types it understands (and a tuple silently becomes a list after a round-trip).
+
 ## What is JSON?
 
 **JSON** (JavaScript Object Notation) is the most popular format for storing and exchanging structured data. It maps naturally to Python's dictionaries, lists, strings, numbers, booleans, and None.

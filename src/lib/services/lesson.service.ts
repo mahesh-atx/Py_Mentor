@@ -45,7 +45,7 @@ export const LessonService = {
         { order: "asc" }
       ]
     });
-    const currentIndex = allLessons.findIndex(l => l.id === currentLessonId);
+    const currentIndex = allLessons.findIndex((l: { id: string }) => l.id === currentLessonId);
     if (currentIndex === -1 || currentIndex === allLessons.length - 1) {
       return null;
     }

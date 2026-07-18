@@ -5,6 +5,8 @@ export const stringFormattingFstringsLesson = {
 
 f-strings (formatted string literals) were introduced in Python 3.6 and are now the preferred way to format strings. They are fast, readable, and powerful.
 
+An f-string is parsed before the program runs: every {expression} is evaluated in the surrounding scope, converted to text, and spliced into the literal parts, while the colon inside the braces adds a format spec that controls how a value is displayed without changing it. The pitfall is that a stray brace or a name missing from the current scope breaks the f-string, and to show a literal brace you must double it as {{ and }}.
+
 ## What is an f-string?
 
 An f-string is a string prefixed with \`f\` or \`F\`. Inside the string, you can embed Python expressions in curly braces \`{}\` - Python evaluates them and inserts the results.

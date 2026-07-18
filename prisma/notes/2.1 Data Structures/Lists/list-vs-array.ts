@@ -3,7 +3,7 @@ export const listVsArrayLesson = {
   slug: "list-vs-array",
   content: `# List vs Array
 
-Python has both **lists** (built-in) and **arrays** (from the \`array\` module or \`numpy\`). Understanding when to use each is important.
+Python has both **lists** (built-in) and **arrays** (from the \`array\` module or \`numpy\`). Understanding when to use each is important. Under the hood, a Python list is a resizable array of object references (so it mixes types but costs memory per item), while \`array\`/\`numpy\` store raw values compactly in one declared type and NumPy adds vectorized operations. The pitfall is assuming lists are automatically fast for math — they aren't, and a typed array can no longer mix data types.
 
 ## Python Lists - The Default Choice
 

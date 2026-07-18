@@ -3,6 +3,8 @@ export const readingFilesLesson = {
   slug: "reading-files",
   content: `# Reading Files
 
+A file on disk is a long sequence of bytes, and opening it gives you a file object — a live handle pointing at one position (the cursor) inside that sequence, where every read method draws characters from the cursor and then advances it forward. The pitfall is assuming each read call starts fresh, when in fact they all walk the same moving pointer, so reading the whole file with read() leaves readline() returning an empty string.
+
 ## Why File Handling Matters
 
 Programs often need to work with data stored in files - configuration files, logs, datasets, user data. Python makes reading files simple and safe.

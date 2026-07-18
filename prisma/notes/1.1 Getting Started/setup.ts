@@ -5,6 +5,8 @@ export const setupLesson = {
 
 Before we can write Python code, we need to install Python on your computer and set up a good environment to write our code in.
 
+Before any code runs, your system needs the Python interpreter (the runtime that executes instructions) and a PATH entry so the terminal knows where to find it. The pitfall: skip "Add Python to PATH" on Windows and typing \`python\` does nothing, because the OS can't locate the program.
+
 ## 1. Installing Python
 
 Python is completely free. To install it:

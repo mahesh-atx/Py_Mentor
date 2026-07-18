@@ -14,7 +14,7 @@ export default async function ProgressPage() {
       stats={{
         totalXp: stats.totalXp,
         lessonsCompleted: stats.completedLessons,
-        exercisesCompleted: stats.totalSubmissions,
+        exercisesCompleted: stats.exercisesCompleted,
         level: stats.level,
         currentStreak: stats.currentStreak,
         xpInCurrentLevel: stats.xpInCurrentLevel,

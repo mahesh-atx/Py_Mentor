@@ -3,6 +3,8 @@ export const dictionaryAccessModifyLesson = {
   slug: "dictionary-access-modify",
   content: `# Accessing, Adding, Updating & Deleting Dictionary Items
 
+Every dictionary operation comes down to the same question — "does this key exist?" — which is why \`dict[key] = value\` both adds a new pair and overwrites an existing one with identical syntax. Accessing a missing key raises a \`KeyError\` (use \`get()\`/\`pop()\` with defaults to avoid it), and remember the \`in\` operator checks **keys only**, not values.
+
 ## Accessing Items
 
 ### Using Square Bracket Notation

@@ -3,6 +3,8 @@ export const lambdaFunctionsLesson = {
   slug: "lambda-functions",
   content: `# Lambda (Anonymous) Functions
 
+A lambda is syntactically compressed \`def\` — it builds the same function object, but its body is a single expression that's returned automatically (no \`return\` keyword). The pitfall is overusing lambdas once the logic needs multiple lines, error handling, or a name, where a normal \`def\` is clearer.
+
 ## What is a Lambda Function?
 
 A **lambda function** is a small, anonymous function defined in a single line using the \`lambda\` keyword. Unlike regular functions defined with \`def\`, lambdas have no name (unless assigned to a variable) and can only contain a single expression.

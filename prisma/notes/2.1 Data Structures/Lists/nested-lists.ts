@@ -3,7 +3,7 @@ export const nestedListsLesson = {
   slug: "nested-lists",
   content: `# Nested Lists (2D Lists)
 
-A **nested list** is a list that contains other lists as its items. This creates a 2D (or even 3D) structure, perfect for representing grids, matrices, tables, and game boards.
+A **nested list** is a list that contains other lists as its items. This creates a 2D (or even 3D) structure, perfect for representing grids, matrices, tables, and game boards. Under the hood, a nested list is just an ordinary list whose elements are references to other lists — so double indexing like \`matrix[0][0]\` means "take element 0, then element 0 of that." The pitfall is building rows by repetition such as \`[[0]] * rows\`, which makes every row the same object, so editing one silently changes them all.
 
 ## Creating a Nested List
 

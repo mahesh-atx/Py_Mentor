@@ -3,6 +3,8 @@ export const fileDirectoryOperationsLesson = {
   slug: "file-directory-operations",
   content: `# File & Directory Operations (os, shutil)
 
+The filesystem is a tree of nodes addressed by a path string, and Python does not manage the disk itself but asks the operating system to perform each operation through modules like os and shutil, which is why path handling must be OS-aware and pathlib wraps paths as objects with the correct separator. The pitfall is assuming os.remove or shutil.rmtree will politely refuse on a missing or non-empty target, when in fact they raise errors or silently erase whole trees immediately.
+
 ## Overview
 
 Python provides two main modules for file and directory operations:

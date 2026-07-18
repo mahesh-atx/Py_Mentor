@@ -5,6 +5,8 @@ export const methodsLesson = {
 
 Python classes support three types of methods, each with a different purpose and way of accessing class/instance data.
 
+The three method types are three answers to *what context the function needs*: an instance method is bound to a specific object (\`self\`), a class method to the class (\`cls\`), and a static method to neither — the decorators just tell Python what first argument to inject. The pitfall is reaching for a static method when you actually need class data, or writing an instance method that never touches \`self\`; if you never use \`self\`, the method belongs at the class or module level.
+
 ## Instance Methods
 
 **Instance methods** are the most common. They always take \`self\` as the first parameter and can access and modify both instance variables and class variables.

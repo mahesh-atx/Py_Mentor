@@ -3,6 +3,8 @@ export const commonExceptionsLesson = {
   slug: "common-exceptions",
   content: `# Common Exceptions
 
+Every Python error is an object in a hierarchy rooted at \`BaseException\`, and the exception type tells you which category of assumption broke as the error unwinds the call stack to the first matching handler. The pitfall is catching too broadly — a bare \`except:\` even swallows \`KeyboardInterrupt\` and hides genuine logic errors as mysterious silence.
+
 ## Python's Exception Hierarchy
 
 Python organizes exceptions in a hierarchy. Understanding this helps you catch the right level:

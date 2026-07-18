@@ -3,6 +3,8 @@ export const setsLesson = {
   slug: "sets",
   content: `# Sets
 
+A set is an unordered, hash-backed collection of distinct items where membership matters more than position, so lookups like \`x in s\` are O(1). A common pitfall is that \`{}\` creates an empty *dictionary* (use \`set()\`), and sets cannot be indexed.
+
 ## What is a Set?
 
 A set is an **unordered collection of unique items**. Sets automatically remove duplicates and have no guaranteed order.

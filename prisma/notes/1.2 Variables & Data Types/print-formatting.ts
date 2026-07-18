@@ -3,7 +3,7 @@ export const printFormattingLesson = {
   slug: "print-formatting",
   content: `# Print Formatting
 
-When you display information to users, raw \`print()\` statements often are not enough. You want to display values neatly combined with text. Python provides several ways to format output.
+When you display information to users, raw \`print()\` statements often are not enough. You want to display values neatly combined with text. Python provides several ways to format output. Formatting is about building one piece of text from fixed words and changing values, with placeholders evaluated and stitched into a single string the moment it is created. A common pitfall is forgetting the result is always text — you cannot do math on a formatted value without converting it back.
 
 ## Basic print() Function
 

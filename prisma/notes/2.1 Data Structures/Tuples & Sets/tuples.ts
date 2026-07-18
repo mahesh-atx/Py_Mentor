@@ -3,6 +3,8 @@ export const tuplesLesson = {
   slug: "tuples",
   content: `# Tuples
 
+A tuple is an immutable, fixed "record made of parts" (like a coordinate or database row), which is why it's hashable and more memory-efficient than a list. A common pitfall is forgetting the trailing comma: \`(42)\` is just the integer 42, while \`(42,)\` is the actual one-item tuple.
+
 ## What is a Tuple?
 
 A tuple is an **ordered, immutable** collection of items. It looks like a list but uses parentheses \`()\` instead of square brackets \`[]\`. Once created, a tuple **cannot be changed** - you cannot add, remove, or modify its items.

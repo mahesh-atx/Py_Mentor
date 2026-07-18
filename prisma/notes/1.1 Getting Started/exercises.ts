@@ -1,6 +1,63 @@
 export const exercises: Record<string, any[]> = {
-  "introduction": [],
-  "setup": [],
+  "introduction": [
+    {
+      "title": "First Program",
+      "prompt": "Write a program that prints exactly: I am learning Python!",
+      "starterCode": "# Print your first line of Python\n",
+      "solutionCode": "print('I am learning Python!')",
+      "testCases": [{ "input": "", "expectedOutput": "I am learning Python!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    },
+    {
+      "title": "Three Facts",
+      "prompt": "Use three print statements to output these three lines:\nPython is interpreted\nPython is versatile\nPython is fun",
+      "starterCode": "# Print three facts about Python\n",
+      "solutionCode": "print('Python is interpreted')\nprint('Python is versatile')\nprint('Python is fun')",
+      "testCases": [{ "input": "", "expectedOutput": "Python is interpreted\nPython is versatile\nPython is fun\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+    {
+      "title": "Build: About Me Card",
+      "prompt": "Read a name and a favorite language (one per line). Print a 3-line card:\n=== About Me ===\nName: <name>\nLoves: <language>",
+      "starterCode": "# Read name and language, print the card\n",
+      "solutionCode": "name = input()\nlang = input()\nprint('=== About Me ===')\nprint(f'Name: {name}')\nprint(f'Loves: {lang}')",
+      "testCases": [{ "input": "Ada\nPython\n", "expectedOutput": "=== About Me ===\nName: Ada\nLoves: Python\n" }],
+      "difficulty": "beginner",
+      "xpReward": 25
+    },
+    {
+      "title": "Build: Launch Checklist",
+      "prompt": "Print this exact 3-line checklist:\n[x] Python installed\n[x] Editor ready\n[ ] Write first program",
+      "starterCode": "# Print the checklist\n",
+      "solutionCode": "print('[x] Python installed')\nprint('[x] Editor ready')\nprint('[ ] Write first program')",
+      "testCases": [{ "input": "", "expectedOutput": "[x] Python installed\n[x] Editor ready\n[ ] Write first program\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
+  ],
+  "setup": [
+    {
+      "title": "Setup Check",
+      "prompt": "Verify your setup works by printing exactly: Python is ready!",
+      "starterCode": "# Print a setup confirmation\n",
+      "solutionCode": "print('Python is ready!')",
+      "testCases": [{ "input": "", "expectedOutput": "Python is ready!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    },
+    {
+      "title": "Two-Step Launch",
+      "prompt": "Print two lines:\nSetup complete\nLet's code!",
+      "starterCode": "# Print two lines\n",
+      "solutionCode": "print('Setup complete')\nprint(\"Let's code!\")",
+      "testCases": [{ "input": "", "expectedOutput": "Setup complete\nLet's code!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
+  ],
   "hello-world": [
     {
       title: "Print Hello, World!",
@@ -38,6 +95,16 @@ export const exercises: Record<string, any[]> = {
       difficulty: "expert",
       xpReward: 50
     }
+  ,
+    {
+      "title": "Build: ASCII House",
+      "prompt": "Print this 4-line ASCII house (watch your backslashes — they need escaping!):\n  /\\\n /  \\\n|    |\n|____|",
+      "starterCode": "# Print the house line by line\n",
+      "solutionCode": "print('  /\\\\')\nprint(' /  \\\\')\nprint('|    |')\nprint('|____|')",
+      "testCases": [{ "input": "", "expectedOutput": "  /\\\n /  \\\n|    |\n|____|\n" }],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
   ],
   "interpreter": [
     {
@@ -57,6 +124,16 @@ export const exercises: Record<string, any[]> = {
       testCases: [{ input: "", expectedOutput: "25.0\n" }],
       difficulty: "intermediate",
       xpReward: 30
+    }
+  ,
+    {
+      "title": "Division Practice",
+      "prompt": "Use Python as a calculator: print the result of 100 divided by 4.",
+      "starterCode": "# Print 100 / 4\n",
+      "solutionCode": "print(100 / 4)",
+      "testCases": [{ "input": "", "expectedOutput": "25.0\n" }],
+      "difficulty": "beginner",
+      "xpReward": 20
     }
   ],
   "syntax": [
@@ -97,6 +174,26 @@ export const exercises: Record<string, any[]> = {
       testCases: [{ input: "", expectedOutput: "10\n" }],
       difficulty: "intermediate",
       xpReward: 30
+    }
+  ,
+    {
+      "title": "Comments Don't Run",
+      "prompt": "Add a comment line (starting with #) that says 'this is ignored', then print exactly: Visible",
+      "starterCode": "# Add a comment, then print 'Visible'\n",
+      "solutionCode": "# this is ignored\nprint('Visible')",
+      "testCases": [{ "input": "", "expectedOutput": "Visible\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
+    }
+  ,
+    {
+      "title": "Build: Documented Greeter",
+      "prompt": "Write two comment lines describing your program (start each with #), then print exactly: Hello!",
+      "starterCode": "# Write two comments, then print\n",
+      "solutionCode": "# This program greets the user\n# It demonstrates that comments are ignored\nprint('Hello!')",
+      "testCases": [{ "input": "", "expectedOutput": "Hello!\n" }],
+      "difficulty": "beginner",
+      "xpReward": 15
     }
   ]
 };

@@ -5,6 +5,8 @@ export const patternPrintingLesson = {
 
 Pattern printing is a classic exercise to practice nested loops. Each pattern teaches you how to think about rows and columns and how to control what gets printed on each iteration.
 
+Every pattern is just an arithmetic relationship between a row number and what belongs on that row — the count of stars, spaces, or columns is a formula in \`i\`. The classic pitfall is hard-coding each line instead of finding that formula, which makes patterns brittle and impossible to scale.
+
 ## The Key Idea
 
 Every pattern has:

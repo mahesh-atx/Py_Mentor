@@ -3,6 +3,8 @@ export const assertionsLesson = {
   slug: "assertions",
   content: `# Assertions (assert)
 
+An \`assert\` is really a self-documenting claim that \`assert condition\` is just shorthand for \`if not condition: raise AssertionError\`, and because \`python -O\` strips assertions at byte-compile time they are a development aid rather than a runtime contract. The pitfall is using \`assert\` to validate untrusted input, since those checks disappear in optimized mode and silently drop your guardrails.
+
 ## What is an Assertion?
 
 An **assertion** is a sanity check - a statement that says "this MUST be true at this point in my code." If it is false, Python immediately raises an \`AssertionError\`, signaling a programming bug (not a user error).

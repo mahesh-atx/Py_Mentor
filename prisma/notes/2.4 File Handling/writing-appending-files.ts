@@ -3,6 +3,8 @@ export const writingAppendingFilesLesson = {
   slug: "writing-appending-files",
   content: `# Writing & Appending to Files
 
+Writing is the mirror image of reading: open() gives you a handle to a byte stream and write() pushes characters into that stream at the current cursor, where the mode decides the relationship between your stream and the existing file — 'w' points the cursor at the start and discards old content while 'a' jumps to the end and preserves everything. The pitfall is forgetting that opening with 'w' destroys the old content instantly the moment the file opens, and that writelines() does not add newlines, so a list of strings becomes one concatenated line unless you supply the newline yourself.
+
 ## Writing to a File
 
 ### write() - Write a String

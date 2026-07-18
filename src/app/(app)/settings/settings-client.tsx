@@ -2,19 +2,45 @@
 
 import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Monitor, Moon, Sun, Bell, Shield, UserCog } from "lucide-react";
+import { Monitor, Moon, Sun, Bell, Shield, UserCog, DownloadCloud } from "lucide-react";
+import { usePlatform } from "@/components/platform-provider";
+import { toast } from "sonner";
 
 export function SettingsClient() {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [version, setVersion] = useState("…");
+  const [isChecking, setIsChecking] = useState(false);
+  const config = usePlatform();
 
   useEffect(() => {
     setMounted(true);
+    if (typeof window !== 'undefined' && window.electron) {
+      window.electron.getVersion().then(v => setVersion(v));
+    } else {
+      // Web/CLI mode: ask the server for the real app version instead of
+      // showing a hardcoded (and quickly stale) fallback.
+      fetch("/api/version")
+        .then(r => (r.ok ? r.json() : null))
+        .then(data => { if (data?.currentVersion) setVersion(data.currentVersion); })
+        .catch(() => setVersion("unknown"));
+    }
   }, []);
+
+  const handleCheckUpdates = () => {
+    setIsChecking(true);
+    if (typeof window !== 'undefined' && window.electron) {
+      window.electron.checkForUpdates();
+      toast.info("Checking for updates...");
+      setTimeout(() => setIsChecking(false), 2000);
+    } else {
+      toast.error("Updates are only available in the Desktop App");
+      setIsChecking(false);
+    }
+  };
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-6 space-y-8">
@@ -44,15 +70,16 @@ export function SettingsClient() {
         </div>
 
         <div className="md:col-span-3 space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Appearance</CardTitle>
-              <CardDescription>Customize how PyMentor looks on your device.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Dark Mode</Label>
+          <div className="group relative overflow-hidden flex flex-col p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="mb-8 relative z-10">
+              <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">Appearance</h3>
+              <p className="text-muted-foreground mt-1">Customize how {config.appName} looks on your device.</p>
+            </div>
+            <div className="space-y-6 relative z-10">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Dark Mode</Label>
                   <p className="text-sm text-muted-foreground">Switch between light and dark themes.</p>
                 </div>
                 <Switch 
@@ -60,31 +87,56 @@ export function SettingsClient() {
                   onCheckedChange={(checked) => setTheme(checked ? 'dark' : 'light')} 
                 />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Notifications</CardTitle>
-              <CardDescription>Configure how you receive alerts and updates.</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Daily Reminders</Label>
+          <div className="group relative overflow-hidden flex flex-col p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="mb-8 relative z-10">
+              <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">Notifications</h3>
+              <p className="text-muted-foreground mt-1">Configure how you receive alerts and updates.</p>
+            </div>
+            <div className="space-y-4 relative z-10">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Daily Reminders</Label>
                   <p className="text-sm text-muted-foreground">Get reminded to keep your learning streak.</p>
                 </div>
                 <Switch defaultChecked />
               </div>
-              <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
-                  <Label>Product Updates</Label>
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Product Updates</Label>
                   <p className="text-sm text-muted-foreground">Receive news about new courses and features.</p>
                 </div>
                 <Switch defaultChecked={false} />
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
+
+          <div className="group relative overflow-hidden flex flex-col p-6 sm:p-8 rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/30 transition-all duration-300 hover:shadow-xl">
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+            <div className="mb-8 relative z-10">
+              <h3 className="text-2xl font-bold group-hover:text-primary transition-colors">About & Updates</h3>
+              <p className="text-muted-foreground mt-1">Keep your {config.appName} app up to date.</p>
+            </div>
+            <div className="space-y-4 relative z-10">
+              <div className="flex items-center justify-between p-4 rounded-xl bg-background/50 border border-border/50">
+                <div className="space-y-1">
+                  <Label className="text-base font-semibold">Current Version</Label>
+                  <p className="text-sm text-muted-foreground">Version {version}</p>
+                </div>
+                <Button 
+                  onClick={handleCheckUpdates} 
+                  disabled={isChecking}
+                  className="flex items-center gap-2"
+                >
+                  <DownloadCloud className="h-4 w-4" />
+                  {isChecking ? "Checking..." : "Check for Updates"}
+                </Button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

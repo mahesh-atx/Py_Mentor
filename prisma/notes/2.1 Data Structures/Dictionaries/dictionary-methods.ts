@@ -3,7 +3,7 @@ export const dictionaryMethodsLesson = {
   slug: "dictionary-methods",
   content: `# Dictionary Methods
 
-Python dictionaries come with a powerful set of built-in methods. This lesson covers all the essential ones.
+Python dictionaries come with a powerful set of built-in methods. This lesson covers all the essential ones. The view methods \`keys()\`, \`values()\`, and \`items()\` return **live windows** onto the dictionary rather than copies, so they stay in sync as the data changes. Watch out with copying: \`copy()\` makes only a **shallow** copy, so nested objects are still shared — reach for \`copy.deepcopy()\` when you need true independence.
 
 ## Viewing Keys, Values, and Items
 

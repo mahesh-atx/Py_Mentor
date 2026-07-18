@@ -3,6 +3,8 @@ export const tryExceptElseFinallyLesson = {
   slug: "try-except-else-finally",
   content: `# try / except / else / finally
 
+Error handling plans for the paths besides the happy one: \`except\` catches exceptions as Python unwinds the call stack, \`else\` runs only on success, and \`finally\` always runs to guarantee cleanup. The pitfall is wrapping too much code in \`try\`, which catches errors you never meant to handle and masks real bugs as if they were the expected failure.
+
 ## Why Error Handling?
 
 Programs encounter unexpected situations: a file does not exist, a user types letters instead of a number, a network request fails, division by zero. Without error handling, these cause the program to crash with an ugly traceback. With error handling, you can respond gracefully.

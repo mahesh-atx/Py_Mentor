@@ -7,6 +7,8 @@ Welcome to your very first Python program!
 
 In the programming world, it is a long-standing tradition that your first program in any new language is one that simply prints the phrase **"Hello, World!"** to the screen. It's a simple test to ensure everything is set up correctly and you know how to execute code.
 
+Under the hood, \`print()\` follows separation of concerns: your program computes values and \`print()\` merely displays a copy of them, leaving the original untouched (the text in quotes is a string literal, not an instruction). A common pitfall is thinking \`print\` "does" something to the data — it only shows it.
+
 ## The print() Function
 
 In Python, displaying text on the screen is incredibly easy. We use a built-in feature called the \`print()\` function.

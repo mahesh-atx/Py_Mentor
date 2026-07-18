@@ -19,6 +19,9 @@
 
 # production
 /build
+/dist
+/release
+pymentor.db
 
 # misc
 .DS_Store
@@ -42,4 +45,12 @@ next-env.d.ts
 
 /src/generated/prisma
 *.db
-*.sqlite
+*.sqlite3
+# SQLite database files (only .sqlite files at root or prisma level)
+dev.sqlite
+pymentor.db
+
+# Pyodide — large WASM files, install via npm or download script
+# The download-pyodide.sh script copies from node_modules/pyodide/ or downloads from CDN
+# Uncomment the next line if you want to exclude Pyodide from git (saves ~13 MB)
+# /public/pyodide/*.wasm

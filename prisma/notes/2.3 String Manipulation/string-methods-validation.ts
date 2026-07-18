@@ -3,7 +3,9 @@ export const stringMethodsValidationLesson = {
   slug: "string-methods-validation",
   content: `# String Methods - Validation
 
-Python provides a set of methods to check what kind of characters a string contains. These all return \`True\` or \`False\` and are perfect for input validation.
+Python provides a set of methods to check what kind of characters a string contains. These all return True or False and are perfect for input validation.
+
+Validation methods are yes-or-no questions — 'does this string consist only of digits?', 'only of letters?' — that scan every character and return True or False, acting as a cheap gate that keeps bad data out of your logic. The pitfall is that they all return False for an empty string instead of raising an error, and that isdigit, isnumeric, and isdecimal disagree on exotic numerals, making isdigit the usual safe choice for user input.
 
 ## Overview of Validation Methods
 
