@@ -3,6 +3,7 @@ import { SubmissionService } from "@/lib/services/submission.service";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import { PracticeClient } from "./practice-client";
+import { db } from "@/lib/db/prisma";
 
 export default async function PracticeSlugPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -13,8 +14,43 @@ export default async function PracticeSlugPage({ params }: { params: Promise<{ s
     notFound();
   }
 
-  // All exercises in the same topic
-  const allExercises = exercise.topic?.exercises || [];
+  const moduleId = exercise.topic?.module?.id;
+  const moduleData = moduleId
+    ? await db.module.findUnique({
+        where: { id: moduleId },
+        include: {
+          topics: {
+            where: { isPublished: true },
+            orderBy: { order: "asc" },
+            include: {
+              exercises: { where: { isPublished: true }, orderBy: { order: "asc" } },
+            },
+          },
+        },
+      })
+    : null;
+
+  // Flatten all exercises from all topics in the module, with topicName attached
+  const moduleExercises = moduleData
+    ? moduleData.topics.flatMap((topic: any) =>
+        topic.exercises.map((ex: any) => ({
+          ...ex,
+          topicName: topic.title,
+          topicSlug: topic.slug,
+        }))
+      )
+    : [];
+
+  // Fallback to topic-level if no module found
+  const allExercises = moduleExercises.length > 0
+    ? moduleExercises
+    : (exercise.topic?.exercises || []).map((ex: any) => ({
+        ...ex,
+        topicName: exercise.topic?.title || "",
+        topicSlug: exercise.topic?.slug || "",
+      }));
+
+  const moduleTitle = moduleData?.title || exercise.topic?.module?.title || "";
 
   const session = await auth();
   let completedSlugs: string[] = [];
@@ -35,6 +71,7 @@ export default async function PracticeSlugPage({ params }: { params: Promise<{ s
       exercise={exercise}
       allExercises={allExercises}
       initialCompletedSlugs={completedSlugs}
+      moduleTitle={moduleTitle}
     />
   );
 }
