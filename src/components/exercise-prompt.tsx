@@ -3,8 +3,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Lightbulb, AlertCircle, Info, Shield, ShieldAlert, Terminal, ArrowRight, ListChecks } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Terminal } from "lucide-react";
 
 interface ExercisePromptProps {
   title: string;
@@ -111,21 +110,6 @@ export function ExercisePrompt({ title, prompt }: ExercisePromptProps) {
         </ReactMarkdown>
       </div>
 
-      {/* Quick info bar */}
-      <div className="flex flex-wrap gap-2 pt-2 border-t border-border/30">
-        <Badge variant="secondary" className="text-xs gap-1">
-          <Terminal className="h-3 w-3" />
-          stdin input
-        </Badge>
-        <Badge variant="secondary" className="text-xs gap-1">
-          <ArrowRight className="h-3 w-3" />
-          stdout output
-        </Badge>
-        <Badge variant="secondary" className="text-xs gap-1">
-          <ListChecks className="h-3 w-3" />
-          1 test case
-        </Badge>
-      </div>
     </div>
   );
 }
