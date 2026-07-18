@@ -24,11 +24,18 @@ const quiet = process.argv.includes("--quiet");
 const pythonBin = process.env.PYTHON_BIN || "python3";
 const notesRoot = path.resolve(__dirname, "..", "prisma", "notes");
 
-const files = fs
-  .readdirSync(notesRoot, { withFileTypes: true })
-  .filter((d) => d.isDirectory())
-  .map((d) => path.join(notesRoot, d.name, "exercises.ts"))
-  .filter((p) => fs.existsSync(p));
+/** Recursively find all exercises.ts files in the notes tree. */
+function findExerciseFiles(dir: string): string[] {
+  const out: string[] = [];
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, entry.name);
+    if (entry.isDirectory()) out.push(...findExerciseFiles(p));
+    else if (entry.name === "exercises.ts") out.push(p);
+  }
+  return out;
+}
+
+const files = findExerciseFiles(notesRoot);
 
 interface Failure {
   where: string;

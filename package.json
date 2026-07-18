@@ -1,7 +1,7 @@
 {
   "name": "pymentor",
   "version": "1.0.18",
-  "description": "Learn Python by Building Logic \u2014 an interactive, offline-capable Python tutor that runs on your machine",
+  "description": "Learn Python by Building Logic — an interactive, offline-capable Python tutor that runs on your machine",
   "license": "MIT",
   "author": "PyMentor",
   "repository": {

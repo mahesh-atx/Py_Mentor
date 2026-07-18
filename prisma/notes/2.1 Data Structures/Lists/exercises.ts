@@ -394,7 +394,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "5\nbanana\nfig\napple\nkiwi\ncherry\n",
-          "expectedOutput": "['fig', 'kiwi', 'apple', 'banana', 'cherry']\nWords longer than 5 chars: 3\n"
+          "expectedOutput": "['fig', 'kiwi', 'apple', 'banana', 'cherry']\nWords longer than 5 chars: 2\n"
         }
       ],
       "difficulty": "expert",
@@ -538,7 +538,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "4\nalice@gmail.com\nBOB@yahoo.com\ncharlie@gmail.com\ndi@test.com\n",
-          "expectedOutput": "['alice', 'charlie']\n['alice@gmail.com', 'bob@yahoo.com', 'charlie@gmail.com', 'di@test.com']\n['alice@gmail.com', 'charlie@gmail.com']\n"
+          "expectedOutput": "['alice', 'charlie']\n['alice@gmail.com', 'bob@yahoo.com', 'charlie@gmail.com', 'di@test.com']\n['charlie@gmail.com']\n"
         }
       ],
       "difficulty": "expert",
@@ -638,7 +638,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "3\nAlice 88 92 85\nBob 72 68 79\nCharlie 95 91 98\n",
-          "expectedOutput": "Alice         88.3  B\nBob           73.0  C\nCharlie       94.7  A\nClass average: 85.3\nTop student: Charlie\n"
+          "expectedOutput": "Alice          88.3  B\nBob            73.0  C\nCharlie        94.7  A\nClass average: 85.3\nTop student: Charlie\n"
         }
       ],
       "difficulty": "expert",
@@ -710,7 +710,7 @@ export const exercises: Record<string, any[]> = {
       "testCases": [
         {
           "input": "4\n3\n1\n4\n2\n",
-          "expectedOutput": "[1, 3, 2, 4]\n[1, 2, 3, 4]\n[1, 2, 3, 4]\nSteps: 3\n"
+          "expectedOutput": "[1, 3, 2, 4]\n[1, 2, 3, 4]\nSteps: 2\n"
         }
       ],
       "difficulty": "expert",
