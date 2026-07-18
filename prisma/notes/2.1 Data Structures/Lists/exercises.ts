@@ -902,5 +902,20 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "expert",
       "xpReward": 80
     }
+  ,
+{
+      "title": "Rotate List Left by K",
+      "prompt": "## What To Do\n\nRead a list of integers and a number **K**. Rotate the list **left by K positions** and print the result.\n\n## Requirements\n\n- First input: integer **N** (number of elements)\n- Second input: **N** space-separated integers (the list)\n- Third input: integer **K** (rotation amount)\n- Output: the rotated list\n- If K is larger than the list length, wrap around (K % N)\n- If K is 0, print the original list\n- If N is 0, print an empty list `[]`\n\n## Example\n\n**Input:**\n```\n5\n1 2 3 4 5\n2\n```\n**Output:**\n```\n[3, 4, 5, 1, 2]\n```\n*(Rotating [1,2,3,4,5] left by 2 moves 1,2 to the end)*\n\n> **Hint:** You can slice the list at position K and concatenate: `list[K:] + list[:K]`",
+      "starterCode": "# Read list and K, print rotated list\nn = int(input())\nnumbers = list(map(int, input().split()))\nk = int(input())\n",
+      "solutionCode": "n = int(input())\nnumbers = list(map(int, input().split()))\nk = int(input())\nif n == 0:\n    print('[]')\nelse:\n    k = k % n\n    rotated = numbers[k:] + numbers[:k]\n    print(rotated)",
+      "testCases": [
+        {
+          "input": "5\n1 2 3 4 5\n2\n",
+          "expectedOutput": "[3, 4, 5, 1, 2]\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 35
+    }
   ]
 };

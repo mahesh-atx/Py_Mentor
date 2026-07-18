@@ -597,5 +597,21 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  
+  ,
+    {
+      "title": "Number Guessing Game",
+      "prompt": "## What To Do\n\nCreate a number guessing game where the computer picks a random number between 1 and 100, and the user has to guess it.\n\n## Requirements\n\n- Use the `random` module to generate a random number\n- After each guess, tell the user if their guess is `Too high` or `Too low`\n- When the user guesses correctly, print `Correct! You guessed it in N tries.` where N is the number of attempts\n- Use a `while` loop to keep asking until they get it right\n\n## Example\n\n**Input:**\n```\n50\n75\n62\n\n```\n**Output:**\n```\nToo low\nToo high\nCorrect! You guessed it in 3 tries.\n```\n\nTest input will always be a sequence of guesses ending with the correct number.",
+      "starterCode": "import random\n# Your guessing game code here\n",
+      "solutionCode": "import random\nrandom.seed(112)\nsecret = random.randint(1, 100)\nguesses = 0\nwhile True:\n    guess = int(input())\n    guesses += 1\n    if guess < secret:\n        print('Too low')\n    elif guess > secret:\n        print('Too high')\n    else:\n        print(f'Correct! You guessed it in {guesses} tries.')\n        break",
+      "testCases": [
+        {
+          "input": "50\n75\n62\n",
+          "expectedOutput": "Too low\nToo high\nCorrect! You guessed it in 3 tries.\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 40
+    }
   ]
 };

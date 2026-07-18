@@ -1094,5 +1094,95 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+{
+      "title": "Build: Anagram Checker",
+      "prompt": "## What To Do\n\nTwo strings are **anagrams** if they contain the same characters in the same frequency, just in a different order. Write a program that checks if two strings are anagrams.\n\n## Requirements\n\n- Read two strings from input (one per line)\n- Print `Anagrams` if they are anagrams, otherwise print `Not anagrams`\n- Ignore case and spaces when checking\n- Use **character frequency counting** (dictionary or Counter) — sorting both strings and comparing is not the intended approach\n\n## Example\n\n**Input:**\n```\nlisten\nsilent\n```\n**Output:**\n```\nAnagrams\n```\n\n**Input:**\n```\nhello\nworld\n```\n**Output:**\n```\nNot anagrams\n```",
+      "starterCode": "# Read two strings and check if they are anagrams\ns1 = input().strip()\ns2 = input().strip()\n",
+      "solutionCode": "s1 = input().strip().lower().replace(' ', '')\ns2 = input().strip().lower().replace(' ', '')\nfrom collections import Counter\nif Counter(s1) == Counter(s2):\n    print('Anagrams')\nelse:\n    print('Not anagrams')",
+      "testCases": [
+        {
+          "input": "listen\nsilent\n",
+          "expectedOutput": "Anagrams\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 35
+    }
+  ,
+{
+      "title": "Pangram Checker",
+      "prompt": "## What To Do\n\nA **pangram** is a sentence that contains every letter of the alphabet at least once. Write a program that checks if a given sentence is a pangram.\n\n## Requirements\n\n- Read a sentence from input (may contain spaces, punctuation, mixed case)\n- Print `Pangram` if it uses all 26 English letters, otherwise print `Not a pangram`\n- Ignore case — treat 'A' and 'a' the same\n- Use a **set** of characters for efficient checking\n\n## Examples\n\n**Input:**\n```\nThe quick brown fox jumps over the lazy dog\n```\n**Output:**\n```\nPangram\n```\n\n**Input:**\n```\nHello World\n```\n**Output:**\n```\nNot a pangram\n```",
+      "starterCode": "# Check if the input sentence is a pangram\nsentence = input()\n",
+      "solutionCode": "sentence = input().lower()\nletters = set(c for c in sentence if c.isalpha())\nif len(letters) == 26:\n    print('Pangram')\nelse:\n    print('Not a pangram')",
+      "testCases": [
+        {
+          "input": "The quick brown fox jumps over the lazy dog\n",
+          "expectedOutput": "Pangram\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 35
+    }
+  ,
+{
+      "title": "Build: Longest Word in Sentence",
+      "prompt": "## What To Do\n\nRead a sentence from input and find the **longest word** in it. If there are multiple words with the same maximum length, print the one that appears **first**.\n\n## Requirements\n\n- A sentence may contain punctuation — clean each word of non-alphabetic characters\n- Print the longest word in lowercase\n- If the sentence is empty, print `No words`\n\n## Example\n\n**Input:**\n```\nPython programming is amazing!\n```\n**Output:**\n```\nprogramming\n```\n*(Because 'programming' has 11 characters, the longest)*",
+      "starterCode": "# Read sentence and find longest word\nsentence = input().strip()\n",
+      "solutionCode": "import re\nsentence = input().strip()\nif not sentence:\n    print('No words')\nelse:\n    words = re.findall(r'[A-Za-z]+', sentence)\n    if not words:\n        print('No words')\n    else:\n        longest = max(words, key=len)\n        print(longest.lower())",
+      "testCases": [
+        {
+          "input": "Python programming is amazing!\n",
+          "expectedOutput": "programming\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 30
+    }
+  ,
+{
+      "title": "Build: Caesar Cipher",
+      "prompt": "## What To Do\n\nImplement a **Caesar cipher** encoder. Shift each letter in the input text by a given number of positions in the alphabet, wrapping around from Z to A.\n\n## Requirements\n\n- First input: the text to encode (may include spaces and punctuation)\n- Second input: the shift amount (integer)\n- Output: the encoded text\n- Preserve case (uppercase stays uppercase, lowercase stays lowercase)\n- Non-alphabetic characters (spaces, punctuation) remain unchanged\n- If shift is negative or larger than 26, handle it correctly using modulo\n\n## Example\n\n**Input:**\n```\nHello, World!\n3\n```\n**Output:**\n```\nKhoor, Zruog!\n```\n*(Each letter shifted forward by 3: H→K, e→h, l→o, l→o, o→r, etc.)*",
+      "starterCode": "# Caesar cipher encoder\ntext = input()\nshift = int(input())\n",
+      "solutionCode": "text = input()\nshift = int(input()) % 26\nresult = []\nfor ch in text:\n    if 'a' <= ch <= 'z':\n        result.append(chr((ord(ch) - ord('a') + shift) % 26 + ord('a')))\n    elif 'A' <= ch <= 'Z':\n        result.append(chr((ord(ch) - ord('A') + shift) % 26 + ord('A')))\n    else:\n        result.append(ch)\nprint(''.join(result))",
+      "testCases": [
+        {
+          "input": "Hello, World!\n3\n",
+          "expectedOutput": "Khoor, Zruog!\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 45
+    }
+  ,
+{
+      "title": "Build: Extract Hashtags",
+      "prompt": "## What To Do\n\nExtract all **hashtags** from a tweet/post. A hashtag starts with `#` followed by letters and digits (no spaces). Write a program that finds and prints all hashtags from the input.\n\n## Requirements\n\n- Read text from input (single line)\n- Find all words that start with `#` and contain only letters and digits\n- Print each hashtag on its own line, sorted alphabetically\n- If no hashtags are found, print `No hashtags`\n- Remove the `#` prefix when printing (just the tag word)\n\n## Example\n\n**Input:**\n```\nLoving #Python and #coding! Also #100DaysOfCode\n```\n**Output:**\n```\n100DaysOfCode\nPython\ncoding\n```\n\n> **Hint:** Use `re.findall(r'#([A-Za-z0-9_]+)', text)` to extract hashtags.",
+      "starterCode": "import re\n# Extract and print hashtags\ntext = input()\n",
+      "solutionCode": "import re\ntext = input()\nhashtags = re.findall(r'#([A-Za-z0-9_]+)', text)\nif hashtags:\n    for tag in sorted(hashtags):\n        print(tag)\nelse:\n    print('No hashtags')",
+      "testCases": [
+        {
+          "input": "Loving #Python and #coding! Also #100DaysOfCode\n",
+          "expectedOutput": "100DaysOfCode\nPython\ncoding\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 35
+    }
+  ,
+{
+      "title": "Build: Run-Length Encoding",
+      "prompt": "## What To Do\n\n**Run-length encoding (RLE)** is a simple compression algorithm. It replaces consecutive repeated characters with the character and its count. Write a program that encodes a string using RLE.\n\n## Requirements\n\n- Read a string from input\n- For each run of consecutive identical characters, print the character followed by the count\n- If the string is empty, print `Empty input`\n- Case matters: `AAA` and `aaa` are different runs\n\n## Example\n\n**Input:**\n```\nAAABBBCCCCA\n```\n**Output:**\n```\nA3B3C4A1\n```\n*(Breakdown: AAA→A3, BBB→B3, CCCCC→C5, A→A1)*\n\n> RLE works well for data with many repeated characters (like simple images or ASCII art).",
+      "starterCode": "# Run-length encode a string\ntext = input().strip()\n",
+      "solutionCode": "text = input().strip()\nif not text:\n    print('Empty input')\nelse:\n    result = []\n    count = 1\n    for i in range(1, len(text)):\n        if text[i] == text[i - 1]:\n            count += 1\n        else:\n            result.append(f'{text[i - 1]}{count}')\n            count = 1\n    result.append(f'{text[-1]}{count}')\n    print(''.join(result))",
+      "testCases": [
+        {
+          "input": "AAABBBCCCCA\n",
+          "expectedOutput": "A3B3C4A1\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 40
+    }
   ]
 };

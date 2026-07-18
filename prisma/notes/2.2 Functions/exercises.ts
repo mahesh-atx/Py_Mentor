@@ -926,5 +926,20 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+{
+      "title": "Build: GCD of Two Numbers",
+      "prompt": "## What To Do\n\nWrite a function `gcd(a, b)` that computes the **Greatest Common Divisor** of two integers using the Euclidean algorithm. Then read two integers and print their GCD.\n\n## Requirements\n\n- Implement the **Euclidean algorithm**: keep replacing (a, b) with (b, a % b) until b becomes 0; then a is the GCD\n- Read two integers from input (one per line)\n- Output the GCD\n- If both numbers are 0, print `0`\n\n## Example\n\n**Input:**\n```\n48\n18\n```\n**Output:**\n```\n6\n```\n*(Because 6 is the largest number that divides both 48 and 18)*\n\n> The Euclidean algorithm is one of the oldest algorithms still in common use — dating back to 300 BCE!",
+      "starterCode": "def gcd(a, b):\n    # Implement Euclidean algorithm\n    pass\n\na = int(input())\nb = int(input())\nprint(gcd(a, b))",
+      "solutionCode": "def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\n\na = int(input())\nb = int(input())\nprint(gcd(a, b))",
+      "testCases": [
+        {
+          "input": "48\n18\n",
+          "expectedOutput": "6\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 40
+    }
   ]
 };

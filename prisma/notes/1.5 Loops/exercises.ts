@@ -745,5 +745,35 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+{
+      "title": "Sum of First N Natural Numbers",
+      "prompt": "## What To Do\n\nRead an integer **N** from input. Calculate the sum of the first **N** natural numbers (1 + 2 + 3 + ... + N). Print the result.\n\n## Requirements\n\n- Input: a single positive integer N\n- Output: the sum 1 + 2 + ... + N\n- Solve it using a **loop** (not the formula) so you demonstrate iteration\n\n## Example\n\n**Input:**\n```\n5\n```\n**Output:**\n```\n15\n```\n*(Because 1+2+3+4+5 = 15)*\n\n> **Bonus:** Try to also solve it with the formula N*(N+1)/2 after you finish the loop version.",
+      "starterCode": "# Read N and calculate sum using a loop\nn = int(input())\n",
+      "solutionCode": "n = int(input())\ntotal = 0\nfor i in range(1, n + 1):\n    total += i\nprint(total)",
+      "testCases": [
+        {
+          "input": "5\n",
+          "expectedOutput": "15\n"
+        }
+      ],
+      "difficulty": "beginner",
+      "xpReward": 20
+    }
+  ,
+{
+      "title": "Missing Number from Sequence",
+      "prompt": "## What To Do\n\nYou are given a list of **N-1** integers that should contain all numbers from **1 to N** but one number is missing. Find and print the missing number.\n\n## Requirements\n\n- First input: an integer **N** (the full range size)\n- Second input: **N-1** space-separated integers (the incomplete list)\n- Output: the missing integer\n\n## Example\n\n**Input:**\n```\n5\n1 2 4 5\n```\n**Output:**\n```\n3\n```\n*(Because 1..5 should be [1,2,3,4,5] but 3 is missing)*\n\n> **Hint:** The sum of 1..N is N*(N+1)/2. The missing number is the difference between that sum and the actual sum.",
+      "starterCode": "# Read N and the list, find the missing number\nn = int(input())\nnumbers = list(map(int, input().split()))\n",
+      "solutionCode": "n = int(input())\nnumbers = list(map(int, input().split()))\nexpected_sum = n * (n + 1) // 2\nactual_sum = sum(numbers)\nprint(expected_sum - actual_sum)",
+      "testCases": [
+        {
+          "input": "5\n1 2 4 5\n",
+          "expectedOutput": "3\n"
+        }
+      ],
+      "difficulty": "intermediate",
+      "xpReward": 35
+    }
   ]
 };

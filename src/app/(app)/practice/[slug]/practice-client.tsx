@@ -10,10 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { outputsMatch } from "@/lib/output-match";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import { remarkAlerts } from "@/lib/remark-alerts";
-import { Shield, ShieldAlert, Info } from "lucide-react";
+import { ExercisePrompt } from "@/components/exercise-prompt";
 import { usePyodide } from "@/lib/hooks/usePyodide";
 import {
   MentorContextProvider,
@@ -306,67 +303,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
               </div>
               
               <TabsContent value="problem" className="flex-1 overflow-y-auto p-6 m-0 outline-none">
-                <article className="prose prose-neutral dark:prose-invert max-w-none prose-headings:mt-0">
-                  <h2 className="text-2xl font-bold tracking-tight mb-4">{exercise.title}</h2>
-                  <ReactMarkdown 
-                    remarkPlugins={[remarkGfm, remarkAlerts]}
-                    components={{
-                      div: ({ node, className, children, ...props }: any) => {
-                        if (typeof className === 'string' && className.includes('markdown-alert')) {
-                          const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
-                          
-                          let Icon = Info;
-                          let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
-                          let title = "Note";
-
-                          switch (type) {
-                            case 'tip':
-                              Icon = Lightbulb;
-                              colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
-                              title = "Tip";
-                              break;
-                            case 'warning':
-                              Icon = AlertCircle;
-                              colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
-                              title = "Warning";
-                              break;
-                            case 'caution':
-                              Icon = ShieldAlert;
-                              colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
-                              title = "Caution";
-                              break;
-                            case 'important':
-                              Icon = Shield;
-                              colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
-                              title = "Important";
-                              break;
-                            case 'note':
-                            default:
-                              Icon = Info;
-                              colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
-                              title = "Note";
-                              break;
-                          }
-
-                          return (
-                            <div className={`my-4 rounded-lg border p-3 ${colorClass}`} {...props}>
-                              <div className="flex items-center gap-2 font-semibold mb-1 text-sm">
-                                <Icon className="h-4 w-4" />
-                                <span>{title}</span>
-                              </div>
-                              <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
-                                {children}
-                              </div>
-                            </div>
-                          );
-                        }
-                        return <div className={className} {...props}>{children}</div>;
-                      }
-                    }}
-                  >
-                    {exercise.prompt || exercise.description}
-                  </ReactMarkdown>
-                </article>
+                <ExercisePrompt title={exercise.title} prompt={exercise.prompt || exercise.description} />
               </TabsContent>
             </Tabs>
           </ResizablePanel>
@@ -437,67 +374,7 @@ function PracticeClientInner({ exercise, initialIsCompleted = false }: { exercis
           </div>
           
           <TabsContent value="problem" className="flex-1 overflow-y-auto p-4 m-0 outline-none bg-background">
-             <article className="prose prose-sm dark:prose-invert">
-                <h2 className="text-xl font-bold tracking-tight mb-4">{exercise.title}</h2>
-                <ReactMarkdown 
-                  remarkPlugins={[remarkGfm, remarkAlerts]}
-                  components={{
-                    div: ({ node, className, children, ...props }: any) => {
-                      if (typeof className === 'string' && className.includes('markdown-alert')) {
-                        const type = node?.data?.hProperties?.['data-alert-type'] || className.match(/markdown-alert-(note|tip|warning|important|caution)/)?.[1] || 'note';
-                        
-                        let Icon = Info;
-                        let colorClass = "bg-blue-500/10 text-blue-500 border-blue-500/20";
-                        let title = "Note";
-
-                        switch (type) {
-                          case 'tip':
-                            Icon = Lightbulb;
-                            colorClass = "bg-green-500/10 text-green-500 border-green-500/20 dark:text-green-400";
-                            title = "Tip";
-                            break;
-                          case 'warning':
-                            Icon = AlertCircle;
-                            colorClass = "bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:text-yellow-400";
-                            title = "Warning";
-                            break;
-                          case 'caution':
-                            Icon = ShieldAlert;
-                            colorClass = "bg-red-500/10 text-red-600 border-red-500/20 dark:text-red-400";
-                            title = "Caution";
-                            break;
-                          case 'important':
-                            Icon = Shield;
-                            colorClass = "bg-purple-500/10 text-purple-600 border-purple-500/20 dark:text-purple-400";
-                            title = "Important";
-                            break;
-                          case 'note':
-                          default:
-                            Icon = Info;
-                            colorClass = "bg-blue-500/10 text-blue-600 border-blue-500/20 dark:text-blue-400";
-                            title = "Note";
-                            break;
-                        }
-
-                        return (
-                          <div className={`my-4 rounded-lg border p-3 ${colorClass}`} {...props}>
-                            <div className="flex items-center gap-2 font-semibold mb-1 text-sm">
-                              <Icon className="h-4 w-4" />
-                              <span>{title}</span>
-                            </div>
-                            <div className="text-sm opacity-90 leading-relaxed [&>p]:m-0">
-                              {children}
-                            </div>
-                          </div>
-                        );
-                      }
-                      return <div className={className} {...props}>{children}</div>;
-                    }
-                  }}
-                >
-                  {exercise.prompt || exercise.description}
-                </ReactMarkdown>
-              </article>
+             <ExercisePrompt title={exercise.title} prompt={exercise.prompt || exercise.description} />
           </TabsContent>
           
           <TabsContent value="editor" className="flex-1 m-0 p-0 outline-none relative bg-[#1E1E1E]">

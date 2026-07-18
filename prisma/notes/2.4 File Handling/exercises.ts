@@ -530,5 +530,20 @@ export const exercises: Record<string, any[]> = {
       "difficulty": "intermediate",
       "xpReward": 30
     }
+  ,
+{
+      "title": "Build: Find and Replace in File",
+      "prompt": "## What To Do\n\nWrite a program that reads a text file, finds all occurrences of a **search word**, and replaces them with a **replace word**. Write the result to a new file and count how many replacements were made.\n\n## Requirements\n\n- Read: filename, search word, replace word (one per line)\n- Open the file, read all text\n- Replace ALL occurrences of the search word (case-insensitive) with the replace word\n- Write the modified text to `output.txt`\n- Print: `Replaced N occurrences` where N is the count\n- If the file does not exist, print `File not found`\n- Use the `with` statement for file handling\n\n## Example\n\nIf `notes.txt` contains:\n```\nPython is fun. I love Python!\n```\n**Input:**\n```\nnotes.txt\npython\nJava\n```\n**Output:**\n```\nReplaced 2 occurrences\n```\n*(output.txt will contain: `Java is fun. I love Java!`)*",
+      "starterCode": "# Find and replace in a file\nfilename = input().strip()\nsearch = input().strip()\nreplace = input().strip()\n",
+      "solutionCode": "import os\nfilename = input().strip()\nsearch = input().strip()\nreplace = input().strip()\nif not os.path.exists(filename):\n    print('File not found')\nelse:\n    with open(filename, 'r') as f:\n        text = f.read()\n    count = text.lower().count(search.lower())\n    new_text = text.replace(search, replace)\n    with open('output.txt', 'w') as f:\n        f.write(new_text)\n    print(f'Replaced {count} occurrences')",
+      "testCases": [
+        {
+          "input": "nonexistent_xyz.txt\ntest\ndemo\n",
+          "expectedOutput": "File not found\n"
+        }
+      ],
+      "difficulty": "advanced",
+      "xpReward": 50
+    }
   ]
 };
