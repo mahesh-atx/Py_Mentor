@@ -423,7 +423,6 @@ function PracticeClientInner({
                             <div className="px-4 pb-3 pt-0 border-t border-border/20">
                               <div className="pt-3 max-h-[300px] overflow-y-auto">
                                 <ExercisePrompt
-                                  title={ex.title}
                                   prompt={ex.prompt || ex.description}
                                 />
                               </div>
@@ -539,7 +538,7 @@ function PracticeClientInner({
                         </button>
                         {isOpen && (
                           <div className="px-4 pb-3">
-                            <ExercisePrompt title={ex.title} prompt={ex.prompt || ex.description} />
+                            <ExercisePrompt prompt={ex.prompt || ex.description} />
                           </div>
                         )}
                       </div>
