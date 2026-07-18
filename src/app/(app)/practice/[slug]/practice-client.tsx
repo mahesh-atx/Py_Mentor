@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Editor } from "@monaco-editor/react";
 import {
   Play, CheckCircle2, ChevronLeft, ChevronDown,
@@ -77,6 +78,7 @@ function PracticeClientInner({
   // Code store — one entry per exercise slug
   const [codeStore, setCodeStore] = useState<Record<string, string>>({});
   const [outputStore, setOutputStore] = useState<Record<string, string>>({});
+  const accordionContentRef = useRef<HTMLDivElement>(null);
 
   const activeExercise = allExercises[activeIndex];
 
@@ -208,14 +210,7 @@ function PracticeClientInner({
         return;
       }
     }
-    // All remaining done — close accordion, stay on current
     setAccordionOpen(null);
-  };
-
-  const switchExercise = (idx: number) => {
-    setActiveIndex(idx);
-    setAccordionOpen(idx);
-    setShowResults(false);
   };
 
   const toggleAccordion = (idx: number) => {
@@ -353,84 +348,109 @@ function PracticeClientInner({
               {/* ─── LEFT: Accordion Exercise List ─── */}
               <ResizablePanel defaultSize={35} minSize={22} className="bg-background">
                 <div className="h-full flex flex-col">
-                  <div className="px-4 py-3 border-b bg-muted/20 shrink-0">
+                  <div className="px-4 py-3 border-b bg-muted/20 shrink-0 flex items-center justify-between">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <ListChecks className="h-4 w-4 text-primary" />
                       Exercises in this topic
                     </h3>
+                    <span className="text-[11px] text-muted-foreground">{completedCount}/{allExercises.length}</span>
                   </div>
-                  <div className="flex-1 overflow-y-auto divide-y divide-border/30">
-                    {allExercises.map((ex: any, idx: number) => {
-                      const isDone = completedSet.has(ex.slug) || completedSet.has(ex.id);
-                      const isActive = activeIndex === idx;
-                      const isOpen = accordionOpen === idx;
+                  <div className="flex-1 overflow-y-auto">
+                    <AnimatePresence mode="popLayout">
+                      {allExercises.map((ex: any, idx: number) => {
+                        const isDone = completedSet.has(ex.slug) || completedSet.has(ex.id);
+                        const isOpen = accordionOpen === idx;
 
-                      return (
-                        <div key={ex.id || ex.slug}>
-                          {/* Accordion header */}
-                          <button
-                            onClick={() => toggleAccordion(idx)}
+                        return (
+                          <motion.div
+                            key={ex.id || ex.slug}
+                            layout
+                            initial={{ opacity: 0, y: 15 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, scale: 0.95 }}
+                            transition={{ duration: 0.25, delay: Math.min(idx * 0.04, 0.4) }}
                             className={cn(
-                              "w-full flex items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-muted/50",
-                              isActive && !isOpen && "bg-primary/5 border-l-2 border-primary",
-                              isDone && "opacity-80"
+                              "border-b border-border/20 last:border-0",
+                              isOpen && "bg-primary/[0.03]",
+                              !isOpen && !isDone && "opacity-80 hover:opacity-100 transition-opacity",
+                              isDone && !isOpen && "opacity-50 hover:opacity-70"
                             )}
                           >
-                            <div
+                            {/* Accordion trigger */}
+                            <button
+                              onClick={() => toggleAccordion(idx)}
                               className={cn(
-                                "h-7 w-7 shrink-0 rounded-md flex items-center justify-center border text-xs font-bold",
-                                isDone
-                                  ? "bg-success/10 border-success/30 text-success"
-                                  : isActive
-                                  ? "bg-primary/10 border-primary/30 text-primary"
-                                  : "bg-muted border-border/50 text-muted-foreground"
+                                "w-full flex items-center gap-3 px-4 py-3.5 text-left transition-colors",
+                                isOpen && "bg-primary/[0.05]"
                               )}
                             >
-                              {isDone ? (
-                                <CheckCircle2 className="h-4 w-4" />
-                              ) : (
-                                idx + 1
-                              )}
-                            </div>
-                            <div className="min-w-0 flex-1">
-                              <div className="text-sm font-medium truncate flex items-center gap-2">
-                                {ex.title}
-                                {isDone && (
-                                  <CheckCircle2 className="h-3 w-3 text-success shrink-0" />
+                              <div
+                                className={cn(
+                                  "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center border text-sm font-bold transition-all duration-200",
+                                  isDone
+                                    ? "bg-success/10 border-success/30 text-success"
+                                    : isOpen
+                                    ? "bg-primary/10 border-primary/30 text-primary shadow-sm"
+                                    : "bg-muted/80 border-border/40 text-muted-foreground"
+                                )}
+                              >
+                                {isDone ? (
+                                  <CheckCircle2 className="h-4 w-4" />
+                                ) : (
+                                  idx + 1
                                 )}
                               </div>
-                              <div className="flex items-center gap-2 mt-0.5">
-                                <div className={`w-1.5 h-1.5 rounded-full ${getDifficultyColor(ex.difficulty)}`} />
-                                <span className="text-[10px] text-muted-foreground capitalize">
-                                  {ex.difficulty}
-                                </span>
-                                <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
-                                  <Sparkles className="h-2.5 w-2.5 text-warning" />
-                                  {ex.xpReward}
-                                </span>
+                              <div className="min-w-0 flex-1">
+                                <div className={cn(
+                                  "font-semibold truncate leading-tight",
+                                  isOpen ? "text-base text-foreground" : "text-sm text-foreground/80",
+                                  isDone && "text-success/80"
+                                )}>
+                                  {ex.title}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5">
+                                  <div className={`w-1.5 h-1.5 rounded-full ${getDifficultyColor(ex.difficulty)}`} />
+                                  <span className="text-[10px] text-muted-foreground capitalize">{ex.difficulty}</span>
+                                  <span className="text-[10px] text-muted-foreground flex items-center gap-0.5">
+                                    <Sparkles className="h-2.5 w-2.5 text-warning" />
+                                    {ex.xpReward}
+                                  </span>
+                                </div>
                               </div>
-                            </div>
-                            <ChevronDown
-                              className={cn(
-                                "h-4 w-4 shrink-0 text-muted-foreground transition-transform",
-                                isOpen && "rotate-180"
-                              )}
-                            />
-                          </button>
+                              <ChevronDown
+                                className={cn(
+                                  "h-4 w-4 shrink-0 text-muted-foreground/60 transition-transform duration-200",
+                                  isOpen && "rotate-180"
+                                )}
+                              />
+                            </button>
 
-                          {/* Accordion content: prompt */}
-                          {isOpen && (
-                            <div className="px-4 pb-3 pt-0 border-t border-border/20">
-                              <div className="pt-3 max-h-[300px] overflow-y-auto">
-                                <ExercisePrompt
-                                  prompt={ex.prompt || ex.description}
-                                />
-                              </div>
-                            </div>
-                          )}
-                        </div>
-                      );
-                    })}
+                            {/* ── Animated accordion content ── */}
+                            <AnimatePresence initial={false}>
+                              {isOpen && (
+                                <motion.div
+                                  key="accordion-content"
+                                  initial={{ height: 0, opacity: 0 }}
+                                  animate={{ height: "auto", opacity: 1 }}
+                                  exit={{ height: 0, opacity: 0 }}
+                                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="px-4 pb-4 pt-0 border-t border-border/20 mx-4">
+                                    <div className="pt-3">
+                                      <ExercisePrompt
+                                        title={ex.title}
+                                        prompt={ex.prompt || ex.description}
+                                      />
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </motion.div>
+                        );
+                      })}
+                    </AnimatePresence>
                   </div>
                 </div>
               </ResizablePanel>
@@ -512,39 +532,59 @@ function PracticeClientInner({
               </div>
 
               <TabsContent value="list" className="flex-1 overflow-y-auto m-0 outline-none bg-background">
-                <div className="divide-y divide-border/30">
+                <AnimatePresence mode="popLayout">
                   {allExercises.map((ex: any, idx: number) => {
                     const isDone = completedSet.has(ex.slug) || completedSet.has(ex.id);
-                    const isActive = activeIndex === idx;
                     const isOpen = accordionOpen === idx;
 
                     return (
-                      <div key={ex.id || ex.slug}>
+                      <motion.div
+                        key={ex.id || ex.slug}
+                        layout
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.2, delay: Math.min(idx * 0.03, 0.3) }}
+                        className={cn(
+                          "border-b border-border/20",
+                          isOpen && "bg-primary/[0.03]"
+                        )}
+                      >
                         <button
                           onClick={() => toggleAccordion(idx)}
-                          className={cn(
-                            "w-full flex items-center gap-3 px-4 py-3 text-left",
-                            isActive && !isOpen && "bg-primary/5 border-l-2 border-primary"
-                          )}
+                          className="w-full flex items-center gap-3 px-4 py-3 text-left"
                         >
                           <div className={cn(
-                            "h-7 w-7 shrink-0 rounded-md flex items-center justify-center border text-xs font-bold",
-                            isDone ? "bg-success/10 border-success/30 text-success" : "bg-muted border-border/50"
+                            "h-8 w-8 shrink-0 rounded-lg flex items-center justify-center border text-sm font-bold",
+                            isDone ? "bg-success/10 border-success/30 text-success" : isOpen ? "bg-primary/10 border-primary/30 text-primary" : "bg-muted/80 border-border/40"
                           )}>
-                            {isDone ? <CheckCircle2 className="h-4 w-4" /> : idx + 1}
+                            {isDone ? <CheckCircle2 className="h-4.5 w-4.5" /> : idx + 1}
                           </div>
-                          <span className="text-sm truncate flex-1">{ex.title}</span>
-                          <ChevronDown className={cn("h-4 w-4 shrink-0 transition-transform", isOpen && "rotate-180")} />
+                          <div className="min-w-0 flex-1">
+                            <div className={cn("font-semibold truncate", isOpen ? "text-base" : "text-sm", isDone && "text-success/80")}>
+                              {ex.title}
+                            </div>
+                          </div>
+                          <ChevronDown className={cn("h-4 w-4 shrink-0 transition-transform duration-200", isOpen && "rotate-180")} />
                         </button>
-                        {isOpen && (
-                          <div className="px-4 pb-3">
-                            <ExercisePrompt prompt={ex.prompt || ex.description} />
-                          </div>
-                        )}
-                      </div>
+                        <AnimatePresence initial={false}>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.25, ease: "easeInOut" }}
+                              className="overflow-hidden"
+                            >
+                              <div className="px-4 pb-3">
+                                <ExercisePrompt title={ex.title} prompt={ex.prompt || ex.description} />
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
                     );
                   })}
-                </div>
+                </AnimatePresence>
               </TabsContent>
 
               <TabsContent value="editor" className="flex-1 m-0 p-0 outline-none relative bg-[#1E1E1E]">
