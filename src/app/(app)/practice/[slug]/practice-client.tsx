@@ -287,9 +287,12 @@ function PracticeClientInner({
               </Button>
               <div className="flex items-center gap-2 min-w-0">
                 {moduleTitle && (
-                  <span className="text-xs font-medium text-muted-foreground hidden md:block">{moduleTitle}</span>
+                  <>
+                    <span className="text-sm font-semibold text-muted-foreground hidden md:block">{moduleTitle}</span>
+                    <span className="text-sm font-semibold text-muted-foreground/40 hidden md:block">/</span>
+                  </>
                 )}
-                <span className="text-sm font-semibold text-muted-foreground/70 truncate max-w-[200px]">
+                <span className="text-sm font-semibold text-foreground/80 truncate max-w-[200px]">
                   {activeTopicName}
                 </span>
                 <Badge
@@ -341,18 +344,20 @@ function PracticeClientInner({
                   <div className="px-4 py-3 border-b bg-muted/20 shrink-0">
                     <h3 className="text-sm font-semibold flex items-center gap-2">
                       <TerminalIcon className="h-4 w-4 text-primary" />
-                      {moduleTitle || "Module"} — {completedCount}/{allExercises.length}
+                      Exercises
                     </h3>
                   </div>
                   <div className="flex-1 overflow-y-auto">
                     <AnimatePresence mode="popLayout">
                       {visibleGroups.map((group, gIdx) => (
                         <div key={group.topicName}>
-                          {/* Topic separator */}
-                          <div className="px-4 py-2 bg-muted/40 border-b border-t border-border/20">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">
+                          {/* Elegant topic separator */}
+                          <div className="flex items-center gap-3 px-4 py-3 opacity-60">
+                            <div className="h-px bg-border/50 flex-1" />
+                            <span className="text-[10px] font-semibold text-muted-foreground tracking-widest uppercase">
                               {group.topicName}
                             </span>
+                            <div className="h-px bg-border/50 flex-1" />
                           </div>
 
                           {/* Exercises in this topic group */}
@@ -368,12 +373,12 @@ function PracticeClientInner({
                                   initial={{ opacity: 0, y: 20, scale: 0.97 }}
                                   animate={{ opacity: 1, y: 0, scale: 1 }}
                                   exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                                  transition={{ duration: 0.3, ease: "easeInOut" }}
+                                  transition={{ duration: 0.4, ease: "easeOut", delay: realIdx * 0.05 }}
                                   className={cn(
-                                    "border-b border-border/15 last:border-0 transition-all duration-300",
+                                    "transition-all duration-300 relative",
                                     isOpen
-                                      ? "bg-background shadow-sm border-l-2 border-l-primary"
-                                      : "opacity-30 hover:opacity-60"
+                                      ? "bg-card/80 dark:bg-primary/5 shadow-lg shadow-primary/5 border border-primary/20 rounded-xl my-2 mx-2 z-10"
+                                      : "border-b border-border/15 last:border-0 opacity-40 hover:opacity-70"
                                   )}
                                 >
                                   <button
@@ -425,7 +430,6 @@ function PracticeClientInner({
                                         <div className="px-4 pb-4 pt-0 border-t border-border/15 mx-4">
                                           <div className="pt-3">
                                             <ExercisePrompt
-                                              title={ex.title}
                                               prompt={ex.prompt || ex.description}
                                             />
                                           </div>
@@ -516,8 +520,13 @@ function PracticeClientInner({
                 <AnimatePresence mode="popLayout">
                   {visibleGroups.map((group) => (
                     <div key={group.topicName}>
-                      <div className="px-4 py-2 bg-muted/40 border-b">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground/60">{group.topicName}</span>
+                      {/* Elegant topic separator */}
+                      <div className="flex items-center gap-3 px-4 py-3 opacity-60">
+                        <div className="h-px bg-border/50 flex-1" />
+                        <span className="text-[10px] font-semibold text-muted-foreground tracking-widest uppercase">
+                          {group.topicName}
+                        </span>
+                        <div className="h-px bg-border/50 flex-1" />
                       </div>
                       {group.exercises.map((ex) => {
                         const realIdx = getRealIndex(ex.slug);
@@ -526,8 +535,13 @@ function PracticeClientInner({
                           <motion.div key={ex.slug || ex.id} layout
                             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className={isOpen ? "bg-background" : "opacity-30"}
+                            transition={{ duration: 0.4, ease: "easeOut", delay: realIdx * 0.05 }}
+                            className={cn(
+                              "transition-all duration-300 relative",
+                              isOpen 
+                                ? "bg-card/80 dark:bg-primary/5 shadow-lg shadow-primary/5 border border-primary/20 rounded-xl my-2 mx-2 z-10" 
+                                : "border-b border-border/15 last:border-0 opacity-40 hover:opacity-70"
+                            )}
                           >
                             <button onClick={() => toggleAccordion(realIdx)}
                               className="w-full flex items-center gap-3 px-4 py-3 text-left">
@@ -546,7 +560,7 @@ function PracticeClientInner({
                               {isOpen && (
                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
-                                  <div className="px-4 pb-3"><ExercisePrompt title={ex.title} prompt={ex.prompt || ex.description} /></div>
+                                  <div className="px-4 pb-3"><ExercisePrompt prompt={ex.prompt || ex.description} /></div>
                                 </motion.div>
                               )}
                             </AnimatePresence>

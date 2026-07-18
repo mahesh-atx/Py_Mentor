@@ -106,7 +106,6 @@ export function FloatingEditor() {
 
           {/* Main Editor Area */}
           <div className="flex-1 overflow-hidden bg-background">
-            {/* @ts-expect-error - shadcn type issue */}
             <ResizablePanelGroup direction="horizontal">
               
               {/* Code Editor Panel */}

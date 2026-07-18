@@ -3,9 +3,10 @@ import { UserService } from "@/lib/services/user.service";
 import { ProgressService } from "@/lib/services/progress.service";
 import { pickContinueIndex } from "@/lib/continue-topic";
 import { DashboardClient } from "./dashboard-client";
+import { db } from "@/lib/db/prisma";
 
 export default async function DashboardPage() {
-  const roadmaps = await CurriculumService.getRoadmaps();
+  const roadmaps = await CurriculumService.getRoadmapsWithExercises();
   const firstRoadmap = roadmaps[0];
   
   if (!firstRoadmap) {
@@ -56,9 +57,57 @@ export default async function DashboardPage() {
   
   const recentActivity = await ProgressService.getRecentActivity(user.id);
 
+  // --- Calculate continuePractice ---
+  const userSubmissions = await db.submission.findMany({
+    where: {
+      userId: user.id,
+      status: "passed",
+      exerciseId: { not: null }
+    },
+    select: { exerciseId: true }
+  });
+  const completedExerciseSlugs = new Set(userSubmissions.map(s => s.exerciseId as string));
+
+  let continuePractice: any = null;
+  // Iterate through allTopics to find the first uncompleted exercise
+  for (const topic of allTopics) {
+    if (topic.exercises && topic.exercises.length > 0) {
+      for (const exercise of topic.exercises) {
+        if (!completedExerciseSlugs.has(exercise.id) && !completedExerciseSlugs.has(exercise.slug)) {
+          
+          let totalExercises = 0;
+          let completedExercisesInModule = 0;
+          const moduleTopics = allTopics.filter((t: any) => t.module.id === topic.module.id);
+          for (const mt of moduleTopics) {
+            if (mt.exercises) {
+              for (const ex of mt.exercises) {
+                totalExercises++;
+                if (completedExerciseSlugs.has(ex.id) || completedExerciseSlugs.has(ex.slug)) {
+                  completedExercisesInModule++;
+                }
+              }
+            }
+          }
+
+          continuePractice = {
+            moduleSlug: topic.module.slug,
+            topicName: topic.title, // or exercise.topicName if that exists, but topic.title is standard
+            exerciseTitle: exercise.title,
+            exerciseSlug: exercise.slug,
+            completedCount: completedExercisesInModule,
+            totalCount: totalExercises
+          };
+          break;
+        }
+      }
+    }
+    if (continuePractice) break;
+  }
+
   return (
     <DashboardClient 
       continueTopic={continueTopic} 
+      continuePractice={continuePractice}
       recommendedTopics={recommendedTopics} 
       recentActivity={recentActivity}
       stats={{

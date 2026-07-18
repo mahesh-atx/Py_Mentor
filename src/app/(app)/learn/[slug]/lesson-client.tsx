@@ -591,7 +591,6 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
       
       {/* Desktop Split View */}
       <div className="hidden lg:flex w-full h-full">
-        {/* @ts-expect-error - shadcn type issue */}
         <ResizablePanelGroup direction="horizontal">
           {/* Left Panel: Lesson Notes */}
           <ResizablePanel defaultSize={showEditor ? 50 : 100} minSize={30} className="flex flex-col bg-background">
@@ -605,7 +604,6 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
               {/* Right Panel: Editor & Console */}
               <ResizablePanel defaultSize={50} minSize={25} className="p-3 pl-2 pb-4">
                 <div className="w-full h-full rounded-xl border border-[#404040]/50 overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.12)] flex flex-col relative">
-                  {/* @ts-expect-error - shadcn type issue */}
                   <ResizablePanelGroup direction="vertical">
                     <ResizablePanel defaultSize={70} minSize={30} className="bg-[#1E1E1E] relative">
                       {renderEditor()}

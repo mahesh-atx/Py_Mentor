@@ -61,7 +61,7 @@ export default async function PracticeSlugPage({ params }: { params: Promise<{ s
     const passedSet = new Set(
       history
         .filter((sub: { status: string }) => sub.status === "passed")
-        .map((sub: { exerciseId: string }) => sub.exerciseId)
+        .map((sub: any) => sub.exerciseId as string)
     );
     completedSlugs = slugs.filter((s: string) => passedSet.has(s));
   }

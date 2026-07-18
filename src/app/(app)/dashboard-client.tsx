@@ -15,6 +15,14 @@ export type TopicWithModule = Topic & { module: Module };
 
 interface DashboardClientProps {
   continueTopic: TopicWithModule | null;
+  continuePractice: {
+    moduleSlug: string;
+    topicName: string;
+    exerciseTitle: string;
+    exerciseSlug: string;
+    completedCount: number;
+    totalCount: number;
+  } | null;
   recommendedTopics: TopicWithModule[];
   stats: {
     totalXp: number;
@@ -36,7 +44,7 @@ interface DashboardClientProps {
   }[];
 }
 
-export function DashboardClient({ continueTopic, recommendedTopics, stats, recentActivity = [] }: DashboardClientProps) {
+export function DashboardClient({ continueTopic, continuePractice, recommendedTopics, stats, recentActivity = [] }: DashboardClientProps) {
   return (
     <div className="space-y-8 pb-10 max-w-6xl mx-auto">
       
@@ -50,59 +58,132 @@ export function DashboardClient({ continueTopic, recommendedTopics, stats, recen
         </div>
       </div>
 
-      {/* Hero Banner: Continue Learning */}
+      {/* Hero Section */}
       {continueTopic ? (
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }} 
-          transition={{ duration: 0.4 }}
-        >
-          <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/50 transition-all duration-300 hover:shadow-xl p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
-            {/* Background Illustration */}
-            <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none z-0 mix-blend-luminosity">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/images/illustrations/study-group.jpg" alt="Study Group" className="w-full h-full object-cover object-left" />
-            </div>
-            
-            <div className="absolute top-0 left-0 w-1.5 h-full bg-primary rounded-l-3xl z-10" />
-            
-            <div className="space-y-4 flex-1 relative z-10">
-              <div className="flex items-center gap-2">
-                <Badge variant="outline" className="bg-background rounded-full px-3 shadow-sm border-border">Module {continueTopic.module.order}</Badge>
-                <span className="text-sm font-medium text-muted-foreground">{continueTopic.module.title}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Continue Lesson Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.4 }}
+            className="h-full"
+          >
+            <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-primary/50 transition-all duration-300 hover:shadow-xl p-6 sm:p-8 flex flex-col justify-between h-full gap-6">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
+              
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none z-0 mix-blend-luminosity">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/illustrations/study-group.jpg" alt="Study Group" className="w-full h-full object-cover object-left" />
               </div>
-              <div>
-                <h2 className="text-3xl font-bold group-hover:text-primary transition-colors">{continueTopic.title}</h2>
-                <p className="text-muted-foreground mt-2 max-w-xl text-lg">
-                  {continueTopic.description || "Continue your learning journey."}
-                </p>
-              </div>
-              <div className="w-full max-w-md space-y-2 mt-4">
-                <div className="flex justify-between text-sm font-medium">
-                  <span>Level {stats.level}</span>
-                  <span className="text-primary font-bold">{stats.xpInCurrentLevel} / {stats.xpForNextLevel} XP</span>
+
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-primary/80 rounded-l-3xl z-10" />
+              
+              <div className="space-y-4 relative z-10 flex-1">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="bg-background rounded-full px-3 shadow-sm border-border">Module {continueTopic.module.order}</Badge>
+                  <span className="text-sm font-medium text-muted-foreground">{continueTopic.module.title}</span>
                 </div>
-                <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
-                   <div 
-                      className="h-full bg-primary rounded-full transition-all duration-1000 ease-out" 
-                      style={{ width: `${(stats.xpInCurrentLevel / stats.xpForNextLevel) * 100}%` }} 
-                   />
+                <div>
+                  <h2 className="text-3xl font-bold group-hover:text-primary transition-colors">{continueTopic.title}</h2>
+                  <p className="text-muted-foreground mt-2 text-base">
+                    {continueTopic.description || "Continue your reading and video lessons."}
+                  </p>
+                </div>
+                <div className="w-full space-y-2 mt-4 pt-2">
+                  <div className="flex justify-between text-sm font-medium">
+                    <span>Level {stats.level}</span>
+                    <span className="text-primary font-bold">{stats.xpInCurrentLevel} / {stats.xpForNextLevel} XP</span>
+                  </div>
+                  <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
+                     <div 
+                        className="h-full bg-primary rounded-full transition-all duration-1000 ease-out" 
+                        style={{ width: `${(stats.xpInCurrentLevel / stats.xpForNextLevel) * 100}%` }} 
+                     />
+                  </div>
                 </div>
               </div>
+              
+              <div className="relative z-10 shrink-0 w-full mt-auto">
+                <Link 
+                  href={`/learn/${continueTopic.slug}`}
+                  className={buttonVariants({ size: "lg", className: "w-full justify-center gap-2 group/btn h-12 px-8 text-md rounded-xl shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30" })}
+                >
+                  <Play className="h-5 w-5 fill-current group-hover/btn:translate-x-1 transition-transform" />
+                  Continue Lesson
+                </Link>
+              </div>
             </div>
-            
-            <div className="relative z-10 shrink-0 w-full md:w-auto mt-4 md:mt-0">
-              <Link 
-                href={`/learn/${continueTopic.slug}`}
-                className={buttonVariants({ size: "lg", className: "w-full md:w-auto gap-2 group/btn h-14 px-8 text-md rounded-xl shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30" })}
-              >
-                <Play className="h-5 w-5 fill-current group-hover/btn:translate-x-1 transition-transform" />
-                Continue Lesson
-              </Link>
+          </motion.div>
+
+          {/* Continue Practice Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} 
+            animate={{ opacity: 1, y: 0 }} 
+            transition={{ duration: 0.4, delay: 0.1 }}
+            className="h-full"
+          >
+            <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-card/30 hover:bg-card hover:border-purple-500/50 transition-all duration-300 hover:shadow-xl p-6 sm:p-8 flex flex-col justify-between h-full gap-6">
+              <div className="absolute inset-0 bg-gradient-to-bl from-purple-500/10 via-transparent to-transparent opacity-50 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-0" />
+              
+              <div className="absolute right-0 top-0 bottom-0 w-1/3 opacity-10 group-hover:opacity-20 transition-opacity duration-500 pointer-events-none z-0 mix-blend-luminosity">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/images/illustrations/notion-1.jpg" alt="Coding" className="w-full h-full object-cover object-right" />
+              </div>
+
+              <div className="absolute top-0 left-0 w-1.5 h-full bg-purple-500/80 rounded-l-3xl z-10" />
+              
+              {continuePractice ? (
+                <>
+                  <div className="space-y-4 relative z-10 flex-1">
+                    <div className="flex items-center gap-2">
+                      <Badge variant="outline" className="bg-background rounded-full px-3 shadow-sm border-border text-purple-500 border-purple-500/30">Code Practice</Badge>
+                      <span className="text-sm font-medium text-muted-foreground">{continuePractice.topicName}</span>
+                    </div>
+                    <div>
+                      <h2 className="text-3xl font-bold group-hover:text-purple-500 transition-colors">{continuePractice.exerciseTitle}</h2>
+                      <p className="text-muted-foreground mt-2 text-base">
+                        Put your knowledge to the test by solving this challenge.
+                      </p>
+                    </div>
+                    
+                    <div className="w-full space-y-2 mt-4 pt-2">
+                      <div className="flex justify-between text-sm font-medium">
+                        <span>Module Progress</span>
+                        <span className="text-purple-500 font-bold">{continuePractice.completedCount} / {continuePractice.totalCount} Exercises</span>
+                      </div>
+                      <div className="h-2 w-full bg-secondary/50 rounded-full overflow-hidden">
+                         <div 
+                            className="h-full bg-purple-500 rounded-full transition-all duration-1000 ease-out" 
+                            style={{ width: `${(continuePractice.completedCount / Math.max(continuePractice.totalCount, 1)) * 100}%` }} 
+                         />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="relative z-10 shrink-0 w-full mt-auto">
+                    <Link 
+                      href={`/practice/${continuePractice.exerciseSlug}`}
+                      className={buttonVariants({ variant: "outline", size: "lg", className: "w-full justify-center gap-2 group/btn h-12 px-8 text-md rounded-xl border-purple-500/30 text-foreground/80 hover:text-purple-500 hover:border-purple-500/60 transition-all bg-background/50 backdrop-blur-sm shadow-sm" })}
+                    >
+                      <Code className="h-5 w-5 group-hover/btn:scale-110 transition-transform" />
+                      Jump to Practice
+                    </Link>
+                  </div>
+                </>
+              ) : (
+                <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center">
+                  <div className="h-16 w-16 bg-purple-500/10 rounded-2xl flex items-center justify-center mb-4 text-purple-500">
+                    <Trophy className="h-8 w-8" />
+                  </div>
+                  <h2 className="text-2xl font-bold text-foreground">Practice Completed</h2>
+                  <p className="text-muted-foreground mt-2">
+                    You have solved all available coding exercises! Awesome work.
+                  </p>
+                </div>
+              )}
             </div>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       ) : (
         <div className="group relative overflow-hidden rounded-3xl border border-border/50 bg-card/30 p-8 flex flex-col items-center justify-center text-center gap-4">
            {/* eslint-disable-next-line @next/next/no-img-element */}

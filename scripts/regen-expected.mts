@@ -39,7 +39,7 @@ for (let a = 0; a < args.length; a += 3) {
   if (keyPos < 0) { console.error(`lesson key not found in source: ${lesson}`); process.exit(1); }
   const re = /"expectedOutput": "(?:[^"\\]|\\.)*"/g;
   re.lastIndex = keyPos;
-  let m: RegExpExecArray | null;
+  let m: RegExpExecArray | null = null;
   for (let i = 0; i <= idx; i++) m = re.exec(src);
   if (!m) { console.error(`expectedOutput #${idxStr} not found after ${lesson}`); process.exit(1); }
 

@@ -21,8 +21,7 @@
       {
         "provider": "github",
         "owner": "mahesh-atx",
-        "repo": "Py_Mentor",
-        "releaseType": "release"
+        "repo": "Py_Mentor"
       }
     ],
     "directories": {
