@@ -8,17 +8,33 @@ export default async function PracticeSlugPage({ params }: { params: Promise<{ s
   const { slug } = await params;
 
   const exercise = await CurriculumService.getExerciseBySlug(slug);
-  
+
   if (!exercise) {
     notFound();
   }
 
+  // All exercises in the same topic
+  const allExercises = exercise.topic?.exercises || [];
+
   const session = await auth();
-  let isCompleted = false;
-  if (session?.user?.id) {
-    const history = await SubmissionService.getHistory(session.user.id, exercise.slug);
-    isCompleted = history.some((sub: { status: string }) => sub.status === "passed");
+  let completedSlugs: string[] = [];
+
+  if (session?.user?.id && allExercises.length > 0) {
+    const slugs = allExercises.map((e: any) => e.slug);
+    const history = await SubmissionService.getHistoryBatch(session.user.id, slugs);
+    const passedSet = new Set(
+      history
+        .filter((sub: { status: string }) => sub.status === "passed")
+        .map((sub: { exerciseId: string }) => sub.exerciseId)
+    );
+    completedSlugs = slugs.filter((s: string) => passedSet.has(s));
   }
 
-  return <PracticeClient exercise={exercise} initialIsCompleted={isCompleted} />;
+  return (
+    <PracticeClient
+      exercise={exercise}
+      allExercises={allExercises}
+      initialCompletedSlugs={completedSlugs}
+    />
+  );
 }

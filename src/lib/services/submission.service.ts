@@ -9,4 +9,16 @@ export const SubmissionService = {
       take: 10,
     });
   },
+
+  /** Get all passed submissions for a user across multiple exercise slugs */
+  async getHistoryBatch(userId: string, exerciseSlugs: string[]) {
+    return db.submission.findMany({
+      where: {
+        userId,
+        exerciseId: { in: exerciseSlugs },
+        status: "passed",
+      },
+      select: { exerciseId: true, status: true },
+    });
+  },
 };
