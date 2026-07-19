@@ -438,6 +438,7 @@ function PracticeClientInner({
                                           <div className="pt-3">
                                             <ExercisePrompt
                                               prompt={ex.prompt || ex.description}
+                                              exerciseTitle={ex.title}
                                               testCase={getFirstExerciseTestCase(ex.testCases)}
                                             />
                                           </div>
@@ -569,6 +570,7 @@ function PracticeClientInner({
                                   <div className="px-4 pb-3">
                                     <ExercisePrompt
                                       prompt={ex.prompt || ex.description}
+                                      exerciseTitle={ex.title}
                                       testCase={getFirstExerciseTestCase(ex.testCases)}
                                     />
                                   </div>

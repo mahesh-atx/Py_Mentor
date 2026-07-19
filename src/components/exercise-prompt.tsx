@@ -12,6 +12,7 @@ import {
 interface ExercisePromptProps {
   prompt: string;
   title?: string;
+  exerciseTitle?: string;
   testCase?: ExerciseTestCase | null;
 }
 
@@ -59,8 +60,8 @@ function SectionTitle({
  * Renders all legacy and new exercises with one beginner-friendly structure:
  * Task, TODO, Sample Input (when needed), and Expected Output.
  */
-export function ExercisePrompt({ prompt, title, testCase = null }: ExercisePromptProps) {
-  const guide = buildExerciseGuide(prompt, testCase);
+export function ExercisePrompt({ prompt, title, exerciseTitle, testCase = null }: ExercisePromptProps) {
+  const guide = buildExerciseGuide(prompt, testCase, exerciseTitle || title);
 
   return (
     <div className="space-y-5">
