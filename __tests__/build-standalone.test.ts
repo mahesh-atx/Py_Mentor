@@ -16,6 +16,14 @@ import * as path from "path";
 const ROOT = path.join(__dirname, "..");
 const DIST = path.join(ROOT, "dist");
 const STANDALONE = path.join(ROOT, ".next", "standalone");
+const SOURCE_PACKAGE = JSON.parse(
+  fs.readFileSync(path.join(ROOT, "package.json"), "utf-8")
+);
+
+// Git may check source files out as CRLF on Windows while an older/generated
+// dist artifact contains LF. Their text is equivalent, so integrity checks
+// should compare normalized content rather than platform-specific line endings.
+const normalizeEol = (content: string) => content.replace(/\r\n/g, "\n");
 
 // Build-output tests only run after `npm run build:npm` — skip in fresh checkouts
 const hasStandalone = fs.existsSync(STANDALONE);
@@ -137,7 +145,9 @@ describe.skipIf(!hasDist)("Dist Directory (npm package)", () => {
 
     const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
     expect(pkg.name).toBe("pymentor");
-    expect(pkg.version).toBe("1.0.0");
+    // Never hard-code a release number here: prepare-dist copies the current
+    // source package version into the generated package.
+    expect(pkg.version).toBe(SOURCE_PACKAGE.version);
     expect(pkg.bin).toBeDefined();
     expect(pkg.bin.pymentor).toBe("./bin/cli.js");
     expect(pkg.keywords).toContain("python");
@@ -167,7 +177,7 @@ describe.skipIf(!hasDist)("File Integrity", () => {
       path.join(DIST, "prisma", "schema.prisma"),
       "utf-8"
     );
-    expect(distSchema).toBe(srcSchema);
+    expect(normalizeEol(distSchema)).toBe(normalizeEol(srcSchema));
   });
 
   it("migration SQL in dist matches source", () => {
@@ -179,7 +189,7 @@ describe.skipIf(!hasDist)("File Integrity", () => {
       path.join(DIST, "prisma", "migrations", "00000000000000_init", "migration.sql"),
       "utf-8"
     );
-    expect(distMigration).toBe(srcMigration);
+    expect(normalizeEol(distMigration)).toBe(normalizeEol(srcMigration));
   });
 
   it("seed.ts in dist matches source", () => {
@@ -191,7 +201,7 @@ describe.skipIf(!hasDist)("File Integrity", () => {
       path.join(DIST, "prisma", "seed.ts"),
       "utf-8"
     );
-    expect(distSeed).toBe(srcSeed);
+    expect(normalizeEol(distSeed)).toBe(normalizeEol(srcSeed));
   });
 
   it("static assets are non-empty", () => {
