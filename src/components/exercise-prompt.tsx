@@ -3,7 +3,7 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { CheckSquare2, Keyboard, Target, Terminal } from "lucide-react";
+import { Keyboard, Terminal } from "lucide-react";
 import {
   buildExerciseGuide,
   type ExerciseTestCase,
@@ -18,13 +18,13 @@ interface ExercisePromptProps {
 
 const markdownComponents = {
   p: ({ children, ...props }: React.ComponentProps<"p">) => (
-    <p className="my-1.5" {...props}>{children}</p>
+    <p className="my-0" {...props}>{children}</p>
   ),
   ul: ({ children, ...props }: React.ComponentProps<"ul">) => (
-    <ul className="my-2 list-disc space-y-1 pl-5" {...props}>{children}</ul>
+    <ul className="my-1 list-disc space-y-0.5 pl-5" {...props}>{children}</ul>
   ),
   ol: ({ children, ...props }: React.ComponentProps<"ol">) => (
-    <ol className="my-2 list-decimal space-y-1 pl-5" {...props}>{children}</ol>
+    <ol className="my-1 list-decimal space-y-0.5 pl-5" {...props}>{children}</ol>
   ),
   pre: ({ children, ...props }: React.ComponentProps<"pre">) => (
     <pre className="my-2 overflow-x-auto rounded-lg border border-border/50 bg-muted/60 p-3 text-xs" {...props}>
@@ -57,14 +57,14 @@ function SectionTitle({
 }
 
 /**
- * Renders all legacy and new exercises with one beginner-friendly structure:
- * Task, TODO, Sample Input (when needed), and Expected Output.
+ * Renders all legacy and new exercises as a compact description, numbered
+ * steps, Sample Input (when needed), and Expected Output.
  */
 export function ExercisePrompt({ prompt, title, exerciseTitle, testCase = null }: ExercisePromptProps) {
   const guide = buildExerciseGuide(prompt, testCase, exerciseTitle || title);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3.5">
       {title && (
         <div className="flex items-center gap-2 pb-2 border-b border-border/20">
           <div className="p-1.5 rounded-md bg-primary/10 border border-primary/20">
@@ -74,50 +74,44 @@ export function ExercisePrompt({ prompt, title, exerciseTitle, testCase = null }
         </div>
       )}
 
-      <section className="space-y-2">
-        <SectionTitle icon={<Target className="h-4 w-4" />}>Task</SectionTitle>
-        <div className="text-sm leading-relaxed text-foreground/90">
-          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-            {guide.task}
-          </ReactMarkdown>
-        </div>
-      </section>
+      <div className="text-sm leading-snug text-foreground/90">
+        <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+          {guide.task}
+        </ReactMarkdown>
+      </div>
 
-      <section className="space-y-2">
-        <SectionTitle icon={<CheckSquare2 className="h-4 w-4" />}>TODO</SectionTitle>
-        <ol className="space-y-2">
-          {guide.todos.map((todo, index) => (
-            <li key={`${index}-${todo}`} className="flex items-start gap-3 text-sm leading-relaxed">
-              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary">
-                {index + 1}
-              </span>
-              <div className="min-w-0 text-foreground/90">
-                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
-                  {todo}
-                </ReactMarkdown>
-              </div>
-            </li>
-          ))}
-        </ol>
-      </section>
+      <ol className="space-y-1.5">
+        {guide.todos.map((todo, index) => (
+          <li key={`${index}-${todo}`} className="flex items-start gap-2 text-sm leading-snug">
+            <span className="mt-px flex h-[18px] w-[18px] shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-[9px] font-bold text-primary">
+              {index + 1}
+            </span>
+            <div className="min-w-0 text-foreground/90">
+              <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                {todo}
+              </ReactMarkdown>
+            </div>
+          </li>
+        ))}
+      </ol>
 
       {guide.sampleInput !== null && (
-        <section className="space-y-2">
-          <SectionTitle icon={<Keyboard className="h-4 w-4" />}>Sample Input</SectionTitle>
-          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-muted/60 p-3 font-mono text-xs leading-relaxed text-foreground">
+        <section className="space-y-1.5">
+          <SectionTitle icon={<Keyboard className="h-3.5 w-3.5" />}>Sample Input</SectionTitle>
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-muted/60 p-2.5 font-mono text-xs leading-snug text-foreground">
             {guide.sampleInput}
           </pre>
         </section>
       )}
 
-      <section className="space-y-2">
-        <SectionTitle icon={<Terminal className="h-4 w-4" />}>Expected Output</SectionTitle>
+      <section className="space-y-1.5">
+        <SectionTitle icon={<Terminal className="h-3.5 w-3.5" />}>Expected Output</SectionTitle>
         {guide.outputIsVariable ? (
           <p className="rounded-lg border border-border/50 bg-muted/40 p-3 text-xs text-muted-foreground">
             Output may vary. Your program must run successfully and produce the requested result.
           </p>
         ) : guide.expectedOutput !== null ? (
-          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-[#1E1E1E] p-3 font-mono text-xs leading-relaxed text-[#CCCCCC]">
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-[#1E1E1E] p-2.5 font-mono text-xs leading-snug text-[#CCCCCC]">
             {guide.expectedOutput}
           </pre>
         ) : (
