@@ -11,6 +11,20 @@ const nextConfig: NextConfig = {
 
   serverExternalPackages: ["better-sqlite3", "@prisma/adapter-better-sqlite3"],
 
+  // Interactive Python input() uses SharedArrayBuffer + Atomics in a worker.
+  // These headers isolate the page so the worker can pause without blocking UI.
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          { key: "Cross-Origin-Opener-Policy", value: "same-origin" },
+          { key: "Cross-Origin-Embedder-Policy", value: "require-corp" },
+        ],
+      },
+    ];
+  },
+
   experimental: {
     staleTimes: {
       dynamic: 30,
