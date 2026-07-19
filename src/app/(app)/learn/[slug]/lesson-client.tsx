@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useMemo, useCallback, memo } from "react";
 import { motion } from "framer-motion";
-import { Bot, ChevronLeft, ChevronRight, CheckCircle2, Copy, ArrowDown, Play, Terminal as TerminalIcon, ChevronDown, PanelRight, BrainCircuit, Code2, BookOpen } from "lucide-react";
+import { Bot, ChevronLeft, ChevronRight, CheckCircle2, Copy, ArrowDown, Play, ChevronDown, PanelRight, BrainCircuit, Code2, BookOpen } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -18,7 +18,8 @@ import Link from "next/link";
 import { remarkAlerts } from "@/lib/remark-alerts";
 import { Info, AlertTriangle, Lightbulb, ShieldAlert, Shield } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
-import { usePyodide } from "@/lib/hooks/usePyodide";
+import { useInteractivePython } from "@/lib/hooks/useInteractivePython";
+import { PythonTerminal } from "@/components/python-terminal";
 import { MentorContextProvider } from "@/components/mentor-context";
 
 export interface NavigationTopic {
@@ -165,13 +166,11 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
   const language = "python";
   const DEFAULT_CODE = `# Practice the code from the lesson here\n# Write Python and click Run ▸\n`;
   const [code, setCode] = useState(DEFAULT_CODE);
-  const [output, setOutput] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
   const [showEditor, setShowEditor] = useState(false);
 
   // ── Lazy-load Pyodide only when editor is opened ──────────────────
   const [pyodideEnabled, setPyodideEnabled] = useState(false);
-  const { isPyodideLoading, runPython } = usePyodide(pyodideEnabled);
+  const terminal = useInteractivePython(pyodideEnabled);
 
   // When user opens editor, start loading Pyodide (only if Python)
   useEffect(() => {
@@ -185,27 +184,9 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
     setCode(codeStr);
   }, []);
 
-  const runCode = useCallback(async () => {
-    setIsRunning(true);
-    setOutput("Executing...\n");
-    
-    try {
-      // Python Pyodide evaluation
-      const result = await runPython(code);
-      
-      if (result.error) {
-        setOutput((result.output ? result.output + "\n" : "") + "Error: " + result.error);
-      } else if (result.output) {
-        setOutput(result.output);
-      } else {
-        setOutput("Execution finished without output.");
-      }
-    } catch (error) {
-      setOutput(`Internal Error: Failed to execute code.\n${error}`);
-    } finally {
-      setIsRunning(false);
-    }
-  }, [code, runPython, language]);
+  const runCode = useCallback(() => {
+    void terminal.runInteractive(code);
+  }, [code, terminal.runInteractive]);
 
   useEffect(() => {
     // Only show scroll hint if content is actually scrollable
@@ -345,7 +326,10 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
             <Button 
               variant="outline" 
               size="sm" 
-              onClick={() => setShowEditor(!showEditor)} 
+              onClick={() => {
+                if (showEditor && terminal.isRunning) terminal.stop();
+                setShowEditor(!showEditor);
+              }}
               className="hidden lg:flex gap-2"
             >
               <PanelRight className="h-4 w-4" />
@@ -529,16 +513,14 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
           size="sm" 
           className="h-7 gap-1.5 px-3 text-xs" 
           onClick={runCode} 
-          disabled={isRunning || isPyodideLoading}
+          disabled={terminal.isRunning || terminal.isLoading}
         >
-          {isPyodideLoading ? (
-             <div className="h-3 w-3 rounded-full border-2 border-current border-t-transparent animate-spin" />
-          ) : isRunning ? (
+          {terminal.isLoading || terminal.isRunning ? (
             <div className="h-3 w-3 rounded-full border-2 border-current border-t-transparent animate-spin" />
           ) : (
             <Play className="h-3 w-3 fill-current" />
           )}
-          {isPyodideLoading ? "Loading..." : isRunning ? "Running..." : "Run"}
+          {terminal.isLoading ? "Loading..." : terminal.isRunning ? "Running..." : "Run"}
         </Button>
       </div>
       <div className="flex-1 relative">
@@ -565,19 +547,12 @@ export function LessonClient({ topic, lessonId, lessonContent, prevTopic, nextTo
   );
 
   const renderConsole = () => (
-    <div className="flex flex-col h-full w-full bg-[#1E1E1E]">
-      <div className="h-10 bg-[#2D2D2D] border-b border-[#404040] flex items-center px-4 gap-2 shrink-0">
-        <TerminalIcon className="h-4 w-4 text-[#858585]" />
-        <span className="text-xs font-semibold text-[#CCCCCC] tracking-wider uppercase">Terminal</span>
-      </div>
-      <div className="flex-1 overflow-y-auto overscroll-contain p-4 font-mono text-sm whitespace-pre-wrap text-[#CCCCCC]">
-        {output ? (
-          <span>{output}</span>
-        ) : (
-          <span className="text-[#858585] italic">Ready. Click "Run" to execute script.</span>
-        )}
-      </div>
-    </div>
+    <PythonTerminal
+      output={terminal.output}
+      status={terminal.status}
+      onInput={terminal.submitInput}
+      onStop={terminal.stop}
+    />
   );
 
   const mentorContextBase = {

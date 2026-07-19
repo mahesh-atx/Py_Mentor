@@ -140,7 +140,7 @@ npm run build:npm
 ## Features
 
 - **📖 Structured Curriculum** — 14 modules across 3 phases: Fundamentals → Data Structures → Object-Oriented Programming
-- **💻 Live Code Editor** — Monaco-powered editor with instant Python execution via Pyodide (no server required)
+- **💻 Live Code Editor** — Monaco-powered editor with instant Python execution via Pyodide and a real interactive terminal: run first, then answer each `input()` prompt (no server required)
 - **🧪 Exercises & Test Cases** — 80+ exercises at four difficulty tiers with automated pass/fail checking
 - **❓ Quizzes** — Multiple-choice quizzes with XP rewards
 - **🏗️ Projects** — Guided capstone projects with requirements and milestones

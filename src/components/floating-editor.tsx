@@ -2,10 +2,11 @@
 
 import { useState } from "react";
 import { Editor } from "@monaco-editor/react";
-import { Play, Terminal as TerminalIcon, X, Code2 } from "lucide-react";
+import { Play, X, Code2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
-import { usePyodide } from "@/lib/hooks/usePyodide";
+import { useInteractivePython } from "@/lib/hooks/useInteractivePython";
+import { PythonTerminal } from "@/components/python-terminal";
 import { usePlatform } from "@/components/platform-provider";
 
 export function FloatingEditor() {
@@ -15,30 +16,10 @@ export function FloatingEditor() {
   const DEFAULT_CODE = `# Quick Practice Editor\n# Write your Python code here and run it instantly.\n\ndef hello_world():\n    print("Ready to code!")\n\nhello_world()\n`;
 
   const [code, setCode] = useState(DEFAULT_CODE);
-  const [output, setOutput] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
-  
-  // We only enable Pyodide if Python is the language.
-  const { isPyodideLoading, runPython } = usePyodide(isOpen);
+  const terminal = useInteractivePython(isOpen);
 
-  const runCode = async () => {
-    setIsRunning(true);
-    setOutput("Executing...\n");
-    
-    try {
-      const result = await runPython(code);
-      if (result.error) {
-        setOutput((prev) => prev + result.output + "\nError: " + result.error);
-      } else if (result.output) {
-        setOutput(result.output);
-      } else {
-        setOutput("Execution finished without output.");
-      }
-    } catch (error) {
-      setOutput(`Internal Error: Failed to execute code.\n${error}`);
-    } finally {
-      setIsRunning(false);
-    }
+  const runCode = () => {
+    void terminal.runInteractive(code);
   };
 
   return (
@@ -87,15 +68,13 @@ export function FloatingEditor() {
             </div>
             
             <div className="flex items-center gap-3">
-              <Button variant="default" size="sm" className="gap-2" onClick={runCode} disabled={isRunning || isPyodideLoading}>
-                {isPyodideLoading ? (
-                   <div className="h-3.5 w-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
-                ) : isRunning ? (
+              <Button variant="default" size="sm" className="gap-2" onClick={runCode} disabled={terminal.isRunning || terminal.isLoading}>
+                {terminal.isLoading || terminal.isRunning ? (
                   <div className="h-3.5 w-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
                 ) : (
                   <Play className="h-3.5 w-3.5 fill-current" />
                 )}
-                {isPyodideLoading ? "Loading..." : isRunning ? "Running..." : "Run"}
+                {terminal.isLoading ? "Loading..." : terminal.isRunning ? "Running..." : "Run"}
               </Button>
               <div className="w-px h-6 bg-border mx-1" />
               <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} className="rounded-full h-8 w-8">
@@ -135,19 +114,14 @@ export function FloatingEditor() {
 
               <ResizableHandle withHandle className="w-1.5 bg-border hover:bg-primary/50 transition-colors" />
 
-              {/* Console Panel */}
-              <ResizablePanel defaultSize={35} minSize={20} className="bg-[#1E1E1E] flex flex-col">
-                <div className="h-9 bg-[#2D2D2D] border-b border-[#404040] flex items-center px-4 gap-2">
-                  <TerminalIcon className="h-4 w-4 text-[#858585]" />
-                  <span className="text-xs font-semibold text-[#CCCCCC] tracking-wider uppercase">Terminal</span>
-                </div>
-                <div className="flex-1 overflow-y-auto p-4 font-mono text-sm whitespace-pre-wrap text-[#CCCCCC]">
-                  {output ? (
-                    <span>{output}</span>
-                  ) : (
-                    <span className="text-[#858585] italic">Ready. Click "Run" to execute script.</span>
-                  )}
-                </div>
+              {/* Interactive terminal: input appears only when Python calls input(). */}
+              <ResizablePanel defaultSize={35} minSize={20} className="bg-[#1E1E1E]">
+                <PythonTerminal
+                  output={terminal.output}
+                  status={terminal.status}
+                  onInput={terminal.submitInput}
+                  onStop={terminal.stop}
+                />
               </ResizablePanel>
 
             </ResizablePanelGroup>

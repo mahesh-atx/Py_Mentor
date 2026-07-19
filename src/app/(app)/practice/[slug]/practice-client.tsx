@@ -16,7 +16,8 @@ import { useRouter } from "next/navigation";
 import { outputsMatch } from "@/lib/output-match";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ExercisePrompt } from "@/components/exercise-prompt";
-import { usePyodide } from "@/lib/hooks/usePyodide";
+import { useInteractivePython } from "@/lib/hooks/useInteractivePython";
+import { PythonTerminal } from "@/components/python-terminal";
 import {
   MentorContextProvider,
   useMentorContextUpdater,
@@ -64,7 +65,7 @@ function PracticeClientInner({
 }) {
   const router = useRouter();
   const config = usePlatform();
-  const { isPyodideLoading, runPython } = usePyodide(true);
+  const terminal = useInteractivePython(true);
   const pushCodeToMentor = useMentorContextUpdater();
   const [showResults, setShowResults] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -108,11 +109,15 @@ function PracticeClientInner({
   );
   const [codeStore, setCodeStore] = useState<Record<string, string>>({});
   const [outputStore, setOutputStore] = useState<Record<string, string>>({});
+  const [terminalExerciseSlug, setTerminalExerciseSlug] = useState<string | null>(null);
 
   const activeExercise = allExercises[activeIndex];
   const activeTopicName = activeExercise?.topicName || "";
   const code = codeStore[activeExercise?.slug] ?? activeExercise?.starterCode ?? "";
-  const output = outputStore[activeExercise?.slug] ?? "";
+  const savedOutput = outputStore[activeExercise?.slug] ?? "";
+  const output = terminalExerciseSlug === activeExercise?.slug
+    ? terminal.output
+    : savedOutput;
 
   const setCode = useCallback(
     (val: string) => {
@@ -126,8 +131,8 @@ function PracticeClientInner({
   }, [code, pushCodeToMentor]);
 
   // ── Run / Submit ─────────────────────────────────────────────────
-  const [isRunning, setIsRunning] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mobileTab, setMobileTab] = useState("list");
 
   const parsedTCs = activeExercise?.testCases
     ? typeof activeExercise.testCases === "string"
@@ -138,16 +143,18 @@ function PracticeClientInner({
 
   const runCode = async () => {
     if (!activeExercise) return;
-    setIsRunning(true);
-    setOutputStore((prev) => ({ ...prev, [activeExercise.slug]: "Executing...\n" }));
-    const result = await runPython(code, tc?.input || "");
+    const slug = activeExercise.slug;
+    setMobileTab("console");
+    setTerminalExerciseSlug(slug);
+    setOutputStore((prev) => ({ ...prev, [slug]: "" }));
+    const result = await terminal.runInteractive(code);
     setOutputStore((prev) => ({
       ...prev,
-      [activeExercise.slug]: result.error
-        ? `Error: ${result.error}`
+      [slug]: result.error
+        ? `${result.output}${result.output && !result.output.endsWith("\n") ? "\n" : ""}Error: ${result.error}`
         : result.output || "Execution finished without output.",
     }));
-    setIsRunning(false);
+    setTerminalExerciseSlug(null);
   };
 
   const submitCode = async () => {
@@ -169,7 +176,9 @@ function PracticeClientInner({
       return;
     }
 
-    const result = await runPython(code, tc.input || "");
+    // Grading is intentionally non-interactive and always uses the official
+    // test input, while Run behaves like a real terminal.
+    const result = await terminal.runAutomated(code, tc.input || "");
     const actual = result.output || "";
     const expected = tc.expectedOutput || "";
     const passed = outputsMatch(actual, expected) && !result.error;
@@ -222,6 +231,8 @@ function PracticeClientInner({
   };
 
   const toggleAccordion = (idx: number) => {
+    if (terminal.isRunning) terminal.stop();
+    setTerminalExerciseSlug(null);
     if (accordionOpen === idx) {
       setAccordionOpen(null);
     } else {
@@ -319,14 +330,14 @@ function PracticeClientInner({
                 </Button>
               )}
               <Button variant="secondary" size="sm" className="gap-1.5" onClick={runCode}
-                disabled={isRunning || isSubmitting || isPyodideLoading || !activeExercise}>
-                {isPyodideLoading || isRunning ? (
+                disabled={terminal.isRunning || isSubmitting || terminal.isLoading || !activeExercise}>
+                {terminal.isLoading || terminal.isRunning ? (
                   <div className="h-3.5 w-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
                 ) : <Play className="h-3.5 w-3.5" />}
-                <span className="hidden sm:inline">{isPyodideLoading ? "Loading..." : "Run"}</span>
+                <span className="hidden sm:inline">{terminal.isLoading ? "Loading..." : "Run"}</span>
               </Button>
               <Button size="sm" className="gap-1.5 bg-success hover:bg-success/90 text-success-foreground" onClick={submitCode}
-                disabled={isRunning || isSubmitting || isPyodideLoading || !activeExercise}>
+                disabled={terminal.isRunning || isSubmitting || terminal.isLoading || !activeExercise}>
                 {isSubmitting ? (
                   <div className="h-3.5 w-3.5 rounded-full border-2 border-current border-t-transparent animate-spin" />
                 ) : <Send className="h-3.5 w-3.5" />}
@@ -489,16 +500,14 @@ function PracticeClientInner({
 
                   <ResizableHandle withHandle className="h-1.5 bg-[#404040] hover:bg-primary/50 transition-colors" />
 
-                  <ResizablePanel defaultSize={30} minSize={15} className="bg-[#1E1E1E] flex flex-col">
-                    <div className="h-10 bg-[#2D2D2D] border-b border-[#404040] flex items-center px-4 gap-2">
-                      <TerminalIcon className="h-4 w-4 text-[#858585]" />
-                      <span className="text-xs font-semibold text-[#CCCCCC] tracking-wider uppercase">Console</span>
-                    </div>
-                    <div className="flex-1 overflow-y-auto p-4 font-mono text-sm whitespace-pre-wrap text-[#CCCCCC]">
-                      {output ? <span>{output}</span> : (
-                        <span className="text-[#858585] italic">Click "Run" to test, or "Submit" to validate against the test case.</span>
-                      )}
-                    </div>
+                  <ResizablePanel defaultSize={30} minSize={15} className="bg-[#1E1E1E]">
+                    <PythonTerminal
+                      output={output}
+                      status={terminalExerciseSlug === activeExercise?.slug ? terminal.status : "idle"}
+                      onInput={terminal.submitInput}
+                      onStop={terminal.stop}
+                      emptyMessage={'Click "Run" for an interactive program, or "Submit" to grade it.'}
+                    />
                   </ResizablePanel>
                 </ResizablePanelGroup>
               </ResizablePanel>
@@ -507,7 +516,7 @@ function PracticeClientInner({
 
           {/* ── Mobile ── */}
           <div className="lg:hidden flex flex-col flex-1 overflow-hidden">
-            <Tabs defaultValue="list" className="h-full flex flex-col">
+            <Tabs value={mobileTab} onValueChange={setMobileTab} className="h-full flex flex-col">
               <div className="px-4 border-b shrink-0 bg-background">
                 <TabsList className="bg-transparent border-none p-0 h-12 w-full justify-start gap-4 rounded-none">
                   <TabsTrigger value="list" className="data-[state=active]:bg-transparent rounded-none px-0 h-full font-medium text-xs">Exercises</TabsTrigger>
@@ -578,8 +587,14 @@ function PracticeClientInner({
                   options={{ minimap: { enabled: false }, fontSize: 13, padding: { top: 16 } }} />
               </TabsContent>
 
-              <TabsContent value="console" className="flex-1 m-0 p-4 outline-none overflow-y-auto bg-[#1E1E1E] font-mono text-sm whitespace-pre-wrap text-[#CCCCCC]">
-                {output ? <span>{output}</span> : <span className="text-[#858585] italic">Run your code to see output...</span>}
+              <TabsContent value="console" className="flex-1 m-0 p-0 outline-none overflow-hidden bg-[#1E1E1E]">
+                <PythonTerminal
+                  output={output}
+                  status={terminalExerciseSlug === activeExercise?.slug ? terminal.status : "idle"}
+                  onInput={terminal.submitInput}
+                  onStop={terminal.stop}
+                  emptyMessage="Run your code to start the interactive terminal."
+                />
               </TabsContent>
             </Tabs>
           </div>
