@@ -72,7 +72,11 @@ function readInteractiveInput() {
   if (state === 2) throw new Error("Execution stopped by user");
 
   const length = Atomics.load(inputControl, 1);
-  const value = new TextDecoder().decode(inputBytes.subarray(0, length));
+  // Browser TextDecoder rejects BufferSource views backed directly by a
+  // SharedArrayBuffer. Copy into a normal ArrayBuffer before decoding; without
+  // this Chromium turns the thrown TypeError into Python's OSError [Errno 29].
+  const safeBytes = Uint8Array.from(inputBytes.subarray(0, length));
+  const value = new TextDecoder().decode(safeBytes);
   // Echo terminal input exactly once, just like a normal terminal.
   emitOutput(`${value}\n`);
   return `${value}\n`;

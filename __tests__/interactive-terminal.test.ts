@@ -74,6 +74,11 @@ describe("interactive Pyodide worker integration", () => {
     expect(worker).toContain("String.fromCodePoint");
   });
 
+  it("copies shared input before TextDecoder to avoid Chromium Errno 29", () => {
+    expect(worker).toContain("Uint8Array.from(inputBytes.subarray(0, length))");
+    expect(worker).not.toContain("decode(inputBytes.subarray(0, length))");
+  });
+
   it("uses local Pyodide first and retains the CDN fallback", () => {
     expect(worker.indexOf("LOCAL_PYODIDE_BASE")).toBeLessThan(worker.indexOf("CDN_PYODIDE_BASE"));
     expect(worker).toContain("cdn.jsdelivr.net");
