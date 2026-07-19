@@ -3,19 +3,67 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Terminal } from "lucide-react";
+import { CheckSquare2, Keyboard, Target, Terminal } from "lucide-react";
+import {
+  buildExerciseGuide,
+  type ExerciseTestCase,
+} from "@/lib/exercise-format";
 
 interface ExercisePromptProps {
   prompt: string;
   title?: string;
+  testCase?: ExerciseTestCase | null;
+}
+
+const markdownComponents = {
+  p: ({ children, ...props }: React.ComponentProps<"p">) => (
+    <p className="my-1.5" {...props}>{children}</p>
+  ),
+  ul: ({ children, ...props }: React.ComponentProps<"ul">) => (
+    <ul className="my-2 list-disc space-y-1 pl-5" {...props}>{children}</ul>
+  ),
+  ol: ({ children, ...props }: React.ComponentProps<"ol">) => (
+    <ol className="my-2 list-decimal space-y-1 pl-5" {...props}>{children}</ol>
+  ),
+  pre: ({ children, ...props }: React.ComponentProps<"pre">) => (
+    <pre className="my-2 overflow-x-auto rounded-lg border border-border/50 bg-muted/60 p-3 text-xs" {...props}>
+      {children}
+    </pre>
+  ),
+  code: ({ className, children, ...props }: React.ComponentProps<"code">) => (
+    <code
+      className={className || "text-xs bg-muted px-1.5 py-0.5 rounded border border-border/50 font-mono text-primary"}
+      {...props}
+    >
+      {children}
+    </code>
+  ),
+};
+
+function SectionTitle({
+  icon,
+  children,
+}: {
+  icon: React.ReactNode;
+  children: React.ReactNode;
+}) {
+  return (
+    <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-foreground/80">
+      <span className="text-primary">{icon}</span>
+      {children}
+    </h3>
+  );
 }
 
 /**
- * ExercisePrompt renders the markdown prompt content with a terminal header.
+ * Renders all legacy and new exercises with one beginner-friendly structure:
+ * Task, TODO, Sample Input (when needed), and Expected Output.
  */
-export function ExercisePrompt({ prompt, title }: ExercisePromptProps) {
+export function ExercisePrompt({ prompt, title, testCase = null }: ExercisePromptProps) {
+  const guide = buildExerciseGuide(prompt, testCase);
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-5">
       {title && (
         <div className="flex items-center gap-2 pb-2 border-b border-border/20">
           <div className="p-1.5 rounded-md bg-primary/10 border border-primary/20">
@@ -24,70 +72,59 @@ export function ExercisePrompt({ prompt, title }: ExercisePromptProps) {
           <span className="text-sm font-bold text-foreground">{title}</span>
         </div>
       )}
-      <div className="prose prose-neutral dark:prose-invert max-w-none 
-        prose-headings:font-semibold prose-headings:text-base prose-headings:mt-6 prose-headings:mb-2
-        prose-p:text-sm prose-p:leading-relaxed prose-p:text-foreground/90
-        prose-code:text-xs prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:border prose-code:border-border/50
-        prose-pre:bg-muted/80 prose-pre:border prose-pre:border-border/50 prose-pre:rounded-lg
-        prose-li:text-sm prose-li:leading-relaxed
-        prose-strong:text-foreground
-        prose-hr:my-4 prose-hr:border-border/50
-      ">
-        <ReactMarkdown
-          remarkPlugins={[remarkGfm]}
-          components={{
-            h2: ({ children, ...props }) => (
-              <h2 className="flex items-center gap-2 text-base font-semibold mt-6 mb-2 pb-1 border-b border-border/30" {...props}>
-                {children}
-              </h2>
-            ),
-            h3: ({ children, ...props }) => (
-              <h3 className="flex items-center gap-2 text-sm font-semibold mt-4 mb-2 text-foreground" {...props}>
-                <span className="w-1 h-4 rounded-full bg-primary/60 inline-block" />
-                {children}
-              </h3>
-            ),
-            code: ({ className, children, ...props }: any) => {
-              const isInline = !className;
-              if (isInline) {
-                return (
-                  <code className="text-xs bg-muted px-1.5 py-0.5 rounded border border-border/50 font-mono text-primary" {...props}>
-                    {children}
-                  </code>
-                );
-              }
-              return <code className={className} {...props}>{children}</code>;
-            },
-            pre: ({ children, ...props }: any) => (
-              <div className="relative group">
-                <div className="absolute top-0 right-0 px-3 py-1 text-[10px] text-muted-foreground bg-muted/90 rounded-bl-lg rounded-tr-lg border-l border-b border-border/30 font-mono">
-                  Python
-                </div>
-                <pre className="bg-muted/80 border border-border/50 rounded-lg p-4 overflow-x-auto text-sm font-mono leading-relaxed" {...props}>
-                  {children}
-                </pre>
+
+      <section className="space-y-2">
+        <SectionTitle icon={<Target className="h-4 w-4" />}>Task</SectionTitle>
+        <div className="text-sm leading-relaxed text-foreground/90">
+          <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+            {guide.task}
+          </ReactMarkdown>
+        </div>
+      </section>
+
+      <section className="space-y-2">
+        <SectionTitle icon={<CheckSquare2 className="h-4 w-4" />}>TODO</SectionTitle>
+        <ol className="space-y-2">
+          {guide.todos.map((todo, index) => (
+            <li key={`${index}-${todo}`} className="flex items-start gap-3 text-sm leading-relaxed">
+              <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-[10px] font-bold text-primary">
+                {index + 1}
+              </span>
+              <div className="min-w-0 text-foreground/90">
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                  {todo}
+                </ReactMarkdown>
               </div>
-            ),
-            blockquote: ({ children, ...props }: any) => (
-              <blockquote className="border-l-4 border-primary/40 bg-primary/5 rounded-r-lg px-4 py-3 my-3 text-sm" {...props}>
-                {children}
-              </blockquote>
-            ),
-            ul: ({ children, ...props }: any) => (
-              <ul className="space-y-1.5 my-3" {...props}>{children}</ul>
-            ),
-            li: ({ children, ...props }: any) => (
-              <li className="flex items-start gap-2 text-sm" {...props}>
-                <span className="h-1.5 w-1.5 rounded-full bg-primary/40 mt-2 shrink-0" />
-                <span>{children}</span>
-              </li>
-            ),
-            hr: () => <hr className="my-4 border-border/30" />,
-          }}
-        >
-          {prompt}
-        </ReactMarkdown>
-      </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      {guide.sampleInput !== null && (
+        <section className="space-y-2">
+          <SectionTitle icon={<Keyboard className="h-4 w-4" />}>Sample Input</SectionTitle>
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-muted/60 p-3 font-mono text-xs leading-relaxed text-foreground">
+            {guide.sampleInput}
+          </pre>
+        </section>
+      )}
+
+      <section className="space-y-2">
+        <SectionTitle icon={<Terminal className="h-4 w-4" />}>Expected Output</SectionTitle>
+        {guide.outputIsVariable ? (
+          <p className="rounded-lg border border-border/50 bg-muted/40 p-3 text-xs text-muted-foreground">
+            Output may vary. Your program must run successfully and produce the requested result.
+          </p>
+        ) : guide.expectedOutput !== null ? (
+          <pre className="overflow-x-auto whitespace-pre-wrap rounded-lg border border-border/50 bg-[#1E1E1E] p-3 font-mono text-xs leading-relaxed text-[#CCCCCC]">
+            {guide.expectedOutput}
+          </pre>
+        ) : (
+          <p className="rounded-lg border border-border/50 bg-muted/40 p-3 text-xs text-muted-foreground">
+            No printed output is required. Complete the behavior described above.
+          </p>
+        )}
+      </section>
     </div>
   );
 }

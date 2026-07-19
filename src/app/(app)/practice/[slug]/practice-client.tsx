@@ -14,6 +14,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { outputsMatch } from "@/lib/output-match";
+import { getFirstExerciseTestCase } from "@/lib/exercise-format";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { ExercisePrompt } from "@/components/exercise-prompt";
 import { useInteractivePython } from "@/lib/hooks/useInteractivePython";
@@ -134,12 +135,7 @@ function PracticeClientInner({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mobileTab, setMobileTab] = useState("list");
 
-  const parsedTCs = activeExercise?.testCases
-    ? typeof activeExercise.testCases === "string"
-      ? JSON.parse(activeExercise.testCases)
-      : activeExercise.testCases
-    : [];
-  const tc = Array.isArray(parsedTCs) ? parsedTCs[0] ?? null : null;
+  const tc = getFirstExerciseTestCase(activeExercise?.testCases);
 
   const runCode = async () => {
     if (!activeExercise) return;
@@ -442,6 +438,7 @@ function PracticeClientInner({
                                           <div className="pt-3">
                                             <ExercisePrompt
                                               prompt={ex.prompt || ex.description}
+                                              testCase={getFirstExerciseTestCase(ex.testCases)}
                                             />
                                           </div>
                                         </div>
@@ -569,7 +566,12 @@ function PracticeClientInner({
                               {isOpen && (
                                 <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }}
                                   exit={{ height: 0, opacity: 0 }} transition={{ duration: 0.25 }} className="overflow-hidden">
-                                  <div className="px-4 pb-3"><ExercisePrompt prompt={ex.prompt || ex.description} /></div>
+                                  <div className="px-4 pb-3">
+                                    <ExercisePrompt
+                                      prompt={ex.prompt || ex.description}
+                                      testCase={getFirstExerciseTestCase(ex.testCases)}
+                                    />
+                                  </div>
                                 </motion.div>
                               )}
                             </AnimatePresence>
